@@ -1,0 +1,86 @@
+/* Estilos para o dropdown do usuário */
+.navbar .dropdown-menu {
+    border: 1px solid #333;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+}
+
+/* Garante que o dropdown do usuário só funcione no clique, não no hover */
+.navbar .dropdown-menu,
+.navbar #userDropdown + .dropdown-menu {
+    display: none !important;
+}
+
+/* Mas permite quando tem a classe 'show' (clique do Bootstrap) */
+.navbar .dropdown-menu.show,
+.navbar #userDropdown + .dropdown-menu.show {
+    display: block !important;
+}
+
+.navbar .dropdown-item {
+    color: #fff !important;
+    transition: all 0.3s ease;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: #333 !important;
+    color: #610094 !important;
+}
+
+.navbar .dropdown-divider {
+    border-color: #333 !important;
+    margin: 0.5rem 0;
+}
+
+#userDropdown {
+    color: #fff !important;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+#userDropdown:hover {
+    color: #610094 !important;
+    text-decoration: none !important;
+}
+
+#userDropdown:focus {
+    color: #610094 !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+}
+
+/* Ícone do usuário */
+.bi-person-circle {
+    color: #610094;
+    transition: color 0.3s ease;
+}
+
+#userDropdown:hover .bi-person-circle {
+    color: #fff;
+}
+
+/* Estilo do nome do usuário */
+.user-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Responsivo para dispositivos móveis */
+@media (max-width: 768px) {
+    .navbar .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        border: none;
+        background-color: transparent !important;
+        box-shadow: none;
+    }
+    
+    .navbar .dropdown-item {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid #333;
+    }
+    
+    .user-name {
+        font-size: 0.8rem;
+    }
+}

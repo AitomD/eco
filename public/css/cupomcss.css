@@ -1,0 +1,38 @@
+@import url(main.css);
+.coupon-card {
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .coupon-card h6 {
+      font-weight: bold;
+    }
+    .coupon-meta {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    .apply-btn {
+      margin-top: 12px;
+      align-self: flex-end;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .alert-purple{
+      background-color: var(--pmain);
+      color: white;
+    }

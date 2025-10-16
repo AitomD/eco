@@ -1,0 +1,419 @@
+@import url("https://fonts.googleapis.com/css2?family=Electrolize&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+:root {
+  --pmain: #610094;
+  --psec: #3f0071;
+  --pterc: #150050;
+  --black: #000000;
+  --clear: #ffff;
+  --gray: #161616;
+}
+
+body {
+  font-family: "Electrolize", sans-serif;
+  font-size: 19px;
+  background: var(--gray);
+  overflow-x: hidden;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+/*-- Responsividade navbar*/
+.navbar {
+  background: rgba(9, 9, 10, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #3f0071;
+}
+
+  .navbar-brand img {
+    width: 150px !important;
+    height: auto !important;
+  }
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- CSS PARA TORNAR O MENU RESPONSIVO --- */
+
+/* O breakpoint 'lg' do Bootstrap é 992px. 
+       Aplicamos estas regras em telas menores que isso. */
+@media (max-width: 991.98px) {
+  .navbar-brand img {
+    width: 100% ;
+    height: auto ;
+  }
+  /* 1. Esconde a barra de pesquisa, conforme solicitado */
+  .central-nav-content form.d-flex {
+    display: none;
+  }
+
+  /* 2. Esconde os links de Entrar/Cadastrar e o carrinho */
+  .navbar div.mb-4 {
+    display: none;
+  }
+
+  /* 3. Permite que o container principal quebre a linha */
+  .navbar > .container-fluid {
+    flex-wrap: wrap;
+    /* Permite que os itens sejam reorganizados em várias linhas */
+  }
+
+  /* 4. Posiciona o menu colapsável (links) corretamente */
+  .central-nav-content {
+    order: 3;
+    width: 100%;
+    /* Faz o bloco ocupar a largura total */
+  }
+
+  /* 5. Centraliza os links do menu quando aberto */
+  .navbar-collapse {
+    width: 100%;
+    margin-top: 1rem;
+    /* Adiciona espaço entre o botão e os links */
+  }
+
+  .navbar-collapse .navbar-nav {
+    align-items: center;
+    /* Centraliza a lista de links */
+  }
+
+  /* 6. Ajusta o tamanho da logo em telas pequenas */
+  .navbar-brand img {
+    max-width: 120px !important;
+    /* Reduz o logo e usa !important para sobrescrever o style inline */
+  }
+
+  /* 7. (IMPORTANTE) Deixa o ícone do menu hambúrguer visível no fundo escuro */
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  #search {
+    display: none !important;
+  }
+}
+
+/* -- Centralização do Search -- */
+
+.central-nav-content {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+
+.central-nav-content {
+  position: absolute;
+  left: 50%;
+}
+
+/* -- Search Bar -- */
+
+#searchbar {
+  width: 520px;
+}
+
+/* -- Ul navbar -- */
+
+.navbar-nav {
+  transform: translateX(20%);
+}
+
+/* -- Btn Nav -- */
+
+.p-btn {
+  color: var(--clear);
+  letter-spacing: 1px;
+  transition: 0.3s all;
+  text-decoration: none;
+}
+
+.p-btn:hover {
+  color: var(--pmain);
+}
+
+.op-btn {
+  background: transparent;
+  cursor: pointer;
+  color: var(--black);
+  transition: 0.3s all;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 5px; /* Espaço para a barra */
+}
+
+.active {
+  color: var(--pmain);
+}
+
+.op-btn:hover {
+  color: var(--pmain);
+}
+
+.op-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--pmain);
+  border-radius: 1px;
+}
+
+/* Exibe o dropdown ao passar o mouse */
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0; /* Corrige a animação */
+}
+
+/* Impede a abertura no clique */
+.nav-item.dropdown .dropdown-toggle::after {
+  pointer-events: none;
+}
+
+.carousel .carousel-item {
+  transition: transform 1.2s ease, opacity 2.5s ease;
+}
+/* Card Oferta */
+.card {
+  overflow: hidden;
+  border-radius: 10px; /* opcional, para bordas arredondadas */
+}
+.card-img {
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.card:hover .card-img {
+  transform: scale(1.04); /* aumenta 10% */
+  filter: blur(0.8px); /* escurece levemente */
+  cursor: pointer;
+}
+
+@media (min-width: 992px) {
+  .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+}
+/* Exibe o dropdown ao passar o mouse no item pai */
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+}
+
+/* Corrige o delay ao sair do menu */
+.dropdown-menu {
+  transition: all 0.3s ease;
+}
+
+/* Diminui o brilho*/
+.text-dimmed {
+  filter: brightness(0.7);
+}
+
+/* Card Img Home */
+.card-img-top {
+  height: 230px; /* altura fixa */
+  object-fit: cover; /* corta e centraliza sem distorcer */
+}
+
+/* Componentes de produtos e navegação (definição única) */
+
+/* Estilo do carrossel de produtos */
+.product-carousel {
+  padding: 2rem 0;
+}
+
+.product-card {
+  background: rgba(21, 0, 80, 0.9);
+  border: 2px solid #610094;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(97, 0, 148, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(97, 0, 148, 0.5);
+  border-color: #ffffff;
+}
+
+.product-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.product-card .card-body {
+  background: rgba(21, 0, 80, 0.95);
+  color: #ffffff;
+  padding: 1.5rem;
+}
+
+.product-card .card-title {
+  color: #ffffff;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.card-price {
+  color: #610094;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.btn-product {
+  background: linear-gradient(45deg, #3f0071, #610094);
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-product:hover {
+  background: linear-gradient(45deg, #610094, #3f0071);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(97, 0, 148, 0.4);
+  color: #ffffff;
+}
+
+/* Controles do carrossel customizados */
+.product-carousel .carousel-control-prev,
+.product-carousel .carousel-control-next {
+  background: rgba(21, 0, 80, 0.8);
+  border: 2px solid #610094;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.product-carousel .carousel-control-prev {
+  left: -60px;
+}
+.product-carousel .carousel-control-next {
+  right: -60px;
+}
+
+.product-carousel .carousel-control-prev:hover,
+.product-carousel .carousel-control-next:hover {
+  background: rgba(97, 0, 148, 0.9);
+  border-color: #ffffff;
+}
+
+/* Responsivo para o carrossel */
+@media (max-width: 768px) {
+  .product-carousel .carousel-control-prev,
+  .product-carousel .carousel-control-next {
+    display: none;
+  }
+  .product-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Cards de oferta com estilo */
+.card.text-bg-dark {
+  background: rgba(21, 0, 80, 0.8) !important;
+  border: 1px solid #610094;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.card.text-bg-dark:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(97, 0, 148, 0.4);
+  border-color: #ffffff;
+}
+
+.card.text-bg-dark .card-title {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Banner principal com overlay sutil */
+.cont-banner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(21, 0, 80, 0.3));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cont-banner {
+  position: relative;
+}
+.cont-banner .carousel {
+  z-index: 2;
+  position: relative;
+}
+
+/* Estilos para a seção do usuário */
+.user-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* Responsividade para a user-section */
+@media (max-width: 991.98px) {
+  .user-section {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+  }
+  
+  .user-section .d-flex {
+    gap: 0.5rem;
+  }
+  
+  /* Reduz espaçamento dos botões em mobile */
+  .user-section .p-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Garante que o navbar container tenha flexbox apropriado */
+.navbar .container-fluid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 991.98px) {
+  .navbar .container-fluid {
+    flex-wrap: wrap;
+  }
+}

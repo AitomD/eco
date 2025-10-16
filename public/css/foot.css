@@ -1,0 +1,47 @@
+@import url(main.css);
+
+footer {
+  background-color: var(--black);
+  position: relative;
+  bottom: 0; 
+  left: 0;
+  width: 100%;
+
+}
+
+.dev-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dev-list li {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
+  font-size: 15px;
+}
+
+.dev-list li span {
+  flex-shrink: 0;
+  width: 200px;
+  font-weight: 500;
+}
+
+.dev-list li a {
+  color: #ccc;
+  font-size: 16px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.dev-list li a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-column > h4 {
+  margin-top: 15px;
+}

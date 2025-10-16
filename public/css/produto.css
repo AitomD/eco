@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Electrolize&display=swap");
+
+.cont-produto{
+  font-family: "Electrolize",sans-serif;
+  font-size: 19px;
+}
+.link-produto {
+  cursor: pointer;               /* mostra o cursor de mãozinha */
+  transition: all 0.3s ease;     /* deixa o efeito suave */
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.link-produto:hover {
+  background-color: white;
+  color: purple;
+  transform: translateY(-3px); /* leve elevação */
+}
+.link-produto.ativo {
+  background-color: white;
+  color: purple;
+  box-shadow: 1px 1px 20px rgb(250, 250, 250), 0 4px 10px rgba(128, 0, 128, 0.4); /* sombra forte */
+  transform: translateY(-4px); /* leve elevação */
+}
+
+

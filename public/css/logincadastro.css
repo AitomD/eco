@@ -1,0 +1,267 @@
+/* Estilos escopados para páginas de login e cadastro */
+body.auth-page {
+    background: linear-gradient(to bottom, #000000, #150050, #3F0071, #610094);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+/* Centralização apenas do conteúdo principal para não afetar navbar/footer */
+body.auth-page main {
+    min-height: 100vh; /* header/footer ocultos em páginas de auth */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container do login */
+.auth-page .login-container {
+    background: rgba(21, 0, 80, 0.9);
+    border: 2px solid #610094;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(97, 0, 148, 0.3);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Container do cadastro */
+.auth-page .register-container {
+    background: rgba(21, 0, 80, 0.9);
+    border: 2px solid #610094;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(97, 0, 148, 0.3);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 450px;
+    margin: 1rem;
+}
+
+/* Headers */
+.auth-page .login-header,
+.auth-page .register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-page .login-header h2,
+.auth-page .register-header h2 {
+    color: #FFFFFF;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.auth-page .login-header p,
+.auth-page .register-header p {
+    color: #B0B0B0;
+    font-size: 0.9rem;
+}
+
+/* Labels */
+.auth-page .form-label {
+    color: #FFFFFF;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Form controls */
+.auth-page .form-control {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #3F0071;
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.auth-page .form-control:focus {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: #610094;
+    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25);
+    color: #FFFFFF;
+}
+
+.auth-page .form-control::placeholder {
+    color: #B0B0B0;
+}
+
+.auth-page .form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.auth-page .form-control.is-valid {
+    border-color: #28a745;
+}
+
+/* Feedback messages */
+.auth-page .invalid-feedback {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+}
+
+.auth-page .valid-feedback {
+    color: #51cf66;
+    font-size: 0.8rem;
+}
+
+/* Botões */
+.auth-page .btn-login,
+.auth-page .btn-register {
+    background: linear-gradient(45deg, #3F0071, #610094);
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 0.75rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.auth-page .btn-login:hover,
+.auth-page .btn-register:hover {
+    background: linear-gradient(45deg, #610094, #3F0071);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(97, 0, 148, 0.4);
+}
+
+.auth-page .btn-register:disabled {
+    background: #6c757d;
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* Links */
+.auth-page .login-links,
+.auth-page .register-links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-page .login-links a,
+.auth-page .register-links a {
+    color: #610094;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.auth-page .login-links a:hover,
+.auth-page .register-links a:hover {
+    color: #FFFFFF;
+}
+
+/* Divisor */
+.auth-page .divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.auth-page .divider::before,
+.auth-page .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #3F0071;
+}
+
+.auth-page .divider span {
+    padding: 0 1rem;
+    color: #B0B0B0;
+    font-size: 0.8rem;
+}
+
+/* Navbar brand */
+.auth-page .navbar-brand img {
+    filter: brightness(1.2);
+}
+
+/* Botão de voltar ao início */
+.auth-page .back-to-home {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+}
+
+.auth-page .back-to-home a {
+    color: #FFFFFF;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid #3F0071;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.auth-page .back-to-home a:hover {
+    background: rgba(63, 0, 113, 0.3);
+    color: #FFFFFF;
+}
+
+/* Indicador de força da senha */
+.auth-page .password-strength {
+    margin-top: 0.5rem;
+}
+
+.auth-page .strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: #3F0071;
+    transition: all 0.3s ease;
+}
+
+.auth-page .strength-bar.weak {
+    background: #dc3545;
+    width: 25%;
+}
+
+.auth-page .strength-bar.medium {
+    background: #ffc107;
+    width: 50%;
+}
+
+.auth-page .strength-bar.strong {
+    background: #28a745;
+    width: 75%;
+}
+
+.auth-page .strength-bar.very-strong {
+    background: #28a745;
+    width: 100%;
+}
+
+.auth-page .strength-text {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    color: #B0B0B0;
+}
+
+/* Checkboxes */
+.auth-page .form-check-input:checked {
+    background-color: #610094;
+    border-color: #610094;
+}
+
+.auth-page .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25);
+}
+
+/* Media queries para responsividade */
+@media (max-width: 576px) {
+    .auth-page .login-container,
+    .auth-page .register-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .auth-page .back-to-home {
+        position: static;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+}

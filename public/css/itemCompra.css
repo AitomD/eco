@@ -1,0 +1,37 @@
+@import url(main.css);
+
+.preco-produto h2 {
+    font-weight: 300; /* Letra mais fina, como no exemplo */
+}
+
+/* Classe customizada para o botão "Adicionar ao carrinho" */
+.purple-btn{
+    background-color: var(--pmain);
+    color: var(--clear);
+    border-radius: 5px;
+    transition: 0.2s all;
+    border: none;
+    margin: 3px 0 3px 0;
+    padding: 3px 1px 3px 1px;
+}
+
+.purple-btn:hover{
+    background-color: var(--psec);
+}
+
+.cart-button{
+    color: var(--black);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.cart-button:hover{
+    color: var(--pmain);
+    text-decoration: underline;
+}
+
+/* Garante que os containers internos ocupem toda a altura da coluna */
+.col-md-4 > div, .col-md-5 > div {
+    height: 100%;
+}
