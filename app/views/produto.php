@@ -78,7 +78,6 @@
     </div>
 </div>
 
-
     <div style="height: 50px;"></div>
 
    <script>
@@ -122,7 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
     <p class="card-text">Estoque: ${p.quantidade}</p>
     <div class="d-flex justify-content-between mt-3">
       <button class="btn btn-primary btn-sm btn-add-cart"><i class="bi bi-cart2"></i> Carrinho</button>
-      <button class="btn btn-outline-secondary btn-sm btn-detalhes"><i class="fa-solid fa-clipboard"></i> Ficha Técnica</button>
+      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn btn-outline-secondary btn-sm btn-detalhes">
+  <i class="fa-solid fa-clipboard"></i> Ficha Técnica
+</a>
     </div>
   </div>
 `;

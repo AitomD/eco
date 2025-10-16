@@ -1,49 +1,59 @@
 <?php
-// Inclui a conexão com o banco de dados
-require_once '../core/Database.php'; // ajuste o caminho se necessário
+require_once '../app/core/Database.php';
 
 // 1. Obter o ID do produto da URL e validar
 $id_produto = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if (!$id_produto) {
-    // Se não houver ID ou for inválido, exibe um erro e para a execução
     die("Produto não encontrado ou ID inválido.");
 }
-
-$produto = null; // Inicializa a variável do produto
 
 try {
     $pdo = Database::conectar();
 
-    // 2. Modificar a consulta SQL para buscar um único produto
-    $sql = "SELECT p.id_produto, p.nome, p.preco, p.quantidade, p.id_categoria,
-                   pi.descricao, pi.cor, pi.marca, pi.ram, pi.armazenamento,
-                   pi.processador, pi.placa_mae, pi.placa_video, pi.fonte, pi.imagem
-            FROM produto p
-            JOIN produto_info pi ON p.id_info = pi.id_info
-            WHERE p.id_produto = :id_produto"; // <<< Adicionada cláusula WHERE
+    // Consulta SQL para trazer o produto e todas as imagens
+    $sql = "
+        SELECT 
+            p.id_produto,
+            p.nome,
+            p.cor,
+            p.preco,
+            p.quantidade,
+            pi.descricao,
+            pi.id_marca,
+            pi.id_categoria,
+            pi.ram,
+            pi.armazenamento,
+            pi.processador,
+            pi.placa_mae,
+            pi.placa_video,
+            pi.fonte,
+            i.url AS imagem
+        FROM produto p
+        JOIN produto_info pi ON p.id_info = pi.id_info
+        LEFT JOIN imagem i ON pi.id_info = i.id_info
+        WHERE p.id_produto = :id_produto
+    ";
 
     $stmt = $pdo->prepare($sql);
-    
-    // 3. Vincular o ID para segurança (previne SQL Injection)
     $stmt->bindParam(':id_produto', $id_produto, PDO::PARAM_INT);
     $stmt->execute();
 
-    // 4. Usar fetch() em vez de fetchAll() para obter um único resultado
-    $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+    $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!$produto) {
-        // Se a consulta não retornar nenhum produto, exibe um erro
+    if (!$resultados) {
         die("Produto não encontrado.");
     }
 
+    // Dados do produto (iguais em todas as linhas)
+    $produto = $resultados[0];
+
+    // Todas as imagens em um array
+    $imagens = array_column($resultados, 'imagem');
+
 } catch (PDOException $e) {
-    // Em caso de erro de conexão ou consulta
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
-
-// A partir daqui, a variável $produto contém todos os dados do produto específico.
-// Agora, podemos usar esta variável no HTML abaixo.
 ?>
 
 <main class="container py-4">
@@ -51,33 +61,41 @@ try {
         
         <div class="col-md-4">
             <div class="galeria-imagens bg-white border rounded p-3 h-100">
-                <div class="miniaturas mb-3">
-                    <p class="mb-2">img 1</p>
+                
+                <!-- Miniaturas -->
+                <div class="miniaturas mb-3 d-flex gap-2 flex-wrap">
+                    <?php foreach ($imagens as $img): ?>
+                        <img src="<?= htmlspecialchars($img) ?>" 
+                             alt="<?= htmlspecialchars($produto['nome']) ?>" 
+                             class="img-thumbnail" 
+                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                    <?php endforeach; ?>
                 </div>
-                <div class="imagem-principal fw-bold text-center">
-                    <img src="<?= htmlspecialchars($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>" class="img-fluid">
+
+                <!-- Imagem principal -->
+                <div class="imagem-principal text-center">
+                    <img src="<?= htmlspecialchars($imagens[0]) ?>" 
+                         alt="<?= htmlspecialchars($produto['nome']) ?>" 
+                         class="img-fluid rounded">
                 </div>
             </div>
         </div>
 
+        <!-- Resto do seu HTML permanece igual -->
         <div class="col-md-5">
             <div class="info-produto bg-white border rounded p-4 h-100">
                 <p class="text-muted small mb-2">Novo | +1000 vendidos</p>
-                
                 <h1 class="h3 fw-bold " style="color:var(--black);"><?= htmlspecialchars($produto['nome']) ?></h1>
-                
                 <div class="avaliacoes d-flex align-items-center small text-muted my-3">
                     <div class="estrelas " style="color:var(--pmain);">
                         <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
                     </div>
                     <span class="ms-2">(1.258 avaliações)</span>
                 </div>
-                
                 <div class="preco-produto my-4">
                     <h2 class="display-5 mb-1" style="color:var(--black);">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></h2>
                     <p class="text-primary">em 10x R$ <?= number_format($produto['preco'] / 10, 2, ',', '.') ?> sem juros</p>
                 </div>
-                
                 <div class="caracteristicas-produto mb-4">
                     <?php if (!empty($produto['cor'])): ?>
                         <p class="mb-1"><strong class="fw-semibold">Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
@@ -86,7 +104,6 @@ try {
                         <p class="mb-1"><strong class="fw-semibold">Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
                     <?php endif; ?>
                 </div>
-                
                 <div class="sobre-o-produto border-top pt-3">
                     <h3 class="h5">O que você precisa saber sobre este produto</h3>
                     <ul class="list-unstyled mt-2 text-muted">
@@ -104,6 +121,7 @@ try {
             </div>
         </div>
 
+        <!-- Coluna de compra e vendedor permanece igual -->
         <div class="col-md-3">
             <div class="compra-info-vendedor d-flex flex-column gap-3">
                 <div class="card-compra border rounded p-3 bg-white">
