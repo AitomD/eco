@@ -418,6 +418,14 @@ class Auth {
             $birthDate = $_POST['birthDate'] ?? '';
             $gender = $_POST['gender'] ?? null;
             $terms = isset($_POST['terms']);
+            
+            // Dados de endereço (opcionais)
+            $cep = trim($_POST['cep'] ?? '');
+            $endereco = trim($_POST['endereco'] ?? '');
+            $complemento = trim($_POST['complemento'] ?? '');
+            $bairro = trim($_POST['bairro'] ?? '');
+            $cidade = trim($_POST['cidade'] ?? '');
+            $estado = trim($_POST['estado'] ?? '');
 
             $errors = [];
 
@@ -447,6 +455,30 @@ class Auth {
                 $errors[] = 'Você deve aceitar os termos de uso';
             }
 
+            if (empty($birthDate)) {
+                $errors[] = 'Data de nascimento é obrigatória';
+            }
+
+            // Validar campos de endereço se algum foi preenchido
+            $hasAddressData = !empty($cep) || !empty($endereco) || !empty($bairro) || !empty($cidade) || !empty($estado);
+            if ($hasAddressData) {
+                if (empty($cep)) {
+                    $errors[] = 'CEP é obrigatório quando endereço é informado';
+                }
+                if (empty($endereco)) {
+                    $errors[] = 'Endereço é obrigatório quando dados de endereço são informados';
+                }
+                if (empty($bairro)) {
+                    $errors[] = 'Bairro é obrigatório quando endereço é informado';
+                }
+                if (empty($cidade)) {
+                    $errors[] = 'Cidade é obrigatória quando endereço é informado';
+                }
+                if (empty($estado)) {
+                    $errors[] = 'Estado é obrigatório quando endereço é informado';
+                }
+            }
+
             if (!empty($errors)) {
                 echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
                 return;
@@ -457,7 +489,8 @@ class Auth {
                 'email' => $email,
                 'senha' => password_hash($password, PASSWORD_DEFAULT),
                 'is_admin' => false,
-                'genero' => in_array($gender, ['masculino', 'feminino', 'outro']) ? $gender : null
+                'genero' => in_array($gender, ['masculino', 'feminino', 'outro']) ? $gender : null,
+                'data_nascimento' => $birthDate
             ];
 
             $validationErrors = $this->validateUserData($userData);
@@ -472,8 +505,8 @@ class Auth {
             }
 
             $stmt = $this->pdo->prepare("
-                INSERT INTO user (nome, email, senha, is_admin, genero) 
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO user (nome, email, senha, is_admin, genero, data_nascimento) 
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
             
             $result = $stmt->execute([
@@ -481,11 +514,19 @@ class Auth {
                 $userData['email'],
                 $userData['senha'],
                 $userData['is_admin'] ? 1 : 0,
-                $userData['genero']
+                $userData['genero'],
+                $userData['data_nascimento']
             ]);
 
             if ($result) {
-                $userData['id_user'] = $this->pdo->lastInsertId();
+                $userId = $this->pdo->lastInsertId();
+                $userData['id_user'] = $userId;
+                
+                // Salvar endereço se foi informado
+                if ($hasAddressData) {
+                    $this->saveUserAddress($userId, $cep, $endereco, $complemento, $bairro, $cidade, $estado);
+                }
+                
                 $this->createSession($userData);
 
                 echo json_encode([
@@ -644,6 +685,33 @@ class Auth {
         }
         
         return true;
+    }
+    
+    // ================================
+    // MÉTODO PARA SALVAR ENDEREÇO
+    // ================================
+    
+    private function saveUserAddress($userId, $cep, $endereco, $complemento, $bairro, $cidade, $estado) {
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO endereco (id_user, endereco, cep, complemento, bairro, cidade, estado) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ");
+            
+            return $stmt->execute([
+                $userId,
+                $endereco,
+                $cep,
+                $complemento,
+                $bairro,
+                $cidade,
+                $estado
+            ]);
+            
+        } catch (PDOException $e) {
+            error_log("Erro ao salvar endereço: " . $e->getMessage());
+            return false;
+        }
     }
 }
 
