@@ -153,8 +153,8 @@ try {
                         <button class="btn-product ">Comprar agora</button>
                         <button class="btn-add-cart btn-product text-center">adicionar ao carrinho</button>
                     </div>
-                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-arrow-return-left mr-1 text-primary"></i> Devolução grátis. Você tem 30 dias a partir da data de recebimento.</p>
-                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-shield-check mr-1 text-primary"></i> Compra Garantida, receba o produto que está esperando ou devolvemos o dinheiro.</p>
+                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-arrow-return-left mr-1 text-primary"></i><span class="text-primary"> Devolução grátis</span>. Você tem 30 dias a partir da data de recebimento.</p>
+                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-shield-check mr-1 text-primary"></i><span  class="text-primary"> Compra Garantida</span>, receba o produto que está esperando ou devolvemos o dinheiro.</p>
                     <p class="small fs-6 text-muted mt-3"><i class="bi bi-award mr-1 text-primary"></i> 12 meses de garantia de fábrica.</p>
                     
                 </div>
