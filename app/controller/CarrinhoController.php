@@ -31,7 +31,7 @@ class CarrinhoController {
             ];
         }
     }
-    
+
     public static function removerDoCarrinho($id) {
         self::init();
         
