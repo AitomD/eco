@@ -30,11 +30,11 @@ body.auth-page main {
     background: rgba(21, 0, 80, 0.9);
     border: 2px solid #610094;
     border-radius: 15px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 10px 30px rgba(97, 0, 148, 0.3);
     backdrop-filter: blur(10px);
     width: 100%;
-    max-width: 450px;
+    max-width: 800px;
     margin: 1rem;
 }
 
@@ -42,14 +42,15 @@ body.auth-page main {
 .auth-page .login-header,
 .auth-page .register-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem;
 }
 
 .auth-page .login-header h2,
 .auth-page .register-header h2 {
     color: #FFFFFF;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    font-size: 1.8rem;
 }
 
 .auth-page .login-header p,
@@ -62,7 +63,8 @@ body.auth-page main {
 .auth-page .form-label {
     color: #FFFFFF;
     font-weight: 500;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
 }
 
 /* Form controls */
@@ -71,8 +73,9 @@ body.auth-page main {
     border: 2px solid #3F0071;
     border-radius: 8px;
     color: #FFFFFF;
-    padding: 0.75rem;
+    padding: 0.6rem;
     transition: all 0.3s ease;
+    font-size: 0.9rem;
 }
 
 .auth-page .form-control:focus {
@@ -113,10 +116,11 @@ body.auth-page main {
     border-radius: 8px;
     color: #FFFFFF;
     font-weight: bold;
-    padding: 0.75rem;
+    padding: 0.7rem;
     width: 100%;
     transition: all 0.3s ease;
-    margin-top: 1rem;
+    margin-top: 0.8rem;
+    font-size: 1rem;
 }
 
 .auth-page .btn-login:hover,
@@ -137,7 +141,7 @@ body.auth-page main {
 .auth-page .login-links,
 .auth-page .register-links {
     text-align: center;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 }
 
 .auth-page .login-links a,
@@ -157,7 +161,7 @@ body.auth-page main {
 .auth-page .divider {
     display: flex;
     align-items: center;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .auth-page .divider::before,
@@ -205,11 +209,12 @@ body.auth-page main {
 
 /* Indicador de força da senha */
 .auth-page .password-strength {
-    margin-top: 0.5rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
 }
 
 .auth-page .strength-bar {
-    height: 4px;
+    height: 3px;
     border-radius: 2px;
     background: #3F0071;
     transition: all 0.3s ease;
@@ -236,32 +241,250 @@ body.auth-page main {
 }
 
 .auth-page .strength-text {
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
     color: #B0B0B0;
 }
 
-/* Checkboxes */
+/* Checkboxes personalizados */
+.auth-page .form-check-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #3F0071;
+    border-radius: 5px;
+    width: 1.3em;
+    height: 1.3em;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
 .auth-page .form-check-input:checked {
     background-color: #610094;
     border-color: #610094;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+    background-size: 70% 70%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .auth-page .form-check-input:focus {
     box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25);
+    border-color: #610094;
+}
+
+.auth-page .form-check-input:hover {
+    border-color: #610094;
+    background: rgba(97, 0, 148, 0.1);
+}
+
+/* Remover qualquer conteúdo ::after para evitar duplicação */
+.auth-page .form-check-input::after {
+    content: none;
+    display: none;
+}
+
+.auth-page .form-check-label {
+    cursor: pointer;
+    margin-left: 0.5rem;
+    user-select: none;
 }
 
 /* Media queries para responsividade */
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .auth-page .login-container,
     .auth-page .register-container {
-        margin: 1rem;
-        padding: 1.5rem;
+        margin: 0.5rem;
+        padding: 1rem;
+        max-width: 100%;
     }
     
     .auth-page .back-to-home {
         position: static;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         text-align: center;
+    }
+
+    .auth-page .register-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .auth-page .form-control {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .auth-page .form-label {
+        font-size: 0.8rem;
+        margin-bottom: 0.2rem;
+    }
+
+    /* Em telas menores, usar 1 coluna */
+    .auth-page .register-container .col-md-4 {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-page .register-container {
+        margin: 0.25rem;
+        padding: 0.8rem;
+    }
+}
+
+/* Estilos para o sistema de etapas */
+.auth-page .steps-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.auth-page .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 200px;
+}
+
+.auth-page .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 60%;
+    width: 80%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: background 0.3s ease;
+}
+
+.auth-page .step.active:not(:last-child)::after,
+.auth-page .step.completed:not(:last-child)::after {
+    background: #610094;
+}
+
+.auth-page .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.auth-page .step.active .step-number {
+    background: #610094;
+    border-color: #610094;
+    color: white;
+    transform: scale(1.1);
+}
+
+.auth-page .step.completed .step-number {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.auth-page .step.completed .step-number::before {
+    content: '✓';
+    font-size: 18px;
+}
+
+.auth-page .step-title {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.auth-page .step.active .step-title {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.auth-page .step.completed .step-title {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Estilos para as etapas do formulário */
+.auth-page .form-step {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.auth-page .form-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para os botões de ação */
+.auth-page .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+
+.auth-page .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.auth-page .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Responsividade para as etapas */
+@media (max-width: 768px) {
+    .auth-page .steps-indicator {
+        margin-bottom: 1.5rem;
+    }
+    
+    .auth-page .step-title {
+        font-size: 0.75rem;
+    }
+    
+    .auth-page .step-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .auth-page .form-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .auth-page .form-actions .btn {
+        width: 100%;
     }
 }

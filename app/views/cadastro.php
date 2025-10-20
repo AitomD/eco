@@ -13,105 +13,203 @@
             <p>Junte-se a nós e comece suas compras</p>
         </div>
 
+        <!-- Indicador de Etapas -->
+        <div class="steps-indicator mb-4">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Dados Pessoais</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Endereço</div>
+            </div>
+        </div>
+
         <form action="../app/core/user.php" method="POST" id="registerForm" novalidate>
             <input type="hidden" name="action" value="register">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="firstName" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="firstName" name="firstName"
-                        placeholder="Seu nome" required>
-                    <div class="invalid-feedback">
-                        Nome é obrigatório
+            
+            <!-- ETAPA 1: Dados Pessoais -->
+            <div class="form-step active" id="step-1">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label for="firstName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                            placeholder="Seu nome" required>
+                        <div class="invalid-feedback">Nome é obrigatório</div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label for="lastName" class="form-label">Sobrenome</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                            placeholder="Seu sobrenome" required>
+                        <div class="invalid-feedback">Sobrenome é obrigatório</div>
                     </div>
                 </div>
 
-                <div class="col-md-6 mb-3">
-                    <label for="lastName" class="form-label">Sobrenome</label>
-                    <input type="text" class="form-control" id="lastName" name="lastName"
-                        placeholder="Seu sobrenome" required>
-                    <div class="invalid-feedback">
-                        Sobrenome é obrigatório
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            placeholder="seu@email.com" required>
+                        <div class="invalid-feedback">Email válido é obrigatório</div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label for="birthDate" class="form-label">Data de Nascimento</label>
+                        <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+                        <div class="invalid-feedback">Data de nascimento é obrigatória</div>
                     </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email"
-                    placeholder="seu@email.com" required>
-                <div class="invalid-feedback">
-                    Email válido é obrigatório
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label for="password" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Crie uma senha forte" required>
+                        <div class="invalid-feedback">Senha deve ter pelo menos 8 caracteres</div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                            placeholder="Digite a senha novamente" required>
+                        <div class="invalid-feedback">As senhas não coincidem</div>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                        <div class="strength-text" id="strengthText">Digite uma senha</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-register" id="nextBtn">
+                        Próximo
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-left: 8px;">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Senha</label>
-                <input type="password" class="form-control" id="password" name="password"
-                    placeholder="Crie uma senha forte" required>
-                <div class="password-strength">
-                    <div class="strength-bar" id="strengthBar"></div>
-                    <div class="strength-text" id="strengthText">Digite uma senha</div>
+            <!-- ETAPA 2: Endereço -->
+            <div class="form-step" id="step-2">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label for="cep" class="form-label">CEP</label>
+                        <input type="text" class="form-control" id="cep" name="cep"
+                            placeholder="00000-000" maxlength="9">
+                        <div class="invalid-feedback">CEP inválido</div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label for="endereco" class="form-label">Endereço</label>
+                        <input type="text" class="form-control" id="endereco" name="endereco"
+                            placeholder="Rua, Avenida, etc.">
+                        <div class="invalid-feedback">Endereço é obrigatório</div>
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="numero" class="form-label">Número</label>
+                        <input type="text" class="form-control" id="numero" name="numero"
+                            placeholder="123" required>
+                        <div class="invalid-feedback">Número é obrigatório</div>
+                    </div>
                 </div>
-                <div class="invalid-feedback">
-                    Senha deve ter pelo menos 8 caracteres
+
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label for="complemento" class="form-label">Complemento</label>
+                        <input type="text" class="form-control" id="complemento" name="complemento"
+                            placeholder="Apt, Bloco, etc. (opcional)">
+                    </div>
+
+                    <div class="col-md-4 mb-2">
+                        <label for="bairro" class="form-label">Bairro</label>
+                        <input type="text" class="form-control" id="bairro" name="bairro"
+                            placeholder="Seu bairro">
+                        <div class="invalid-feedback">Bairro é obrigatório</div>
+                    </div>
+
+                    <div class="col-md-4 mb-2">
+                        <label for="cidade" class="form-label">Cidade</label>
+                        <input type="text" class="form-control" id="cidade" name="cidade"
+                            placeholder="Sua cidade">
+                        <div class="invalid-feedback">Cidade é obrigatória</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select class="form-control" id="estado" name="estado">
+                            <option value="">Selecione o estado</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                        <div class="invalid-feedback">Estado é obrigatório</div>
+                    </div>
+                </div>
+
+                <div class="mb-2 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                    <label class="form-check-label" for="terms" style="color: #B0B0B0; font-size: 0.85rem;">
+                        Eu aceito os <a href="#" style="color: #610094;">Termos de Uso</a> e
+                        <a href="#" style="color: #610094;">Política de Privacidade</a>
+                    </label>
+                    <div class="invalid-feedback">Você deve aceitar os termos para continuar</div>
+                </div>
+
+                <div class="mb-2 form-check">
+                    <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter">
+                    <label class="form-check-label" for="newsletter" style="color: #B0B0B0; font-size: 0.85rem;">
+                        Quero receber ofertas e novidades por email
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        Anterior
+                    </button>
+                    <button type="submit" class="btn btn-register" id="submitBtn">
+                        <span class="btn-text">Criar Conta</span>
+                        <span class="btn-loading d-none">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Criando...
+                        </span>
+                    </button>
                 </div>
             </div>
-
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirmar Senha</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                    placeholder="Digite a senha novamente" required>
-                <div class="invalid-feedback">
-                    As senhas não coincidem
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="birthDate" class="form-label">Data de Nascimento</label>
-                <input type="date" class="form-control" id="birthDate" name="birthDate" required>
-                <div class="invalid-feedback">
-                    Data de nascimento é obrigatória
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="gender" class="form-label">Gênero</label>
-                <select class="form-control" id="gender" name="gender">
-                    <option value="">Selecione (opcional)</option>
-                    <option value="masculino">Masculino</option>
-                    <option value="feminino">Feminino</option>
-                    <option value="outro">Outro</option>
-                    <option value="prefiro_nao_dizer">Prefiro não dizer</option>
-                </select>
-            </div>
-
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="terms" name="terms" required
-                    style="background: rgba(0, 0, 0, 0.3); border-color: #3F0071;">
-                <label class="form-check-label" for="terms" style="color: #B0B0B0; font-size: 0.9rem;">
-                    Eu aceito os <a href="#" style="color: #610094;">Termos de Uso</a> e
-                    <a href="#" style="color: #610094;">Política de Privacidade</a>
-                </label>
-                <div class="invalid-feedback">
-                    Você deve aceitar os termos para continuar
-                </div>
-            </div>
-
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter"
-                    style="background: rgba(0, 0, 0, 0.3); border-color: #3F0071;">
-                <label class="form-check-label" for="newsletter" style="color: #B0B0B0; font-size: 0.9rem;">
-                    Quero receber ofertas e novidades por email
-                </label>
-            </div>
-
-            <button type="submit" class="btn btn-register" id="submitBtn">
-                <span class="btn-text">Criar Conta</span>
-                <span class="btn-loading d-none">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Criando...
-                </span>
-            </button>
         </form>
 
         <div class="divider">
@@ -136,6 +234,67 @@
         const submitBtn = document.getElementById('submitBtn');
         const btnText = submitBtn.querySelector('.btn-text');
         const btnLoading = submitBtn.querySelector('.btn-loading');
+        
+        // Elementos de navegação entre etapas
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const steps = document.querySelectorAll('.step');
+        const formSteps = document.querySelectorAll('.form-step');
+        let currentStep = 1;
+
+        // Função para mostrar etapa específica
+        function showStep(stepNumber) {
+            // Atualizar indicadores
+            steps.forEach(step => {
+                const stepNum = parseInt(step.dataset.step);
+                step.classList.toggle('active', stepNum === stepNumber);
+                step.classList.toggle('completed', stepNum < stepNumber);
+            });
+
+            // Mostrar/esconder etapas do formulário
+            formSteps.forEach((step, index) => {
+                step.classList.toggle('active', index + 1 === stepNumber);
+            });
+
+            currentStep = stepNumber;
+        }
+
+        // Validar etapa atual
+        function validateCurrentStep() {
+            const currentFormStep = document.querySelector(`#step-${currentStep}`);
+            const inputs = currentFormStep.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+
+            return isValid;
+        }
+
+        // Navegação - Botão Próximo
+        nextBtn.addEventListener('click', function() {
+            if (validateCurrentStep()) {
+                if (currentStep < 2) {
+                    showStep(currentStep + 1);
+                }
+            } else {
+                // Focar no primeiro campo inválido
+                const firstInvalid = document.querySelector(`#step-${currentStep} .is-invalid`);
+                if (firstInvalid) {
+                    firstInvalid.focus();
+                }
+            }
+        });
+
+        // Navegação - Botão Anterior
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        });
 
         // Verificar força da senha
         function checkPasswordStrength(password) {
@@ -333,6 +492,47 @@
             }
         });
 
+        // Máscara para CEP
+        const cepInput = document.getElementById('cep');
+        if (cepInput) {
+            cepInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                
+                if (value.length <= 8) {
+                    value = value.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+                }
+                
+                e.target.value = value;
+                
+                // Buscar endereço quando CEP estiver completo
+                if (value.replace(/\D/g, '').length === 8) {
+                    buscarEnderecoPorCEP(value.replace(/\D/g, ''));
+                }
+            });
+        }
+
+        // Função para buscar endereço por CEP
+        function buscarEnderecoPorCEP(cep) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('endereco').value = data.logradouro || '';
+                        document.getElementById('bairro').value = data.bairro || '';
+                        document.getElementById('cidade').value = data.localidade || '';
+                        document.getElementById('estado').value = data.uf || '';
+                        
+                        // Focar no complemento se endereço foi preenchido
+                        if (data.logradouro) {
+                            document.getElementById('complemento').focus();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.log('Erro ao buscar CEP:', error);
+                });
+        }
+
         // Máscara para telefone
         const phoneInput = document.getElementById('phone');
         if (phoneInput) {
@@ -359,6 +559,31 @@
 
             input.addEventListener('blur', function() {
                 this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Melhorar interação dos checkboxes
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        checkboxes.forEach(checkbox => {
+            // Adicionar evento de clique na label para melhor usabilidade
+            const label = checkbox.nextElementSibling;
+            if (label && label.classList.contains('form-check-label')) {
+                label.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'A') { // Não interferir com links
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+
+            // Feedback visual ao marcar/desmarcar
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                }
             });
         });
     </script>
