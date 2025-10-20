@@ -11,27 +11,48 @@ if (!$id_produto) {
 try {
     $pdo = Database::conectar();
 
-    // Consulta SQL para trazer o produto e todas as imagens
+    // Consulta SQL completa
     $sql = "
         SELECT 
             p.id_produto,
             p.nome,
             p.cor,
             p.preco,
-            p.quantidade,
             pi.descricao,
-            pi.id_marca,
-            pi.id_categoria,
             pi.ram,
             pi.armazenamento,
             pi.processador,
             pi.placa_mae,
             pi.placa_video,
             pi.fonte,
-            i.url AS imagem
+            m.nome AS marca,
+            c.nome AS categoria,
+            
+            -- Imagem principal (primeira imagem da ordem)
+            (SELECT i.url 
+             FROM imagem i 
+             WHERE i.id_info = pi.id_info 
+             ORDER BY i.ordem ASC 
+             LIMIT 1) AS imagem_principal,
+            
+            -- Todas as imagens relacionadas
+            i.url AS imagem,
+            
+            -- Quantidade disponível (último total do estoque)
+            (SELECT 
+                CASE 
+                    WHEN MAX(e.total) IS NULL THEN 'Sem Estoque'
+                    ELSE MAX(e.total)
+                END
+             FROM estoque e
+             WHERE e.id_produto = p.id_produto
+            ) AS quantidade_disponivel
+
         FROM produto p
         JOIN produto_info pi ON p.id_info = pi.id_info
         LEFT JOIN imagem i ON pi.id_info = i.id_info
+        LEFT JOIN marca m ON pi.id_marca = m.id_marca
+        LEFT JOIN categoria c ON pi.id_categoria = c.id_categoria
         WHERE p.id_produto = :id_produto
     ";
 
@@ -59,10 +80,9 @@ try {
 <main class="container py-4">
     <section class="row g-4 bg-white mt-2 py-4">
         
+        <!-- GALERIA DE IMAGENS -->
         <div class="col-md-4">
             <div class="galeria-imagens bg-white border rounded p-3 h-100">
-                
-                <!-- Miniaturas -->
                 <div class="miniaturas mb-3 d-flex gap-2 flex-wrap">
                     <?php foreach ($imagens as $img): ?>
                         <img src="<?= htmlspecialchars($img) ?>" 
@@ -72,38 +92,48 @@ try {
                     <?php endforeach; ?>
                 </div>
 
-                <!-- Imagem principal -->
                 <div class="imagem-principal text-center">
-                    <img src="<?= htmlspecialchars($imagens[0]) ?>" 
+                    <img src="<?= htmlspecialchars($produto['imagem_principal']) ?>" 
                          alt="<?= htmlspecialchars($produto['nome']) ?>" 
                          class="img-fluid rounded">
                 </div>
             </div>
         </div>
 
-        <!-- Resto do seu HTML permanece igual -->
+        <!-- INFORMAÇÕES DO PRODUTO -->
         <div class="col-md-5">
             <div class="info-produto bg-white border rounded p-4 h-100">
                 <p class="text-muted small mb-2">Novo | +1000 vendidos</p>
-                <h1 class="h3 fw-bold " style="color:var(--black);"><?= htmlspecialchars($produto['nome']) ?></h1>
+                <h1 class="h3 fw-bold" style="color:var(--black);"><?= htmlspecialchars($produto['nome']) ?></h1>
+                <p class="text-muted small">Marca: <?= htmlspecialchars($produto['marca']) ?> | Categoria: <?= htmlspecialchars($produto['categoria']) ?></p>
+
                 <div class="avaliacoes d-flex align-items-center small text-muted my-3">
-                    <div class="estrelas " style="color:var(--pmain);">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                    <div class="estrelas" style="color:var(--pmain);">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
                     </div>
                     <span class="ms-2">(1.258 avaliações)</span>
                 </div>
+
                 <div class="preco-produto my-4">
-                    <h2 class="display-5 mb-1" style="color:var(--black);">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></h2>
-                    <p class="text-primary">em 10x R$ <?= number_format($produto['preco'] / 10, 2, ',', '.') ?> sem juros</p>
+                    <h2 class="display-5 mb-1" style="color:var(--black);">
+                        R$ <?= number_format($produto['preco'], 2, ',', '.') ?>
+                    </h2>
+                    <p class="text-primary">
+                        em 10x R$ <?= number_format($produto['preco'] / 10, 2, ',', '.') ?> sem juros
+                    </p>
                 </div>
+
                 <div class="caracteristicas-produto mb-4">
                     <?php if (!empty($produto['cor'])): ?>
-                        <p class="mb-1"><strong class="fw-semibold">Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
+                        <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
                     <?php endif; ?>
                     <?php if (!empty($produto['armazenamento'])): ?>
-                        <p class="mb-1"><strong class="fw-semibold">Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
+                        <p><strong>Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
                     <?php endif; ?>
                 </div>
+
                 <div class="sobre-o-produto border-top pt-3">
                     <h3 class="h5">O que você precisa saber sobre este produto</h3>
                     <ul class="list-unstyled mt-2 text-muted">
@@ -121,18 +151,23 @@ try {
             </div>
         </div>
 
-        <!-- Coluna de compra e vendedor permanece igual -->
+        <!-- COMPRA E VENDEDOR -->
         <div class="col-md-3">
             <div class="compra-info-vendedor d-flex flex-column gap-3">
                 <div class="card-compra border rounded p-3 bg-white">
-                    <p class="fw-semibold mb-2 ">Estoque disponível</p> 
-                    <p class="text-muted small">Quantidade: <?= htmlspecialchars($produto['quantidade']) ?> unidade(s)</p>
+                    <p class="fw-semibold mb-2">Estoque disponível</p>
+                    <p class="text-muted small">
+                        Quantidade: <?= htmlspecialchars($produto['quantidade_disponivel']) ?> unidade(s)
+                    </p>
                     <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn ">Comprar agora</button>
-                        <button class="cart-button text-center">adicionar ao carrinho</button>
+                        <button class="purple-btn">Comprar agora</button>
+                        <button class="cart-button text-center">Adicionar ao carrinho</button>
                     </div>
-                    <p class="small text-muted mt-3">Compra Garantida, receba o produto que está esperando ou devolvemos o dinheiro.</p>
+                    <p class="small text-muted mt-3">
+                        Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
+                    </p>
                 </div>
+
                 <div class="card-vendedor border rounded p-3 bg-white">
                     <h3 class="h6 fw-semibold">Informações sobre o vendedor</h3>
                     <p class="small my-1">Localização: São Paulo</p>
@@ -141,8 +176,9 @@ try {
             </div>
         </div>
 
+        <!-- DESCRIÇÃO COMPLETA -->
         <div class="col-12">
-             <div class="descricao-completa bg-white border rounded p-4 mt-2">
+            <div class="descricao-completa bg-white border rounded p-4 mt-2">
                 <h2 class="h4">Descrição</h2>
                 <p class="text-muted mt-3"><?= nl2br(htmlspecialchars($produto['descricao'])) ?></p>
             </div>
