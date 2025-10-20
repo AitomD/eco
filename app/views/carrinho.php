@@ -4,6 +4,9 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Incluir o controlador do carrinho
+require_once __DIR__ . '/../controller/CarrinhoController.php';
+
 // Verificar se o usuário está logado
 $isLoggedIn = isset($_SESSION['user_id']);
 
@@ -13,7 +16,7 @@ $totalCarrinho = CarrinhoController::calcularTotal();
 $totalItens = CarrinhoController::contarItens();
 ?>
 
-<div class="container mt-5 pt-5">
+<div class="container mt-5 pt-5 carrinho-container">
     <div class="row">
         <div class="col-12">
             <h2 class="text-white mb-4">
@@ -204,26 +207,27 @@ $totalItens = CarrinhoController::contarItens();
 }
 
 .quantidade-input {
-    background-color: #2d2d2d;
-    border-color: #555;
-    color: white;
+    background-color: #2d2d2d !important;
+    border-color: #555 !important;
+    color: white !important;
 }
 
 .quantidade-input:focus {
-    background-color: #2d2d2d;
-    border-color: var(--pmain);
-    color: white;
-    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25);
+    background-color: #2d2d2d !important;
+    border-color: #610094 !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25) !important;
 }
 
 .btn-outline-secondary {
-    border-color: #555;
-    color: #adb5bd;
+    border-color: #555 !important;
+    color: #adb5bd !important;
 }
 
 .btn-outline-secondary:hover {
-    background-color: var(--pmain);
-    border-color: var(--pmain);
+    background-color: #610094 !important;
+    border-color: #610094 !important;
+    color: white !important;
 }
 
 .card {
@@ -231,7 +235,16 @@ $totalItens = CarrinhoController::contarItens();
 }
 
 .badge {
-    background-color: var(--pmain) !important;
+    background-color: #610094 !important;
+}
+
+.carrinho-container .card {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+}
+
+.carrinho-container .text-white {
+    color: white !important;
 }
 </style>
 
@@ -314,14 +327,37 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function atualizarItem(id, quantidade) {
-        document.getElementById('update-id').value = id;
-        document.getElementById('update-quantidade').value = quantidade;
-        document.getElementById('form-atualizar').submit();
+        try {
+            const updateForm = document.getElementById('form-atualizar');
+            const updateId = document.getElementById('update-id');
+            const updateQuantidade = document.getElementById('update-quantidade');
+            
+            if (updateForm && updateId && updateQuantidade) {
+                updateId.value = id;
+                updateQuantidade.value = quantidade;
+                updateForm.submit();
+            } else {
+                console.error('Elementos do formulário de atualização não encontrados');
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar item:', error);
+        }
     }
 
     function removerItem(id) {
-        document.getElementById('remove-id').value = id;
-        document.getElementById('form-remover').submit();
+        try {
+            const removeForm = document.getElementById('form-remover');
+            const removeId = document.getElementById('remove-id');
+            
+            if (removeForm && removeId) {
+                removeId.value = id;
+                removeForm.submit();
+            } else {
+                console.error('Elementos do formulário de remoção não encontrados');
+            }
+        } catch (error) {
+            console.error('Erro ao remover item:', error);
+        }
     }
 });
 </script>

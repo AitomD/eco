@@ -20,9 +20,10 @@ class CarrinhoManager {
         });
 
         // Eventos específicos da página do carrinho
-        if (window.location.href.includes('carrinho')) {
-            this.bindCartPageEvents();
-        }
+        // Comentado para evitar conflito com o JavaScript da página carrinho.php
+        // if (window.location.href.includes('carrinho')) {
+        //     this.bindCartPageEvents();
+        // }
     }
 
     bindCartPageEvents() {
@@ -101,10 +102,12 @@ class CarrinhoManager {
     handleAddToCart(button) {
         // Obter dados do produto
         const productCard = button.closest('.card, .product-card');
-        const productId = productCard.dataset.id || Math.random().toString(36).substr(2, 9);
-        const productName = productCard.querySelector('.card-title, h6').textContent.trim();
-        const productPrice = this.extractPrice(productCard.querySelector('.card-price, .price'));
-        const productImage = productCard.querySelector('img').src;
+        
+        // Tentar obter dados dos atributos data- primeiro
+        let productId = button.dataset.id || productCard.dataset.id || Math.random().toString(36).substr(2, 9);
+        let productName = button.dataset.nome || productCard.querySelector('.card-title, h6').textContent.trim();
+        let productPrice = button.dataset.preco || this.extractPrice(productCard.querySelector('.card-price, .price'));
+        let productImage = button.dataset.imagem || productCard.querySelector('img').src;
 
         // Criar formulário para enviar dados
         const form = document.createElement('form');
@@ -138,10 +141,26 @@ class CarrinhoManager {
 
     extractPrice(element) {
         if (!element) return 0;
-        const priceText = element.textContent
-            .replace(/[R$\s]/g, '')  // Remove R$, espaços
-            .replace(/\./g, '')      // Remove pontos de milhares
-            .replace(',', '.');      // Substitui vírgula por ponto decimal
+        
+        let priceText = element.textContent;
+        
+        // Se não encontrou preço, tenta procurar em outros elementos
+        if (!priceText || !priceText.includes('R$')) {
+            const priceElements = element.closest('.card').querySelectorAll('.card-text');
+            for (let el of priceElements) {
+                if (el.textContent.includes('R$') || el.textContent.includes('Preço:')) {
+                    priceText = el.textContent;
+                    break;
+                }
+            }
+        }
+        
+        // Extrair apenas os números e formatação de preço
+        priceText = priceText
+            .replace(/[^\d,\.]/g, '')  // Remove tudo exceto dígitos, vírgulas e pontos
+            .replace(/\./g, '')        // Remove pontos de milhares
+            .replace(',', '.');        // Substitui vírgula por ponto decimal
+            
         return parseFloat(priceText) || 0;
     }
 
