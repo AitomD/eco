@@ -422,6 +422,7 @@ class Auth {
             // Dados de endereço (opcionais)
             $cep = trim($_POST['cep'] ?? '');
             $endereco = trim($_POST['endereco'] ?? '');
+            $numero = trim($_POST['numero'] ?? '');
             $complemento = trim($_POST['complemento'] ?? '');
             $bairro = trim($_POST['bairro'] ?? '');
             $cidade = trim($_POST['cidade'] ?? '');
@@ -460,13 +461,16 @@ class Auth {
             }
 
             // Validar campos de endereço se algum foi preenchido
-            $hasAddressData = !empty($cep) || !empty($endereco) || !empty($bairro) || !empty($cidade) || !empty($estado);
+            $hasAddressData = !empty($cep) || !empty($endereco) || !empty($numero) || !empty($bairro) || !empty($cidade) || !empty($estado);
             if ($hasAddressData) {
                 if (empty($cep)) {
                     $errors[] = 'CEP é obrigatório quando endereço é informado';
                 }
                 if (empty($endereco)) {
                     $errors[] = 'Endereço é obrigatório quando dados de endereço são informados';
+                }
+                if (empty($numero)) {
+                    $errors[] = 'Número é obrigatório quando endereço é informado';
                 }
                 if (empty($bairro)) {
                     $errors[] = 'Bairro é obrigatório quando endereço é informado';
@@ -524,7 +528,7 @@ class Auth {
                 
                 // Salvar endereço se foi informado
                 if ($hasAddressData) {
-                    $this->saveUserAddress($userId, $cep, $endereco, $complemento, $bairro, $cidade, $estado);
+                    $this->saveUserAddress($userId, $cep, $endereco, $numero, $complemento, $bairro, $cidade, $estado);
                 }
                 
                 $this->createSession($userData);
@@ -691,16 +695,17 @@ class Auth {
     // MÉTODO PARA SALVAR ENDEREÇO
     // ================================
     
-    private function saveUserAddress($userId, $cep, $endereco, $complemento, $bairro, $cidade, $estado) {
+    private function saveUserAddress($userId, $cep, $endereco, $numero, $complemento, $bairro, $cidade, $estado) {
         try {
             $stmt = $this->pdo->prepare("
-                INSERT INTO endereco (id_user, endereco, cep, complemento, bairro, cidade, estado) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO endereco (id_user, endereco, numero, cep, complemento, bairro, cidade, estado) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             
             return $stmt->execute([
                 $userId,
                 $endereco,
+                $numero,
                 $cep,
                 $complemento,
                 $bairro,

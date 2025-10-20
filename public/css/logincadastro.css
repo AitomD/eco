@@ -330,3 +330,161 @@ body.auth-page main {
         padding: 0.8rem;
     }
 }
+
+/* Estilos para o sistema de etapas */
+.auth-page .steps-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.auth-page .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 200px;
+}
+
+.auth-page .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 60%;
+    width: 80%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: background 0.3s ease;
+}
+
+.auth-page .step.active:not(:last-child)::after,
+.auth-page .step.completed:not(:last-child)::after {
+    background: #610094;
+}
+
+.auth-page .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.auth-page .step.active .step-number {
+    background: #610094;
+    border-color: #610094;
+    color: white;
+    transform: scale(1.1);
+}
+
+.auth-page .step.completed .step-number {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.auth-page .step.completed .step-number::before {
+    content: '✓';
+    font-size: 18px;
+}
+
+.auth-page .step-title {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.auth-page .step.active .step-title {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.auth-page .step.completed .step-title {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Estilos para as etapas do formulário */
+.auth-page .form-step {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.auth-page .form-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para os botões de ação */
+.auth-page .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+
+.auth-page .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.auth-page .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Responsividade para as etapas */
+@media (max-width: 768px) {
+    .auth-page .steps-indicator {
+        margin-bottom: 1.5rem;
+    }
+    
+    .auth-page .step-title {
+        font-size: 0.75rem;
+    }
+    
+    .auth-page .step-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .auth-page .form-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .auth-page .form-actions .btn {
+        width: 100%;
+    }
+}
