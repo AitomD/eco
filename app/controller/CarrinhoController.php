@@ -1,6 +1,12 @@
 <?php
 // app/controller/CarrinhoController.php
 // Controlador para gerenciar operações do carrinho
+
+// Iniciar sessão apenas se não estiver ativa
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 class CarrinhoController {
     
     public static function init() {

@@ -7,7 +7,7 @@ body.auth-page {
 
 /* Centralização apenas do conteúdo principal para não afetar navbar/footer */
 body.auth-page main {
-    min-height: 100vh; /* header/footer ocultos em páginas de auth */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;

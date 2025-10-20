@@ -364,7 +364,9 @@ $cartCount = CarrinhoController::contarItens();
     <?php endif; ?>
     <script src="js/cupomalerta.js"></script>
     <script src="js/carrinho.js"></script>
+    <?php if ($pagina === 'paginaRetirada'): ?>
     <script src="js/modalEndereco.js"></script>
+    <?php endif; ?>
 </body>
 
 </html>

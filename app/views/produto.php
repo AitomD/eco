@@ -10,6 +10,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         crossorigin="anonymous"
         referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../public/css/produto.css">
 </head>
 
@@ -111,19 +112,26 @@ document.addEventListener('DOMContentLoaded', () => {
     produtos.forEach(p => {
       const card = document.createElement('div');
       card.classList.add('card', 'm-6', 'col-sm-3'); // 4 cards por linha
+      card.dataset.id = p.id_produto;
       card.innerHTML = `
   <img src="${p.imagem}" class="card-img-top" alt="${p.nome}">
   <div class="card-body">
     <h5 class="card-title">${p.nome}</h5>
     <p class="card-text">Marca: ${p.marca}</p>
     <p class="card-text">Categoria: ${p.categoria}</p>
-    <p class="card-text card-price">Preço: R$ ${p.preco}</p>
+    <p class="card-text card-price">R$ ${p.preco}</p>
     <p class="card-text">Estoque: ${p.quantidade_disponivel}</p>
     <div class="d-flex justify-content-between mt-3">
-      <button class="btn btn-primary btn-sm btn-add-cart"><i class="bi bi-cart2"></i> Carrinho</button>
+      <button class="btn btn-primary btn-sm btn-add-cart" 
+              data-id="${p.id_produto}" 
+              data-nome="${p.nome}" 
+              data-preco="${p.preco}" 
+              data-imagem="${p.imagem}">
+        <i class="bi bi-cart2"></i> Carrinho
+      </button>
       <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn btn-outline-secondary btn-sm btn-detalhes">
-  <i class="fa-solid fa-clipboard"></i> Ficha Técnica
-</a>
+        <i class="fa-solid fa-clipboard"></i> Ficha Técnica
+      </a>
     </div>
   </div>
 `;
@@ -154,8 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-
-
+<script src="../public/js/carrinho.js"></script>
 
 </body>
 
