@@ -101,17 +101,6 @@ $cartCount = CarrinhoController::contarItens();
 
                 <!-- DIV CENTRALIZADA -->
                 <div class="central-nav-content text-center">
-                    <div>
-                        <form class="d-flex" role="search" id="search">
-                            <div class="input-group">
-                                <span class="input-group-text" id="search-icon">
-                                    <i class="bi bi-search"></i>
-                                </span>
-                                <input type="search" class="form-control" placeholder="Search" aria-label="Search"
-                                    id="searchbar">
-                            </div>
-                        </form>
-                    </div>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mb-2 mb-lg-0 ">

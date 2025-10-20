@@ -28,7 +28,6 @@ body {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #3f0071;
 }
-
   .navbar-brand img {
     width: 150px !important;
     height: auto !important;
@@ -97,37 +96,6 @@ body {
     border-color: rgba(255, 255, 255, 0.2);
   }
 
-  #search {
-    display: none !important;
-  }
-}
-
-/* -- Centralização do Search -- */
-
-.central-nav-content {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: block;
-}
-
-.central-nav-content {
-  position: absolute;
-  left: 50%;
-}
-
-/* -- Search Bar -- */
-
-#searchbar {
-  width: 520px;
-}
-
-/* -- Ul navbar -- */
-
-.navbar-nav {
-  transform: translateX(20%);
 }
 
 /* -- Btn Nav -- */
