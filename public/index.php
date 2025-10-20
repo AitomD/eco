@@ -21,7 +21,10 @@ $paginasPermitidas = [
     'cupons',
     'carrinho',
     '404',
-    'itemCompra'
+    'itemCompra',
+    'paginaSeguro',
+    'paginaRetirada',
+    'paginaCompra'
 ];
 
 // Página padrão
@@ -361,6 +364,7 @@ $cartCount = CarrinhoController::contarItens();
     <?php endif; ?>
     <script src="js/cupomalerta.js"></script>
     <script src="js/carrinho.js"></script>
+    <script src="js/modalEndereco.js"></script>
 </body>
 
 </html>

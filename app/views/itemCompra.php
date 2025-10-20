@@ -96,30 +96,52 @@ try {
                     <h2 class="display-5 mb-1" style="color:var(--black);">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></h2>
                     <p class="text-primary">em 10x R$ <?= number_format($produto['preco'] / 10, 2, ',', '.') ?> sem juros</p>
                 </div>
-                <div class="caracteristicas-produto mb-4">
-                    <?php if (!empty($produto['cor'])): ?>
-                        <p class="mb-1"><strong class="fw-semibold">Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
-                    <?php endif; ?>
-                    <?php if (!empty($produto['armazenamento'])): ?>
-                        <p class="mb-1"><strong class="fw-semibold">Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
-                    <?php endif; ?>
-                </div>
-                <div class="sobre-o-produto border-top pt-3">
-                    <h3 class="h5">O que você precisa saber sobre este produto</h3>
-                    <ul class="list-unstyled mt-2 text-muted">
-                        <?php if (!empty($produto['processador'])): ?>
-                            <li>• Processador: <?= htmlspecialchars($produto['processador']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['ram'])): ?>
-                            <li>• Memória RAM: <?= htmlspecialchars($produto['ram']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['placa_video'])): ?>
-                            <li>• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
+        <div class="sobre-o-produto border-top pt-3">
+            <h5 style="color:var(--black);" ><strong>Informarções do Produto:</strong></h5>
+            <ul class="list-unstyled mt-2 text-muted">
+                
+                <?php if (!empty($produto['processador'])): ?>
+                    
+                        <li style="color:var(--black);">• Processador: <?= htmlspecialchars($produto['processador']) ?></li>
+                    
+                <?php endif; ?>
+                
+                <?php if (!empty($produto['ram'])): ?>
+                   
+                        <li style="color:var(--black);">• Memória RAM: <?= htmlspecialchars($produto['ram']) ?></li>
+                    
+                <?php endif; ?>
+                
+                <?php if (!empty($produto['placa_video'])): ?>
+                    
+                        <li  style="color:var(--black);">• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
+                    
+                <?php endif; ?>
+                
+                
+                <?php if (!empty($produto['armazenamento'])): ?>
+                    
+                        <li  style="color:var(--black);">• Armazenamento: <?= htmlspecialchars($produto['armazenamento']) ?></li>
+                    
+                <?php endif; ?>
+                    
+                <?php if (!empty($produto['fonte'])): ?>
+                    
+                        <li  style="color:var(--black);">• Fonte: <?= htmlspecialchars($produto['fonte']) ?></li>
+                    
+                <?php endif; ?>
+
+                <?php if (!empty($produto['placa_mae'])): ?>
+                    
+                        <li  style="color:var(--black);">• Placa Mãe: <?= htmlspecialchars($produto['placa_mae']) ?></li>
+                    
+                <?php endif; ?>
+        
+                </ul>
         </div>
+        </div>
+</div>
+       
 
         <!-- Coluna de compra e vendedor permanece igual -->
         <div class="col-md-3">
@@ -127,11 +149,14 @@ try {
                 <div class="card-compra border rounded p-3 bg-white">
                     <p class="fw-semibold mb-2 ">Estoque disponível</p> 
                     <p class="text-muted small">Quantidade: <?= htmlspecialchars($produto['quantidade']) ?> unidade(s)</p>
-                    <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn ">Comprar agora</button>
-                        <button class="cart-button text-center">adicionar ao carrinho</button>
+                    <div class="d-grid gap-3 mt-3">
+                        <button class="btn-product ">Comprar agora</button>
+                        <button class="btn-add-cart btn-product text-center">adicionar ao carrinho</button>
                     </div>
-                    <p class="small text-muted mt-3">Compra Garantida, receba o produto que está esperando ou devolvemos o dinheiro.</p>
+                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-arrow-return-left mr-1 text-primary"></i><span class="text-primary"> Devolução grátis</span>. Você tem 30 dias a partir da data de recebimento.</p>
+                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-shield-check mr-1 text-primary"></i><span  class="text-primary"> Compra Garantida</span>, receba o produto que está esperando ou devolvemos o dinheiro.</p>
+                    <p class="small fs-6 text-muted mt-3"><i class="bi bi-award mr-1 text-primary"></i> 12 meses de garantia de fábrica.</p>
+                    
                 </div>
                 <div class="card-vendedor border rounded p-3 bg-white">
                     <h3 class="h6 fw-semibold">Informações sobre o vendedor</h3>
