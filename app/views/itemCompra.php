@@ -150,6 +150,8 @@ try {
                 </div>
             </div>
         </div>
+</div>
+       
 
         <!-- COMPRA E VENDEDOR -->
         <div class="col-md-3">
