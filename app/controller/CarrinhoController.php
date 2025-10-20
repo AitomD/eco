@@ -1,7 +1,6 @@
 <?php
 // app/controller/CarrinhoController.php
 // Controlador para gerenciar operações do carrinho
-
 class CarrinhoController {
     
     public static function init() {
@@ -26,7 +25,7 @@ class CarrinhoController {
             ];
         }
     }
-    
+
     public static function removerDoCarrinho($id) {
         self::init();
         
