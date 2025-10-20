@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <h5 class="card-title">${p.nome}</h5>
     <p class="card-text">Marca: ${p.marca}</p>
     <p class="card-text">Categoria: ${p.categoria}</p>
-    <p class="card-text">Preço: R$ ${p.preco}</p>
+    <p class="card-text card-price">Preço: R$ ${p.preco}</p>
     <p class="card-text">Estoque: ${p.quantidade_disponivel}</p>
     <div class="d-flex justify-content-between mt-3">
       <button class="btn btn-primary btn-sm btn-add-cart"><i class="bi bi-cart2"></i> Carrinho</button>
