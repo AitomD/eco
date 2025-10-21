@@ -24,7 +24,8 @@ $paginasPermitidas = [
     'itemCompra',
     'paginaSeguro',
     'paginaRetirada',
-    'paginaCompra'
+    'paginaCompra',
+    'meuperfil'
 ];
 
 // Página padrão
