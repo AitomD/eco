@@ -181,7 +181,6 @@ class Auth {
             $password = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirmPassword'] ?? '';
             $birthDate = $_POST['birthDate'] ?? '';
-            $gender = $_POST['gender'] ?? null;
             $terms = isset($_POST['terms']);
 
             $errors = [];
@@ -232,20 +231,18 @@ class Auth {
                 'email' => $email,
                 'senha' => password_hash($password, PASSWORD_DEFAULT),
                 'is_admin' => false,
-                'genero' => in_array($gender, ['masculino', 'feminino', 'outro']) ? $gender : null,
                 'data_nascimento' => $birthDate
             ];
-
-
 
             if ($this->emailExists($email)) {
                 echo json_encode(['success' => false, 'message' => 'Este email já está cadastrado']);
                 return;
             }
 
+            // INSERT sem o campo genero
             $stmt = $this->pdo->prepare("
-                INSERT INTO user (nome, email, senha, is_admin, genero, data_nascimento) 
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO user (nome, email, senha, is_admin, data_nascimento) 
+                VALUES (?, ?, ?, ?, ?)
             ");
             
             $result = $stmt->execute([
@@ -253,16 +250,13 @@ class Auth {
                 $userData['email'],
                 $userData['senha'],
                 $userData['is_admin'] ? 1 : 0,
-                $userData['genero'],
                 $userData['data_nascimento']
             ]);
 
             if ($result) {
                 $userId = $this->pdo->lastInsertId();
                 $userData['id_user'] = $userId;
-                
 
-                
                 $this->createSession($userData);
 
                 echo json_encode([
@@ -345,9 +339,6 @@ class Auth {
             echo json_encode(['success' => false, 'message' => 'Erro inesperado. Tente novamente.']);
         }
     }
-
-
-    
 
 }
 
