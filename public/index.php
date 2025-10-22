@@ -5,11 +5,16 @@ session_start();
 // Incluir sistema de autenticação
 require_once __DIR__ . '/../app/core/user.php';
 
-// Incluir controlador do carrinho
+// Incluir controladores
 require_once __DIR__ . '/../app/controller/CarrinhoController.php';
+require_once __DIR__ . '/../app/controller/cupons-carrinho.php';
 
-// Processar ações do carrinho antes de qualquer output
+// Processar ações do carrinho e cupons antes de qualquer output
 CarrinhoController::processarAcao();
+CuponsCarrinhoController::processarAcao();
+
+// Processar requisições AJAX de cupons
+CuponsCarrinhoController::aplicarCupomAjax();
 
 // Lista de páginas permitidas
 $paginasPermitidas = [
