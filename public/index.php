@@ -155,7 +155,7 @@ $cartCount = CarrinhoController::contarItens();
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
                                 <li>
-                                    <a class="dropdown-item text-light" href="#" style="border-bottom: 1px solid #3F0071;">
+                                    <a class="dropdown-item text-light" href="index.php?url=meuperfil" style="border-bottom: 1px solid #3F0071;">
                                         <i class="bi bi-person me-2"></i>Meu Perfil
                                     </a>
                                 </li>
