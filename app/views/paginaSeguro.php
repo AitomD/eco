@@ -17,7 +17,7 @@
 
                 <div class="d-flex align-items-center">
                     <input class="form-check-input me-3" type="radio" name="seguro-option" id="seguro-12">
-                    <span class="fw-bold text-ml-dark">12 meses de Garantia estendida</span>
+                    <span class="fw-bold text-ml-dark" data-seguro='12'>12 meses de Garantia estendida</span>
                 </div>
 
                 <div class="text-end">
@@ -32,7 +32,7 @@
             <label for="seguro-18" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0">
                 <div class="d-flex align-items-center">
                     <input class="form-check-input me-3" type="radio" name="seguro-option" id="seguro-18">
-                    <span class="fw-bold text-ml-dark">18 meses de Garantia estendida</span>
+                    <span class="fw-bold text-ml-dark" data-seguro="18">18 meses de Garantia estendida</span>
                 </div>
                 <div class="text-end">
                     <span class="fs-5 fw-bold text-ml-dark">R$ 463</span>
@@ -46,7 +46,7 @@
             <label for="seguro-24" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0">
                 <div class="d-flex align-items-center">
                     <input class="form-check-input me-3" type="radio" name="seguro-option" id="seguro-24">
-                    <span class="fw-bold text-ml-dark">24 meses de Garantia estendida</span>
+                    <span class="fw-bold text-ml-dark" data-seguro="24">24 meses de Garantia estendida</span>
                 </div>
                 <div class="text-end">
                     <span class="fs-5 fw-bold text-ml-dark">R$ 499</span>
@@ -68,5 +68,6 @@
             <a href="index.php?url=paginaRetirada"><button class="btn-product py-2">Prosseguir</button></a>
         </div>
     </section>
+
 
 </main>
