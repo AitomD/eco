@@ -4,8 +4,11 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Incluir o controlador do carrinho
+// Incluir os controladores
 require_once __DIR__ . '/../controller/CarrinhoController.php';
+require_once __DIR__ . '/../controller/cupons-carrinho.php';
+
+// Nota: Processamento de ações já foi feito no index.php
 
 // Verificar se o usuário está logado
 $isLoggedIn = isset($_SESSION['user_id']);
@@ -14,6 +17,11 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $itensCarrinho = CarrinhoController::getItens();
 $totalCarrinho = CarrinhoController::calcularTotal();
 $totalItens = CarrinhoController::contarItens();
+
+// Obter cupons e calcular valor final
+$cuponsDisponiveis = CuponsCarrinhoController::getCuponsDisponiveis();
+$cupomAplicado = CuponsCarrinhoController::getCupomAplicado();
+$valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 ?>
 
 <div class="container mt-5 pt-5 carrinho-container">
@@ -114,8 +122,21 @@ $totalItens = CarrinhoController::contarItens();
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Subtotal (<?= $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?>):</span>
-                            <span class="text-white">R$ <?= number_format($totalCarrinho, 2, ',', '.') ?></span>
+                            <span class="text-white">R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?></span>
                         </div>
+                        
+                        <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-success">
+                                    Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>):
+                                    <button class="btn btn-link btn-sm text-danger p-0 ms-2" onclick="removerCupom()" title="Remover cupom">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </span>
+                                <span class="text-success">-R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
+                            </div>
+                        <?php endif; ?>
+                        
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Frete:</span>
                             <span class="text-success">Grátis</span>
@@ -123,18 +144,49 @@ $totalItens = CarrinhoController::contarItens();
                         <hr class="border-secondary">
                         <div class="d-flex justify-content-between mb-4">
                             <span class="text-white fw-bold h5">Total:</span>
-                            <span class="text-white fw-bold h5">R$ <?= number_format($totalCarrinho, 2, ',', '.') ?></span>
+                            <span class="text-white fw-bold h5">R$ <?= number_format($valoresCarrinho['valor_final'], 2, ',', '.') ?></span>
                         </div>
                         
                         <!-- Cupom de desconto -->
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Código do cupom" id="cupom-input">
-                                <button class="btn btn-outline-secondary" type="button" id="aplicar-cupom">
-                                    Aplicar
-                                </button>
+                        <?php if (!$cupomAplicado): ?>
+                            <div class="mb-3">
+                                <form method="POST" id="form-cupom">
+                                    <input type="hidden" name="acao_cupom" value="aplicar">
+                                    <input type="hidden" name="valor_carrinho" value="<?= $totalCarrinho ?>">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="codigo_cupom" placeholder="Código do cupom" id="cupom-input" value="">
+                                        <button class="btn btn-outline-secondary" type="submit">
+                                            Aplicar
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
+                            
+                            <!-- Cupons disponíveis -->
+                            <?php if (!empty($cuponsDisponiveis)): ?>
+                                <div class="mb-3">
+                                    <button class="btn btn-link btn-sm text-info p-0" type="button" data-bs-toggle="collapse" data-bs-target="#cuponsDisponiveis">
+                                        <i class="bi bi-tag me-1"></i>Ver cupons disponíveis
+                                    </button>
+                                    <div class="collapse" id="cuponsDisponiveis">
+                                        <div class="mt-2">
+                                            <?php foreach (array_slice($cuponsDisponiveis, 0, 3) as $cupom): ?>
+                                                <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel" data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <small class="text-white fw-bold"><?= htmlspecialchars($cupom['codigo']) ?></small>
+                                                            <br>
+                                                            <small class="text-muted"><?= htmlspecialchars($cupom['descricao']) ?></small>
+                                                        </div>
+                                                        <button class="btn btn-outline-primary btn-sm aplicar-cupom-disponivel">Usar</button>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
 
                         <button class="btn btn-success w-100 btn-lg mb-3" id="finalizar-compra">
                             <i class="bi bi-credit-card me-2"></i>Finalizar Compra
@@ -197,6 +249,10 @@ $totalItens = CarrinhoController::contarItens();
     <input type="hidden" name="id" id="remove-id">
 </form>
 
+<form id="form-remover-cupom" method="POST" style="display: none;">
+    <input type="hidden" name="acao_cupom" value="remover">
+</form>
+
 <style>
 .item-carrinho {
     transition: all 0.3s ease;
@@ -245,6 +301,34 @@ $totalItens = CarrinhoController::contarItens();
 
 .carrinho-container .text-white {
     color: white !important;
+}
+
+.cupom-disponivel {
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cupom-disponivel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #610094 !important;
+}
+
+.aplicar-cupom-disponivel {
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.btn-link {
+    text-decoration: none !important;
+}
+
+.btn-link:hover {
+    text-decoration: underline !important;
 }
 </style>
 
@@ -317,13 +401,18 @@ document.addEventListener('DOMContentLoaded', function() {
         <?php endif; ?>
     });
 
-    // Aplicar cupom
-    document.getElementById('aplicar-cupom')?.addEventListener('click', function() {
-        const cupom = document.getElementById('cupom-input').value.trim();
-        if (cupom) {
-            // Implementar lógica de cupom
-            alert('Funcionalidade de cupom será implementada em breve!');
-        }
+    // Aplicar cupons disponíveis
+    document.querySelectorAll('.aplicar-cupom-disponivel').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const cupomDiv = this.closest('.cupom-disponivel');
+            const codigo = cupomDiv.dataset.codigo;
+            const cupomInput = document.getElementById('cupom-input');
+            
+            if (cupomInput) {
+                cupomInput.value = codigo;
+                document.getElementById('form-cupom').submit();
+            }
+        });
     });
 
     function atualizarItem(id, quantidade) {
@@ -360,4 +449,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Função global para remover cupom
+function removerCupom() {
+    document.getElementById('form-remover-cupom').submit();
+}
 </script>
