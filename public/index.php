@@ -25,7 +25,8 @@ $paginasPermitidas = [
     'paginaSeguro',
     'paginaRetirada',
     'paginaCompra',
-    'meuperfil'
+    'meuperfil',
+
 ];
 
 // Página padrão
@@ -159,23 +160,6 @@ $cartCount = CarrinhoController::contarItens();
                                         <i class="bi bi-person me-2"></i>Meu Perfil
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item text-light" href="#" style="border-bottom: 1px solid #3F0071;">
-                                        <i class="bi bi-bag me-2"></i>Meus Pedidos
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-light" href="#" style="border-bottom: 1px solid #3F0071;">
-                                        <i class="bi bi-heart me-2"></i>Lista de Desejos
-                                    </a>
-                                </li>
-                                <?php if ($userData['is_admin']): ?>
-                                <li>
-                                    <a class="dropdown-item text-warning" href="#" style="border-bottom: 1px solid #3F0071;">
-                                        <i class="bi bi-gear me-2"></i>Administração
-                                    </a>
-                                </li>
-                                <?php endif; ?>
                                 <li>
                                     <a class="dropdown-item text-danger" href="#" id="logoutBtn">
                                         <i class="bi bi-box-arrow-right me-2"></i>Sair
