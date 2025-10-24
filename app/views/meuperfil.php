@@ -1,14 +1,15 @@
 <?php
 // 1. **VERIFICAR SESSÃO** (Obrigatório para sistemas logados)
-// Certifique-se de que session_start() está no topo do seu script principal (ou index.php)
+// session_start() deve estar no topo do seu script principal (ex: index.php)
+// Exemplo:
 // session_start(); 
 
 // 2. **INCLUSÃO DA CLASSE**
-// Ajuste o caminho conforme a sua estrutura de diretórios.
-require_once "../app/model/Dadosuser.php"; // Assumindo que a classe Dadosuser está neste arquivo
+require_once "../app/model/Dadosuser.php";
 
 // 3. **OBTER O ID DO USUÁRIO**
 // Em um sistema logado, o ID do usuário deve vir da sessão.
+// Se você está usando uma variável diferente na sessão, ajuste aqui.
 if (isset($_SESSION['user_id'])) {
     $id_user = (int) $_SESSION['user_id'];
 } else {
@@ -21,54 +22,26 @@ if (isset($_SESSION['user_id'])) {
 $dadosUser = new Dadosuser();
 
 // 5. **CHAMAR A FUNÇÃO DE BUSCA**
-// Usamos a função buscarUsuarioEEnderecos que retorna uma lista (array de arrays)
 $userDataList = $dadosUser->buscarUsuarioEEnderecos($id_user);
 
 // 6. **VALIDAR OS RESULTADOS E PREPARAR AS VARIÁVEIS**
 if (!$userDataList || empty($userDataList)) {
-    // Falha na query ou usuário não encontrado
     die("Erro ao carregar o perfil ou usuário não encontrado.");
 }
 
-// O primeiro elemento da lista contém os dados do usuário e o primeiro endereço
+// O primeiro elemento da lista contém os dados do usuário
 $userData = $userDataList[0];
 
-// Os endereços são todas as linhas (ou você pode processar para agrupar)
-// Neste caso, vamos iterar sobre $userDataList para os endereços, pois ela já está pronta.
-
-// Renomeando para clareza no HTML, caso a chave do BD seja diferente do HTML:
-// $nome = $userData['nome'];
-// $email = $userData['email'];
-// $nascimento = $userData['data_nascimento'];
-
-// Se precisar usar a chave is_admin:
-// $isAdmin = $userData['is_admin'];
-
-?>
-
-<?php
-// No topo do meuperfil.php, após session_start();
-
-// Exibe mensagem de sucesso
-if (isset($_SESSION['mensagem_sucesso'])): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php echo $_SESSION['mensagem_sucesso']; unset($_SESSION['mensagem_sucesso']); ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php endif; 
-
-// Exibe mensagem de erro
-if (isset($_SESSION['mensagem_erro'])): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Erro:</strong> <?php echo $_SESSION['mensagem_erro']; unset($_SESSION['mensagem_erro']); ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php endif; 
-
-// ... restante do seu código PHP para buscar os dados ...
+// 7. Função para exibir mensagens na UI (substitui o alert)
+function showMessage($type, $text) {
+    echo "<div id='statusMessage' class='alert alert-{$type} alert-dismissible fade show' role='alert'>";
+    echo $text;
+    echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+}
 ?>
 
 <style>
+    /* Estilos existentes */
     .list-group-item-action {
         color: var(--black);
         font-weight: 500;
@@ -90,9 +63,32 @@ if (isset($_SESSION['mensagem_erro'])): ?>
         border-left: 3px solid var(--pmain);
         box-shadow: 3px 0 5px -5px rgba(0, 0, 0, 0.1);
     }
+    
+    /* Novo estilo para a área de mensagem */
+    #messageContainer {
+        min-height: 50px; /* Garante espaço para a mensagem */
+    }
 </style>
 
 <main class="container py-4">
+
+    <!-- Container para exibir mensagens de status (sucesso/erro) via PHP ou AJAX -->
+    <div id="messageContainer" class="mb-4">
+        <?php
+        // Exibe mensagem de sucesso
+        if (isset($_SESSION['mensagem_sucesso'])) {
+            showMessage('success', $_SESSION['mensagem_sucesso']);
+            unset($_SESSION['mensagem_sucesso']);
+        }
+
+        // Exibe mensagem de erro
+        if (isset($_SESSION['mensagem_erro'])) {
+            showMessage('danger', "<strong>Erro:</strong> " . $_SESSION['mensagem_erro']);
+            unset($_SESSION['mensagem_erro']);
+        }
+        ?>
+    </div>
+
 
     <div class="row g-4">
 
@@ -181,6 +177,7 @@ if (isset($_SESSION['mensagem_erro'])): ?>
 
             </div>
         </div>
+        <!-- INÍCIO DO MODAL -->
         <div class="modal p-4 fade" id="modalEditarDados" tabindex="-1" aria-labelledby="modalEditarDadosLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -190,8 +187,10 @@ if (isset($_SESSION['mensagem_erro'])): ?>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <form action="validarperfil.php" method="POST">
+                    <form id="formAtualizarDados">
                         <div class="modal-body">
+                            <!-- CAMPO OCULTO CRUCIAL ADICIONADO AQUI -->
+                            <input type="hidden" name="id_user" value="<?php echo htmlspecialchars($id_user); ?>">
 
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome Completo</label>
@@ -221,15 +220,94 @@ if (isset($_SESSION['mensagem_erro'])): ?>
                                 <label for="senha_confirmar" class="form-label">Confirmar Nova Senha</label>
                                 <input type="password" class="form-control" id="senha_confirmar" name="senha_confirmar">
                             </div>
-
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-product">Salvar Alterações</button>
+                            <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
+        <!-- FIM DO MODAL -->
     </div>
 </main>
+
+<!-- Script AJAX e jQuery -->
+<script>
+// Função utilitária para mostrar mensagens (substitui alert)
+function displayMessage(type, message) {
+    // Remove qualquer mensagem anterior
+    $('#messageContainer').empty();
+    // Cria e insere a nova mensagem no container principal
+    var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+        message +
+        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+    $('#messageContainer').append(alertHtml);
+
+    // Rola para o topo para garantir que o usuário veja a mensagem
+    $('html, body').animate({
+        scrollTop: 0
+    }, 'fast');
+}
+
+$(document).ready(function () {
+    // Certifique-se de que a tag <form> no seu HTML tenha id="formAtualizarDados"
+    $('#formAtualizarDados').submit(function (e) {
+        // ESSA É A LINHA CRUCIAL. Ela impede o envio GET padrão que você está vendo na URL.
+        e.preventDefault(); 
+
+        // 1. Validação básica de senha no lado do cliente
+        var senhaNova = $('#senha_nova').val();
+        var senhaConfirmar = $('#senha_confirmar').val();
+
+        if (senhaNova !== senhaConfirmar) {
+            displayMessage('danger', 'A nova senha e a confirmação não coincidem!');
+            // Fechar o modal aqui se a senha for inválida
+            return; // Interrompe a submissão
+        }
+        
+        // Desabilitar o botão e mostrar loading
+        var submitBtn = $(this).find('button[type="submit"]');
+        submitBtn.attr('disabled', true).text('Salvando...');
+
+        // 2. Envio dos dados via AJAX
+        $.ajax({
+            type: "POST", // Método de envio
+            // ATENÇÃO: Verifique se este caminho está correto em relação ao index.php
+            url: "../app/model/atualizar_perfil.php", 
+            // O método .serialize() envia todos os campos do formulário (id_user, nome, email, data_nascimento, senha_nova, etc.)
+            // que correspondem às colunas da tabela 'user' (nome, email, data_nascimento, senha, etc.)
+            data: $(this).serialize(), 
+            dataType: "json", // Espera uma resposta JSON do servidor
+            success: function (response) {
+                // Reabilita o botão
+                submitBtn.attr('disabled', false).text('Salvar Alterações');
+
+                // 3. Tratamento da resposta do servidor
+                if (response.success) {
+                    displayMessage('success', response.message);
+                    // Fechar o modal 
+                    $('#modalEditarDados').modal('hide'); // Assumindo este é o ID do seu modal
+                    // RECARREGAR A PÁGINA para atualizar os dados visíveis
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500); 
+                } else {
+                    displayMessage('danger', 'Erro ao atualizar: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Reabilita o botão
+                submitBtn.attr('disabled', false).text('Salvar Alterações');
+                // Erro de comunicação ou caminho/resposta inválida do servidor
+                displayMessage('danger', 'Ocorreu um erro na comunicação com o servidor. Verifique se o jQuery está carregado.');
+                console.error("AJAX Error:", status, error, xhr.responseText);
+            }
+        });
+    });
+});
+
+</script>
