@@ -5,11 +5,16 @@ session_start();
 // Incluir sistema de autenticação
 require_once __DIR__ . '/../app/core/user.php';
 
-// Incluir controlador do carrinho
+// Incluir controladores
 require_once __DIR__ . '/../app/controller/CarrinhoController.php';
+require_once __DIR__ . '/../app/controller/cupons-carrinho.php';
 
-// Processar ações do carrinho antes de qualquer output
+// Processar ações do carrinho e cupons antes de qualquer output
 CarrinhoController::processarAcao();
+CuponsCarrinhoController::processarAcao();
+
+// Processar requisições AJAX de cupons
+CuponsCarrinhoController::aplicarCupomAjax();
 
 // Lista de páginas permitidas
 $paginasPermitidas = [
@@ -26,7 +31,7 @@ $paginasPermitidas = [
     'paginaRetirada',
     'paginaCompra',
     'meuperfil',
-    
+    'dashboard'
 ];
 
 // Página padrão
@@ -119,14 +124,7 @@ $cartCount = CarrinhoController::contarItens();
                                 <a class="nav-link p-btn mx-1" href="index.php?url=cupons">Cupons</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle p-btn mx-1" href="#">Categorias</a>
-
-                                <ul class="dropdown-menu" style="background-color: #09090A;">
-                                    <li><a class="dropdown-item p-btn" href="index.php?url=produto">Computadores</a></li>
-                                    <li><a class="dropdown-item p-btn" href="index.php?url=produto">Notebooks</a></li>
-                                    <li><a class="dropdown-item p-btn" href="index.php?url=produto">Smartphones</a></li>
-                                    <li><a class="dropdown-item p-btn" href="index.php?url=produto">SmartTV</a></li>
-                                </ul>
+                                <a class="nav-link p-btn mx-1" href="index.php?url=produto">Produtos</a>
                             </li>
                         </ul>
                     </div>
@@ -254,6 +252,7 @@ $cartCount = CarrinhoController::contarItens();
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         AOS.init(); // Inicializa as animações
     </script>

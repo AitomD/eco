@@ -30,6 +30,9 @@ class CarrinhoController {
                 'quantidade' => intval($quantidade)
             ];
         }
+        
+        // Atualizar cupom com novo valor do carrinho
+        self::atualizarCupons();
     }
 
     public static function removerDoCarrinho($id) {
@@ -38,6 +41,9 @@ class CarrinhoController {
         if (isset($_SESSION['carrinho'][$id])) {
             unset($_SESSION['carrinho'][$id]);
         }
+        
+        // Atualizar cupom com novo valor do carrinho
+        self::atualizarCupons();
     }
     
     public static function atualizarQuantidade($id, $quantidade) {
@@ -51,10 +57,16 @@ class CarrinhoController {
                 $_SESSION['carrinho'][$id]['quantidade'] = $quantidade;
             }
         }
+        
+        // Atualizar cupom com novo valor do carrinho
+        self::atualizarCupons();
     }
     
     public static function limparCarrinho() {
         $_SESSION['carrinho'] = [];
+        
+        // Atualizar cupom (vai remover se carrinho vazio)
+        self::atualizarCupons();
     }
     
     public static function calcularTotal() {
@@ -115,6 +127,17 @@ class CarrinhoController {
             // Redirecionar para evitar resubmissão
             header('Location: index.php?url=carrinho');
             exit;
+        }
+    }
+    
+    /**
+     * Atualiza cupons quando o carrinho é modificado
+     */
+    private static function atualizarCupons() {
+        // Verificar se existe a classe de cupons
+        if (class_exists('CuponsCarrinhoController')) {
+            $novoTotal = self::calcularTotal();
+            CuponsCarrinhoController::atualizarCupomCarrinho($novoTotal);
         }
     }
 }
