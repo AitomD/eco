@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . '/../core/Database.php';
 
-class Produto {
+class Produto
+{
     private $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pdo = Database::conectar();
     }
 
-    public function filtrar($id_categoria = null, $id_marca = null) {
+    public function filtrar($id_categoria = null, $id_marca = null)
+    {
         $sql = "SELECT 
     p.id_produto,
     p.nome,

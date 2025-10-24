@@ -234,80 +234,44 @@ function showMessage($type, $text) {
         <!-- FIM DO MODAL -->
     </div>
 </main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Script AJAX e jQuery -->
 <script>
-// Função utilitária para mostrar mensagens (substitui alert)
-function displayMessage(type, message) {
-    // Remove qualquer mensagem anterior
-    $('#messageContainer').empty();
-    // Cria e insere a nova mensagem no container principal
-    var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
-        message +
-        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-    $('#messageContainer').append(alertHtml);
-
-    // Rola para o topo para garantir que o usuário veja a mensagem
-    $('html, body').animate({
-        scrollTop: 0
-    }, 'fast');
-}
-
-$(document).ready(function () {
-    // Certifique-se de que a tag <form> no seu HTML tenha id="formAtualizarDados"
-    $('#formAtualizarDados').submit(function (e) {
-        // ESSA É A LINHA CRUCIAL. Ela impede o envio GET padrão que você está vendo na URL.
+$(document).ready(function() {
+    // Intercepta o evento de submit do formulário
+    $('#formAtualizarDados').on('submit', function(e) {
+        
+        // Impede o comportamento padrão do formulário (que recarregaria a página)
         e.preventDefault(); 
 
-        // 1. Validação básica de senha no lado do cliente
-        var senhaNova = $('#senha_nova').val();
-        var senhaConfirmar = $('#senha_confirmar').val();
+        // Coleta todos os dados do formulário
+        var formData = $(this).serialize();
 
-        if (senhaNova !== senhaConfirmar) {
-            displayMessage('danger', 'A nova senha e a confirmação não coincidem!');
-            // Fechar o modal aqui se a senha for inválida
-            return; // Interrompe a submissão
-        }
-        
-        // Desabilitar o botão e mostrar loading
-        var submitBtn = $(this).find('button[type="submit"]');
-        submitBtn.attr('disabled', true).text('Salvando...');
-
-        // 2. Envio dos dados via AJAX
+        // Envia os dados para o script PHP usando AJAX
         $.ajax({
-            type: "POST", // Método de envio
-            // ATENÇÃO: Verifique se este caminho está correto em relação ao index.php
-            url: "../app/model/atualizar_perfil.php", 
-            // O método .serialize() envia todos os campos do formulário (id_user, nome, email, data_nascimento, senha_nova, etc.)
-            // que correspondem às colunas da tabela 'user' (nome, email, data_nascimento, senha, etc.)
-            data: $(this).serialize(), 
-            dataType: "json", // Espera uma resposta JSON do servidor
-            success: function (response) {
-                // Reabilita o botão
-                submitBtn.attr('disabled', false).text('Salvar Alterações');
-
-                // 3. Tratamento da resposta do servidor
+            type: 'POST',
+            url: '../app/model/atualizar_perfil.php', // O arquivo PHP que processará os dados
+            data: formData,
+            dataType: 'json', // Espera uma resposta em formato JSON do servidor
+            
+            success: function(response) {
                 if (response.success) {
-                    displayMessage('success', response.message);
-                    // Fechar o modal 
-                    $('#modalEditarDados').modal('hide'); // Assumindo este é o ID do seu modal
-                    // RECARREGAR A PÁGINA para atualizar os dados visíveis
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 500); 
+                    // Se deu certo
+                    alert('Dados atualizados com sucesso!');
+                    // Fecha o modal
+                    $('#modalEditarDados').modal('hide');
+                    // Recarrega a página para exibir os dados novos
+                    location.reload(); 
                 } else {
-                    displayMessage('danger', 'Erro ao atualizar: ' + response.message);
+                    // Se deu errado, exibe a mensagem de erro
+                    alert('Erro: ' + response.message);
                 }
             },
-            error: function (xhr, status, error) {
-                // Reabilita o botão
-                submitBtn.attr('disabled', false).text('Salvar Alterações');
-                // Erro de comunicação ou caminho/resposta inválida do servidor
-                displayMessage('danger', 'Ocorreu um erro na comunicação com o servidor. Verifique se o jQuery está carregado.');
-                console.error("AJAX Error:", status, error, xhr.responseText);
+            error: function() {
+                // Em caso de erro de conexão ou no servidor
+                alert('Ocorreu um erro no servidor. Tente novamente.');
             }
         });
     });
 });
-
 </script>
