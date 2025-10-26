@@ -533,23 +533,6 @@
                 });
         }
 
-        // Máscara para telefone
-        const phoneInput = document.getElementById('phone');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-
-                if (value.length <= 11) {
-                    value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                    value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-                    value = value.replace(/(\d{2})(\d{4})/, '($1) $2');
-                    value = value.replace(/(\d{2})/, '($1');
-                }
-
-                e.target.value = value;
-            });
-        }
-
         // Efeitos visuais nos inputs
         const allInputs = document.querySelectorAll('.form-control');
         allInputs.forEach(input => {
