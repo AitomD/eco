@@ -31,7 +31,6 @@ $paginasPermitidas = [
     'paginaRetirada',
     'paginaCompra',
     'meuperfil',
-    'dashboard'
 ];
 
 // Página padrão
