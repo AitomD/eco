@@ -174,7 +174,11 @@ class Auth {
             return;
         }
 
+        // 1. Coletar TODOS os dados (usuário e endereço)
+        // Assumindo que seu formulário agora envia esses campos de endereço.
+        // Ajuste os nomes (ex: 'cep', 'cidade') se forem diferentes no seu formulário.
         try {
+            // Dados do Usuário
             $firstName = trim($_POST['firstName'] ?? '');
             $lastName = trim($_POST['lastName'] ?? '');
             $email = trim(strtolower($_POST['email'] ?? ''));
@@ -183,69 +187,71 @@ class Auth {
             $birthDate = $_POST['birthDate'] ?? '';
             $terms = isset($_POST['terms']);
 
+            // Dados do Endereço
+            $endereco = trim($_POST['endereco'] ?? '');
+            $cep = trim($_POST['cep'] ?? '');
+            $complemento = trim($_POST['complemento'] ?? '');
+            $bairro = trim($_POST['bairro'] ?? '');
+            $cidade = trim($_POST['cidade'] ?? '');
+            $estado = trim($_POST['estado'] ?? ''); // Ex: 'SP'
+
+            // 2. Validações
             $errors = [];
 
-            if (empty($firstName)) {
-                $errors[] = 'Nome é obrigatório';
-            } elseif (strlen($firstName) < 2) {
-                $errors[] = 'Nome deve ter pelo menos 2 caracteres';
-            }
+            // Validações do Usuário (como no seu código original)
+            if (empty($firstName)) $errors[] = 'Nome é obrigatório';
+            elseif (strlen($firstName) < 2) $errors[] = 'Nome deve ter pelo menos 2 caracteres';
 
-            if (empty($lastName)) {
-                $errors[] = 'Sobrenome é obrigatório';
-            } elseif (strlen($lastName) < 2) {
-                $errors[] = 'Sobrenome deve ter pelo menos 2 caracteres';
-            }
+            if (empty($lastName)) $errors[] = 'Sobrenome é obrigatório';
+            elseif (strlen($lastName) < 2) $errors[] = 'Sobrenome deve ter pelo menos 2 caracteres';
 
-            if (empty($email)) {
-                $errors[] = 'Email é obrigatório';
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = 'Email inválido';
-            }
+            if (empty($email)) $errors[] = 'Email é obrigatório';
+            elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email inválido';
 
-            if (empty($password)) {
-                $errors[] = 'Senha é obrigatória';
-            } elseif (strlen($password) < 8) {
-                $errors[] = 'Senha deve ter pelo menos 8 caracteres';
-            }
+            if (empty($password)) $errors[] = 'Senha é obrigatória';
+            elseif (strlen($password) < 8) $errors[] = 'Senha deve ter pelo menos 8 caracteres';
 
-            if ($password !== $confirmPassword) {
-                $errors[] = 'As senhas não coincidem';
-            }
+            if ($password !== $confirmPassword) $errors[] = 'As senhas não coincidem';
+            if (!$terms) $errors[] = 'Você deve aceitar os termos de uso';
+            if (empty($birthDate)) $errors[] = 'Data de nascimento é obrigatória';
 
-            if (!$terms) {
-                $errors[] = 'Você deve aceitar os termos de uso';
-            }
+            // TODO: Adicionar validações para os campos de endereço se necessário
+            // Ex: if (empty($cep)) $errors[] = 'CEP é obrigatório';
+            // Ex: if (empty($endereco)) $errors[] = 'Endereço é obrigatório';
 
-            if (empty($birthDate)) {
-                $errors[] = 'Data de nascimento é obrigatória';
-            }
 
             if (!empty($errors)) {
                 echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
                 return;
             }
 
-            $userData = [
-                'nome' => $firstName . ' ' . $lastName,
-                'email' => $email,
-                'senha' => password_hash($password, PASSWORD_DEFAULT),
-                'is_admin' => false,
-                'data_nascimento' => $birthDate
-            ];
-
+            // 3. Verificação de Email (antes de iniciar a transação)
             if ($this->emailExists($email)) {
                 echo json_encode(['success' => false, 'message' => 'Este email já está cadastrado']);
                 return;
             }
 
-            // INSERT sem o campo genero
-            $stmt = $this->pdo->prepare("
+            // Dados do usuário prontos para o DB
+            $userData = [
+                'nome' => $firstName . ' ' . $lastName,
+                'email' => $email,
+                'senha' => password_hash($password, PASSWORD_DEFAULT),
+                'is_admin' => false, // Padrão para novos registros
+                'data_nascimento' => $birthDate
+            ];
+
+            // 4. Executar os INSERTs como uma Transação
+            
+            // Inicia a transação
+            $this->pdo->beginTransaction();
+
+            // 4a. Inserir na tabela 'user'
+            $stmtUser = $this->pdo->prepare("
                 INSERT INTO user (nome, email, senha, is_admin, data_nascimento) 
                 VALUES (?, ?, ?, ?, ?)
             ");
             
-            $result = $stmt->execute([
+            $resultUser = $stmtUser->execute([
                 $userData['nome'],
                 $userData['email'],
                 $userData['senha'],
@@ -253,26 +259,62 @@ class Auth {
                 $userData['data_nascimento']
             ]);
 
-            if ($result) {
-                $userId = $this->pdo->lastInsertId();
-                $userData['id_user'] = $userId;
-
-                $this->createSession($userData);
-
-                echo json_encode([
-                    'success' => true, 
-                    'redirect' => '../public/index.php?url=home'
-                ]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Erro ao criar conta. Tente novamente.']);
+            if (!$resultUser) {
+                // Se falhar no usuário, desfaz tudo
+                $this->pdo->rollBack();
+                echo json_encode(['success' => false, 'message' => 'Erro ao criar conta. Tente novamente. (Erro User)']);
+                return;
             }
 
+            // Obter o ID do usuário recém-criado
+            $userId = $this->pdo->lastInsertId();
+            $userData['id_user'] = $userId; // Adiciona o ID aos dados da sessão
+
+            // 4b. Inserir na tabela 'endereco'
+            // Assumindo que 'id_endereco' é AUTO_INCREMENT
+            $stmtEndereco = $this->pdo->prepare("
+                INSERT INTO endereco (id_user, endereco, cep, complemento, bairro, cidade, estado)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ");
+            
+            $resultEndereco = $stmtEndereco->execute([
+                $userId,        // <--- A Chave Estrangeira que faz o "link"
+                $endereco,
+                $cep,
+                $complemento,
+                $bairro,
+                $cidade,
+                $estado
+            ]);
+
+            if (!$resultEndereco) {
+                // Se falhar no endereço, desfaz tudo (inclusive o usuário)
+                $this->pdo->rollBack();
+                echo json_encode(['success' => false, 'message' => 'Erro ao salvar endereço. Tente novamente. (Erro Endereco)']);
+                return;
+            }
+
+            // 5. Sucesso!
+            // Se chegou até aqui, os dois INSERTs funcionaram.
+            $this->pdo->commit(); // Confirma as mudanças no banco
+
+            // Cria a sessão e envia a resposta de sucesso
+            $this->createSession($userData);
+
+            echo json_encode([
+                'success' => true, 
+                'redirect' => '../public/index.php?url=home'
+            ]);
+
         } catch (Exception $e) {
+            // Se qualquer exceção do PDO ou outra ocorrer, desfaz tudo
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
             error_log("Erro no cadastro: " . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Erro inesperado. Tente novamente.']);
         }
     }
-
     // ================================
     // PROCESSO DE LOGIN COMPLETO
     // ================================
