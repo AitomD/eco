@@ -167,7 +167,7 @@ if ($id_usuario_logado) {
                     <div class="tab-pane fade" id="pane-minhas-vendas" role="tabpanel" aria-labelledby="link-minhas-vendas" tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
                             <h3 class="h5 mb-3">Minhas Vendas</h3>
-                            <p class="text-muted">Área do administrador para gerenciamento de vendas.</p>
+                             <?php require_once 'dashboard.php' ?>
                         </div>
                     </div>
                 <?php endif; ?>
