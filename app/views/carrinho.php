@@ -32,11 +32,11 @@ $totalItens = CarrinhoController::contarItens();
         <!-- Carrinho vazio -->
         <div class="row">
             <div class="col-12">
-                <div class="card bg-dark border-secondary">
+                <div class="card border-secondary">
                     <div class="card-body text-center py-5">
-                        <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
-                        <h4 class="text-white mt-3 mb-4">Seu carrinho está vazio</h4>
-                        <p class="text-muted mb-4">Adicione produtos ao carrinho para continuar suas compras</p>
+                        <i class="bi bi-cart-x text-light" style="font-size: 4rem;"></i>
+                        <h4 class="text-light mt-3 mb-4">Seu carrinho está vazio</h4>
+                        <p class="text-light mb-4">Adicione produtos ao carrinho para continuar suas compras</p>
                         <a href="index.php?url=home" class="btn btn-primary btn-lg">
                             <i class="bi bi-arrow-left me-2"></i>Continuar Comprando
                         </a>

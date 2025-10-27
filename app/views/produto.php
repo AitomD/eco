@@ -18,10 +18,10 @@
 
     <div style="height: 50px;"></div>
 
-    <div class="container-fluid text-center border cont-produto">
+    <div class="container-fluid text-center cont-produto">
     <div class="row">
         <!-- Coluna lateral -->
-        <div class="col-sm-2 text-start border">
+        <div class="col-sm-2 text-start cont-filtro">
             <br>
             <h5 class="text-light">
                 <i class="fa-solid fa-clipboard "></i>
