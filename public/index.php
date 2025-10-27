@@ -89,8 +89,8 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/produto.css">
     <link rel="stylesheet" href="css/cupomcss.css">
     <link rel="stylesheet" href="css/itemCompra.css">
-
     <link rel="stylesheet" href="css/carrinho.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?> data-is-logged-in="<?= $isLoggedIn ? 'true' : 'false' ?>">
@@ -251,6 +251,7 @@ $cartCount = CarrinhoController::contarItens();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

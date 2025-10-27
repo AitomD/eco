@@ -1,29 +1,93 @@
 @import url("https://fonts.googleapis.com/css2?family=Electrolize&display=swap");
 
-.cont-produto{
-  font-family: "Electrolize",sans-serif;
-  font-size: 19px;
+/* ====== Container geral dos produtos ====== */
+.cont-produto {
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
+
+/* ====== Botões e links da lateral ====== */
 .link-produto {
-  cursor: pointer;               /* mostra o cursor de mãozinha */
-  transition: all 0.3s ease;     /* deixa o efeito suave */
-  border: 1px solid white;
-  border-radius: 5px;
-  color: purple;
-  padding: 5px;
+  cursor: pointer;
+  border: 1px solid #6a0dad;
+  border-radius: 8px;
+  color: #eaeaea;
+  padding: 10px;
+  text-align: center;
+  background-color: #161616;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.05);
+}
+
+.link-produto:hover {
+  background: linear-gradient(90deg, #6a11cb, #a445b2);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 0 12px rgba(164, 69, 178, 0.6);
+}
+
+.link-produto.ativo {
+  background: linear-gradient(90deg, #a445b2, #6a11cb);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.6), 0 4px 10px rgba(128, 0, 128, 0.5);
+  transform: translateY(-4px);
+}
+
+/* ====== Cards de produto ====== */
+.card {
+  background-color: #111;
+  border-radius: 14px;
+  padding: 20px;
   text-align: center;
   transition: all 0.3s ease;
-}
-.link-produto:hover {
-  background-color: white;
-  color: purple;
-  transform: translateY(-3px); /* leve elevação */
-}
-.link-produto.ativo {
-  background-color: white;
-  color: purple;
-  box-shadow: 1px 1px 20px rgb(250, 250, 250), 0 4px 10px rgba(128, 0, 128, 0.4); /* sombra forte */
-  transform: translateY(-4px); /* leve elevação */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+.card:hover {
+  transform: translateY(-6px);
+  border-color: #a445b2;
+  box-shadow: 0 8px 20px rgba(164, 69, 178, 0.4);
+}
 
+/* ====== Títulos e textos ====== */
+.card h5, .card h6 {
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: #c8c8c8;
+  font-size: 14px;
+}
+
+/* ====== Botões nos cards ====== */
+.card button,
+.card a.btn {
+  background: linear-gradient(90deg, #6a11cb, #a445b2);
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 14px;
+  transition: all 0.3s ease;
+}
+
+.card button:hover,
+.card a.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(164, 69, 178, 0.6);
+}
+
+/* ====== Responsivo ====== */
+@media (max-width: 768px) {
+  .link-produto {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .card {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+}
