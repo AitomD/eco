@@ -2,21 +2,21 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produtos</title>
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../public/css/produto.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../public/css/produto.css">
 </head>
 
 <body>
 
-    <div style="height: 50px;"></div>
+  <div style="height: 50px;"></div>
 
     <div class="container-fluid text-center cont-produto">
     <div class="row">
@@ -76,44 +76,45 @@
                 <!-- Produtos aparecem aqui via JS -->
             </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
-    <div style="height: 50px;"></div>
+  <div style="height: 50px;"></div>
 
-   <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const botoes = document.querySelectorAll('.link-produto');
-  let filtroCategoria = null;
-  let filtroMarca = null;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const botoes = document.querySelectorAll('.link-produto');
+      let filtroCategoria = null;
+      let filtroMarca = null;
 
-  // Função para buscar produtos via AJAX
-  function buscarProdutos(categoria = null, marca = null) {
-    let url = `../app/controller/FiltroController.php?`;
-    if (categoria) url += `categoria=${categoria}&`;
-    if (marca) url += `marca=${marca}&`;
+      // Função para buscar produtos via AJAX
+      function buscarProdutos(categoria = null, marca = null) {
+        let url = `../app/controller/FiltroController.php?`;
+        if (categoria) url += `categoria=${categoria}&`;
+        if (marca) url += `marca=${marca}&`;
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => atualizarProdutosNaTela(data))
-      .catch(err => console.error(err));
-  }
+        fetch(url)
+          .then(res => res.json())
+          .then(data => atualizarProdutosNaTela(data))
+          .catch(err => console.error(err));
+      }
 
-  // Função para atualizar a tela
-  function atualizarProdutosNaTela(produtos) {
-    const container = document.querySelector('#produtos');
-    if (!container) return;
-    container.innerHTML = '';
+      // Função para atualizar a tela
+      function atualizarProdutosNaTela(produtos) {
+        const container = document.querySelector('#produtos');
+        if (!container) return;
+        container.innerHTML = '';
 
-    // Cria a row que vai conter os cards
-    const row = document.createElement('div');
-    row.classList.add('row');
+        // Cria a row que vai conter os cards
+        const row = document.createElement('div');
+        row.classList.add('row');
 
-    produtos.forEach(p => {
-      const card = document.createElement('div');
-      card.classList.add('card', 'm-6', 'col-sm-3'); // 4 cards por linha
-      card.dataset.id = p.id_produto;
-      card.innerHTML = `
+        produtos.forEach(p => {
+          const card = document.createElement('div');
+          card.classList.add('card', 'm-6', 'col-sm-3'); // 4 cards por linha
+          card.dataset.id = p.id_produto;
+          card.innerHTML = `
   <img src="${p.imagem}" class="card-img-top" alt="${p.nome}">
   <div class="card-body">
     <h5 class="card-title">${p.nome}</h5>
@@ -135,34 +136,34 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 `;
-      row.appendChild(card);
+          row.appendChild(card);
+        });
+
+        container.appendChild(row);
+      }
+
+      // Inicializa a tela com todos os produtos
+      buscarProdutos();
+
+      // Configura eventos dos botões de filtro
+      botoes.forEach(botao => {
+        botao.addEventListener('click', () => {
+          // Remove estado ativo dos botões
+          botoes.forEach(b => b.classList.remove('ativo'));
+          botao.classList.add('ativo');
+
+          // Atualiza filtros
+          filtroCategoria = botao.dataset.categoria || null;
+          filtroMarca = botao.dataset.marca || null;
+
+          // Busca produtos filtrados
+          buscarProdutos(filtroCategoria, filtroMarca);
+        });
+      });
     });
+  </script>
 
-    container.appendChild(row);
-}
-
-  // Inicializa a tela com todos os produtos
-  buscarProdutos();
-
-  // Configura eventos dos botões de filtro
-  botoes.forEach(botao => {
-    botao.addEventListener('click', () => {
-      // Remove estado ativo dos botões
-      botoes.forEach(b => b.classList.remove('ativo'));
-      botao.classList.add('ativo');
-
-      // Atualiza filtros
-      filtroCategoria = botao.dataset.categoria || null;
-      filtroMarca = botao.dataset.marca || null;
-
-      // Busca produtos filtrados
-      buscarProdutos(filtroCategoria, filtroMarca);
-    });
-  });
-});
-</script>
-
-<script src="../public/js/carrinho.js"></script>
+  <script src="../public/js/carrinho.js"></script>
 
 </body>
 
