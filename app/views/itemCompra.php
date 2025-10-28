@@ -71,7 +71,6 @@ try {
 
     // Todas as imagens em um array
     $imagens = array_column($resultados, 'imagem');
-
 } catch (PDOException $e) {
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
@@ -79,23 +78,23 @@ try {
 
 <main class="container py-4">
     <section class="row g-4 bg-white mt-2 py-4">
-        
+
         <!-- GALERIA DE IMAGENS -->
         <div class="col-md-4">
             <div class="galeria-imagens bg-white border rounded p-3 h-100">
                 <div class="miniaturas mb-3 d-flex gap-2 flex-wrap">
                     <?php foreach ($imagens as $img): ?>
-                        <img src="<?= htmlspecialchars($img) ?>" 
-                             alt="<?= htmlspecialchars($produto['nome']) ?>" 
-                             class="img-thumbnail" 
-                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                        <img src="<?= htmlspecialchars($img) ?>"
+                            alt="<?= htmlspecialchars($produto['nome']) ?>"
+                            class="img-thumbnail"
+                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                     <?php endforeach; ?>
                 </div>
 
                 <div class="imagem-principal text-center">
-                    <img src="<?= htmlspecialchars($produto['imagem_principal']) ?>" 
-                         alt="<?= htmlspecialchars($produto['nome']) ?>" 
-                         class="img-fluid rounded">
+                    <img src="<?= htmlspecialchars($produto['imagem_principal']) ?>"
+                        alt="<?= htmlspecialchars($produto['nome']) ?>"
+                        class="img-fluid rounded">
                 </div>
             </div>
         </div>
@@ -150,8 +149,8 @@ try {
                 </div>
             </div>
         </div>
-</div>
-       
+        </div>
+
 
         <!-- COMPRA E VENDEDOR -->
         <div class="col-md-3">
@@ -173,7 +172,7 @@ try {
                 <div class="card-vendedor border rounded p-3 bg-white">
                     <h3 class="h6 fw-semibold">Informações sobre o vendedor</h3>
                     <p class="small my-1">Localização: São Paulo</p>
-                    <p class="small text-muted">MercadoLíder | +5mil Vendas</p> 
+                    <p class="small text-muted">MercadoLíder | +5mil Vendas</p>
                 </div>
             </div>
         </div>
