@@ -63,13 +63,16 @@
 }
 
 /* ====== Botões nos cards ====== */
-.card button,
-.card a.btn {
+.card  button,
+.card  a.btn {
   background: linear-gradient(90deg, #6a11cb, #a445b2);
   border-radius: 10px;
+  border: none;
   color: #fff;
   font-weight: 600;
-  padding: 8px 14px;
+  padding: 5px 10px;
+  align-items: center;
+  margin: auto;
   transition: all 0.3s ease;
 }
 
