@@ -29,6 +29,7 @@ $paginasPermitidas = [
     'itemCompra',
     'paginaSeguro',
     'paginaRetirada',
+    'metodopagamento',
     'paginaCompra',
     'meuperfil',
 ];
