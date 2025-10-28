@@ -1,3 +1,32 @@
+<?php
+// Inicializar sessão se não estiver ativa
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Incluir os controladores
+require_once __DIR__ . '/../controller/CarrinhoController.php';
+require_once __DIR__ . '/../controller/cupons-carrinho.php';
+
+// Verificar se o usuário está logado
+$isLoggedIn = isset($_SESSION['user_id']);
+
+// Obter dados do carrinho através do controlador
+$itensCarrinho = CarrinhoController::getItens();
+$totalCarrinho = CarrinhoController::calcularTotal();
+$totalItens = CarrinhoController::contarItens();
+
+// Obter cupons e calcular valor final
+$cupomAplicado = CuponsCarrinhoController::getCupomAplicado();
+$valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
+
+// Se o carrinho estiver vazio, redirecionar
+if (empty($itensCarrinho)) {
+    header('Location: index.php?url=carrinho');
+    exit;
+}
+?>
+
 <style>
     /* Estilos para os cards de opção de entrega.
            Usamos 'has' para mudar a borda quando o input dentro dele estiver checado.
@@ -30,9 +59,182 @@
     h6 {
         color: var(--black);
     }
+    
+    .step-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+        background: linear-gradient(135deg, rgba(97, 0, 148, 0.1), rgba(0, 123, 255, 0.1));
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 1.5rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .step-number {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 2;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .step-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .step-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .step.completed .step-number {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        transform: scale(1.1);
+        animation: pulse-completed 2s infinite;
+    }
+    
+    .step.completed .step-icon {
+        color: #28a745;
+        transform: scale(1.1);
+    }
+    
+    .step.completed .step-label {
+        color: #28a745;
+        font-weight: 700;
+    }
+    
+    .step.active .step-number {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        transform: scale(1.2);
+        animation: pulse-active 1.5s infinite;
+        box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
+    }
+    
+    .step.active .step-icon {
+        color: #007bff;
+        transform: scale(1.2);
+    }
+    
+    .step.active .step-label {
+        color: #007bff;
+        font-weight: 700;
+    }
+    
+    .step.pending .step-number {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+    }
+    
+    .step.pending .step-icon {
+        color: #6c757d;
+    }
+    
+    .step.pending .step-label {
+        color: #6c757d;
+    }
+    
+    .step-line {
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #dee2e6, #adb5bd);
+        margin: 0 1rem;
+        border-radius: 2px;
+        position: relative;
+        top: -25px;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    
+    .step.completed + .step-line {
+        background: linear-gradient(90deg, #28a745, #20c997);
+        box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+    }
+    
+    @keyframes pulse-active {
+        0% { box-shadow: 0 0 25px rgba(0, 123, 255, 0.5); }
+        50% { box-shadow: 0 0 35px rgba(0, 123, 255, 0.8); }
+        100% { box-shadow: 0 0 25px rgba(0, 123, 255, 0.5); }
+    }
+    
+    @keyframes pulse-completed {
+        0% { transform: scale(1.1); }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1.1); }
+    }
+    
+    @media (max-width: 768px) {
+        .step {
+            margin: 0 0.5rem;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+        
+        .step-label {
+            font-size: 0.8rem;
+        }
+        
+        .step-line {
+            width: 40px;
+            top: -20px;
+        }
+    }
 </style>
 
 <body>
+    <!-- Indicador de progresso -->
+    <div class="container py-4 mt-3">
+        <div class="step-indicator">
+            <div class="step completed">
+                <div class="step-number">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <span class="step-label">Carrinho</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step active">
+                <div class="step-number">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <span class="step-label">Entrega</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step pending">
+                <div class="step-number">
+                    <i class="bi bi-credit-card"></i>
+                </div>
+                <span class="step-label">Pagamento</span>
+            </div>
+        </div>
+    </div>
 
     <main class="container py-4 mt-3 bg-white my-3">
         <div class="row g-4">
@@ -86,8 +288,16 @@
 
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Produto</span>
-                        <span class="text-muted">R$ 3.330</span>
+                        <span class="text-muted">R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?></span>
                     </div>
+                    
+                    <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-success">Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>):</span>
+                            <span class="text-success">-R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
+                        </div>
+                    <?php endif; ?>
+                    
                     <div class="d-flex justify-content-between mb-3">
                         <span class="text-muted">Frete</span>
                         <span class="fw-bold text-primary">GRÁTIS</span>
@@ -97,11 +307,18 @@
 
                     <div class="d-flex justify-content-between fs-5 fw-bold">
                         <span class="text-ml-dark">Total</span>
-                        <span class="text-ml-dark">R$ 3.330</span>
+                        <span class="text-ml-dark">R$ <?= number_format($valoresCarrinho['valor_final'], 2, ',', '.') ?></span>
                     </div>
                 </div>
                 <div class="text-center mt-4 w-100">
-                    <button class="btn-product ">Continuar</button>
+                    <div class="d-flex justify-content-between">
+                        <a href="index.php?url=carrinho" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Voltar ao Carrinho
+                        </a>
+                        <button id="btn-continuar" class="btn btn-primary">
+                            Finalizar Pedido <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -135,6 +352,35 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnContinuar = document.getElementById('btn-continuar');
+        
+        btnContinuar.addEventListener('click', function() {
+            // Verificar se uma opção de entrega foi selecionada
+            const entregaSelecionada = document.querySelector('input[name="entrega-option"]:checked');
+            
+            if (!entregaSelecionada) {
+                alert('Por favor, selecione uma opção de entrega.');
+                return;
+            }
+            
+            // Redirecionar para a página de método de pagamento
+            window.location.href = 'index.php?url=metodopagamento';
+        });
+        
+        // Abrir modal de endereço quando selecionar "Alterar meu endereço"
+        const mudaEndereco = document.getElementById('mudaEndereco');
+        if (mudaEndereco) {
+            mudaEndereco.addEventListener('change', function() {
+                if (this.checked) {
+                    const modal = new bootstrap.Modal(document.getElementById('enderecoModal'));
+                    modal.show();
+                }
+            });
+        }
+    });
+    </script>
 </body>
 
 </html>
