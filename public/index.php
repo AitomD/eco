@@ -21,7 +21,6 @@ $paginasPermitidas = [
     'home',
     'login',
     'cadastro',
-    'ofertas',
     'produto',
     'cupons',
     'carrinho',
@@ -115,9 +114,6 @@ $cartCount = CarrinhoController::contarItens();
                         <ul class="navbar-nav mb-2 mb-lg-0 ">
                             <li class="nav-item">
                                 <a class="nav-link p-btn mx-1" aria-current="page" href="index.php?url=home">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link p-btn mx-1" href="index.php?url=ofertas">Ofertas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link p-btn mx-1" href="index.php?url=cupons">Cupons</a>

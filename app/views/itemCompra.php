@@ -1,5 +1,6 @@
 <?php
 require_once '../app/core/Database.php';
+require_once '../app/model/lojaInfo.php';
 
 // 1. Obter o ID do produto da URL e validar
 $id_produto = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -74,8 +75,16 @@ try {
 } catch (PDOException $e) {
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
+
 ?>
 
+<div class="card-vendedor border rounded p-3 bg-white">
+    <h3 class="h6 fw-semibold">Informações sobre o vendedor (<?php echo $nomeVendedor; ?>)</h3>
+
+    <p class="small my-1">Localização: <?php echo $localizacao; ?></p>
+
+    <p class="small text-muted">MercadoLíder | +5mil Vendas</p>
+</div>
 <main class="container py-4">
     <section class="row g-4 bg-white mt-2 py-4">
 
@@ -84,17 +93,14 @@ try {
             <div class="galeria-imagens bg-white border rounded p-3 h-100">
                 <div class="miniaturas mb-3 d-flex gap-2 flex-wrap">
                     <?php foreach ($imagens as $img): ?>
-                        <img src="<?= htmlspecialchars($img) ?>"
-                            alt="<?= htmlspecialchars($produto['nome']) ?>"
-                            class="img-thumbnail"
-                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>"
+                            class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
                     <?php endforeach; ?>
                 </div>
 
                 <div class="imagem-principal text-center">
                     <img src="<?= htmlspecialchars($produto['imagem_principal']) ?>"
-                        alt="<?= htmlspecialchars($produto['nome']) ?>"
-                        class="img-fluid rounded">
+                        alt="<?= htmlspecialchars($produto['nome']) ?>" class="img-fluid rounded">
                 </div>
             </div>
         </div>
@@ -102,9 +108,10 @@ try {
         <!-- INFORMAÇÕES DO PRODUTO -->
         <div class="col-md-5">
             <div class="info-produto bg-white border rounded p-4 h-100">
-                <p class="text-muted small mb-2">Novo | +1000 vendidos</p>
                 <h1 class="h3 fw-bold" style="color:var(--black);"><?= htmlspecialchars($produto['nome']) ?></h1>
-                <p class="text-muted small">Marca: <?= htmlspecialchars($produto['marca']) ?> | Categoria: <?= htmlspecialchars($produto['categoria']) ?></p>
+                <p class="text-muted small">Marca: <?= htmlspecialchars($produto['marca']) ?> | Categoria:
+                    <?= htmlspecialchars($produto['categoria']) ?>
+                </p>
 
                 <div class="avaliacoes d-flex align-items-center small text-muted my-3">
                     <div class="estrelas" style="color:var(--pmain);">
@@ -124,18 +131,14 @@ try {
                     </p>
                 </div>
 
-                <div class="caracteristicas-produto mb-4">
-                    <?php if (!empty($produto['cor'])): ?>
-                        <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
-                    <?php endif; ?>
-                    <?php if (!empty($produto['armazenamento'])): ?>
-                        <p><strong>Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
-                    <?php endif; ?>
-                </div>
+
 
                 <div class="sobre-o-produto border-top pt-3">
                     <h3 class="h5">O que você precisa saber sobre este produto</h3>
                     <ul class="list-unstyled mt-2 text-muted">
+                        <?php if (!empty($produto['cor'])): ?>
+                            <li>• Cor: <?= htmlspecialchars($produto['cor']) ?></li>
+                        <?php endif; ?>
                         <?php if (!empty($produto['processador'])): ?>
                             <li>• Processador: <?= htmlspecialchars($produto['processador']) ?></li>
                         <?php endif; ?>
@@ -144,6 +147,15 @@ try {
                         <?php endif; ?>
                         <?php if (!empty($produto['placa_video'])): ?>
                             <li>• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['armazenamento'])): ?>
+                            <li>• Armazenamento:<?= htmlspecialchars($produto['armazenamento']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['fonte'])): ?>
+                            <li>• Fonte: <?= htmlspecialchars($produto['fonte']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['placa_mae'])): ?>
+                            <li>• Placa Mãe: <?= htmlspecialchars($produto['placa_mae']) ?></li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -161,8 +173,8 @@ try {
                         Quantidade: <?= htmlspecialchars($produto['quantidade_disponivel']) ?> unidade(s)
                     </p>
                     <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn">Comprar agora</button>
-                        <button class="cart-button text-center">Adicionar ao carrinho</button>
+                        <button class="purple-btn p-2">Comprar agora</button>
+                        <button class="cart-button text-center p-1">Adicionar ao carrinho</button>
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
@@ -170,9 +182,11 @@ try {
                 </div>
 
                 <div class="card-vendedor border rounded p-3 bg-white">
-                    <h3 class="h6 fw-semibold">Informações sobre o vendedor</h3>
-                    <p class="small my-1">Localização: São Paulo</p>
-                    <p class="small text-muted">MercadoLíder | +5mil Vendas</p>
+                    <h3 class="h6 fw-semibold">Informações sobre o vendedor (<?php echo $nomeVendedor; ?>)</h3>
+
+                    <p class="small my-1">Localização: </p>
+
+                    <p class="small text-muted"></p>
                 </div>
             </div>
         </div>

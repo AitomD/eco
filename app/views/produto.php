@@ -14,7 +14,7 @@
 <body>
 
   <div style="height: 50px;"></div>
-
+  
   <div class="container-fluid text-center cont-produto">
     <div class="row">
       <!-- Coluna lateral -->
@@ -24,9 +24,9 @@
           <i class="fa-solid fa-clipboard "></i>
           Categorias
         </h5>
-        <p class="link-produto" data-categoria="1">Computadores Desktop</p>
+        <p class="link-produto">Mostrar Todos</p>
+        <p class="link-produto" data-categoria="1">Desktop</p>
         <p class="link-produto" data-categoria="2">Notebooks</p>
-        <p class="link-produto" data-categoria="3">SmartTV</p>
         <p class="link-produto" data-categoria="4">Smartphones</p>
         <br>
         <h5 class="text-light">
@@ -56,17 +56,7 @@
         <p class="link-produto" data-marca="9">Samsung</p>
         <p class="link-produto" data-marca="10">Xiaomi</p>
         <br>
-        <h5 class="text-light">
-          <i class="fa-solid fa-tv"></i>
-          SmartTV
-        </h5>
-        <p class="link-produto" data-marca="11">AOC</p>
-        <p class="link-produto" data-marca="12">LG</p>
-        <p class="link-produto" data-marca="13">Philco</p>
-        <p class="link-produto" data-marca="9">Samsung</p>
-        <p class="link-produto" data-marca="14">Sony</p>
-        <br>
-        <p class="link-produto">Cancelar Filtros</p>
+
       </div>
 
 
