@@ -84,16 +84,18 @@ try {
         <div class="col-md-4">
             <div class="galeria-imagens bg-white border rounded p-3 h-100">
                 <div class="miniaturas mb-3 d-flex gap-2 flex-wrap">
-                    <?php foreach ($imagens as $img): ?>
+                    <?php foreach ($imagens as $index => $img): ?>
                         <img src="<?= htmlspecialchars($img) ?>" 
                              alt="<?= htmlspecialchars($produto['nome']) ?>" 
-                             class="img-thumbnail" 
-                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;">
+                             class="img-thumbnail miniatura-img <?= $index === 0 ? 'active' : '' ?>" 
+                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                             onclick="trocarImagemPrincipal('<?= htmlspecialchars($img) ?>', this)">
                     <?php endforeach; ?>
                 </div>
 
                 <div class="imagem-principal text-center">
-                    <img src="<?= htmlspecialchars($produto['imagem_principal']) ?>" 
+                    <img id="imagem-principal" 
+                         src="<?= htmlspecialchars($produto['imagem_principal']) ?>" 
                          alt="<?= htmlspecialchars($produto['nome']) ?>" 
                          class="img-fluid rounded">
                 </div>
@@ -187,3 +189,47 @@ try {
         </div>
     </section>
 </main>
+
+<style>
+.miniatura-img {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.miniatura-img:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.miniatura-img.active {
+    border: 2px solid var(--pmain, #007bff);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+#imagem-principal {
+    transition: opacity 0.3s ease;
+}
+</style>
+
+<script>
+function trocarImagemPrincipal(novaImagem, elemento) {
+    // Atualiza a imagem principal
+    const imagemPrincipal = document.getElementById('imagem-principal');
+    
+    // Efeito de fade
+    imagemPrincipal.style.opacity = '0.5';
+    
+    setTimeout(() => {
+        imagemPrincipal.src = novaImagem;
+        imagemPrincipal.style.opacity = '1';
+    }, 150);
+    
+    // Remove a classe 'active' de todas as miniaturas
+    document.querySelectorAll('.miniatura-img').forEach(img => {
+        img.classList.remove('active');
+    });
+    
+    // Adiciona a classe 'active' na miniatura clicada
+    elemento.classList.add('active');
+}
+</script>
