@@ -32,7 +32,8 @@ $paginasPermitidas = [
     'metodopagamento',
     'paginaCompra',
     'meuperfil',
-    'venda'
+    'venda',
+    'adicionaproduto'
 ];
 
 // Página padrão
@@ -127,62 +128,70 @@ $cartCount = CarrinhoController::contarItens();
                         </ul>
                     </div>
                 </div>
-                
+
                 <!-- User Section - Posicionada à direita -->
                 <div class="user-section ms-auto">
                     <?php if ($isLoggedIn): ?>
-                    <!-- Usuário logado -->
-                    <div class="d-flex align-items-center">
-                        <!-- Carrinho de compras -->
-                        <a href="index.php?url=carrinho" class="text-light fs-4 me-3 position-relative" title="Carrinho de compras">
-                            <i class="bi bi-cart2"></i>
-                            <?php if ($cartCount > 0): ?>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
-                                    <?= $cartCount > 99 ? '99+' : $cartCount ?>
-                                </span>
-                            <?php endif; ?>
-                        </a>
-                        
-                        <!-- Dropdown do usuário -->
-                        <div class="dropdown">
-                            <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center" 
-                               href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle fs-5 me-2"></i>
-                                <span class="d-none d-md-inline">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
+                        <!-- Usuário logado -->
+                        <div class="d-flex align-items-center">
+                            <!-- Carrinho de compras -->
+                            <a href="index.php?url=carrinho" class="text-light fs-4 me-3 position-relative" title="Carrinho de compras">
+                                <i class="bi bi-cart2"></i>
+                                <?php if ($cartCount > 0): ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                                        <?= $cartCount > 99 ? '99+' : $cartCount ?>
+                                    </span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
-                                <li>
-                                    <a class="dropdown-item text-light" href="index.php?url=meuperfil" style="border-bottom: 1px solid #3F0071;">
-                                        <i class="bi bi-person me-2"></i>Meu Perfil
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-danger" href="#" id="logoutBtn">
-                                        <i class="bi bi-box-arrow-right me-2"></i>Sair
-                                    </a>
-                                </li>
-                            </ul>
+
+                            <!-- Dropdown do usuário -->
+                            <div class="dropdown">
+                                <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center"
+                                    href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle fs-5 me-2"></i>
+                                    <span class="d-none d-md-inline">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
+                                    <li>
+                                        <a class="dropdown-item text-light" href="index.php?url=meuperfil" style="border-bottom: 1px solid #3F0071;">
+                                            <i class="bi bi-person me-2"></i>Meu Perfil
+                                        </a>
+                                    </li>
+                                    <?php if ($userData['is_admin'] == 1): ?>
+                                        <li>
+                                            <a class="dropdown-item text-light" href="index.php?url=adicionaproduto" style="border-bottom: 1px solid #3F0071;">
+                                                <i class="bi bi-person me-2"></i>Novo Produto
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Sair
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                     <?php else: ?>
-                    <!-- Usuário não logado -->
-                    <div class="d-flex align-items-center">
-                        <!-- Carrinho de compras -->
-                        <a href="index.php?url=carrinho" class="text-light fs-4 me-4 position-relative" title="Carrinho de compras">
-                            <i class="bi bi-cart2"></i>
-                            <?php if ($cartCount > 0): ?>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
-                                    <?= $cartCount > 99 ? '99+' : $cartCount ?>
-                                </span>
-                            <?php endif; ?>
-                        </a>
-                        
-                        <!-- Botões de autenticação -->
-                        <div class="d-flex">
-                            <a href="index.php?url=login" class="p-btn mx-2">Entrar</a>
-                            <a href="index.php?url=cadastro" class="p-btn mx-2">Cadastrar</a>
+                        <!-- Usuário não logado -->
+                        <div class="d-flex align-items-center">
+                            <!-- Carrinho de compras -->
+                            <a href="index.php?url=carrinho" class="text-light fs-4 me-4 position-relative" title="Carrinho de compras">
+                                <i class="bi bi-cart2"></i>
+                                <?php if ($cartCount > 0): ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                                        <?= $cartCount > 99 ? '99+' : $cartCount ?>
+                                    </span>
+                                <?php endif; ?>
+                            </a>
+
+                            <!-- Botões de autenticação -->
+                            <div class="d-flex">
+                                <a href="index.php?url=login" class="p-btn mx-2">Entrar</a>
+                                <a href="index.php?url=cadastro" class="p-btn mx-2">Cadastrar</a>
+                            </div>
                         </div>
-                    </div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -262,30 +271,30 @@ $cartCount = CarrinhoController::contarItens();
     </body>
     <script src="js/dropinteracao.js"></script>
     <script src="js/auth.js"></script>
-    
+
     <!-- Script para efeito do ícone do usuário -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userDropdown = document.getElementById('userDropdown');
             const userIcon = document.querySelector('#userDropdown .bi-person-circle');
-            
+
             if (userDropdown && userIcon) {
                 // Detectar quando o dropdown é mostrado
                 userDropdown.addEventListener('show.bs.dropdown', function() {
                     userIcon.style.color = '#610094';
                     userIcon.style.transform = 'scale(1.1)';
                 });
-                
+
                 // Detectar quando o dropdown é escondido
                 userDropdown.addEventListener('hide.bs.dropdown', function() {
                     userIcon.style.color = '';
                     userIcon.style.transform = '';
                 });
-                
+
                 // Efeito adicional no clique
                 userDropdown.addEventListener('click', function() {
                     userIcon.style.color = '#3F0071';
-                    
+
                     // Voltar à cor normal após um tempo se o dropdown não abrir
                     setTimeout(() => {
                         if (!userDropdown.classList.contains('show')) {
@@ -296,60 +305,65 @@ $cartCount = CarrinhoController::contarItens();
             }
         });
     </script>
-    
+
     <?php if ($isLoggedIn): ?>
-    
-    <style>
-        .spin {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .user-section .dropdown-menu {
-            min-width: 200px;
-        }
-        
-        .user-section .dropdown-item:hover {
-            background-color: #3F0071 !important;
-            color: #fff !important;
-        }
-        
-        /* Efeito de mudança de cor no ícone do usuário */
-        #userDropdown {
-            transition: all 0.3s ease;
-        }
-        
-        #userDropdown:hover .bi-person-circle {
-            color: #610094 !important;
-            transform: scale(1.1);
-        }
-        
-        #userDropdown:active .bi-person-circle,
-        #userDropdown.show .bi-person-circle {
-            color: #3F0071 !important;
-            transform: scale(1.05);
-        }
-        
-        /* Efeito quando o dropdown está aberto */
-        .dropdown.show #userDropdown .bi-person-circle {
-            color: #610094 !important;
-        }
-        
-        /* Animação suave para o ícone */
-        .bi-person-circle {
-            transition: all 0.3s ease;
-        }
-    </style>
+
+        <style>
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .user-section .dropdown-menu {
+                min-width: 200px;
+            }
+
+            .user-section .dropdown-item:hover {
+                background-color: #3F0071 !important;
+                color: #fff !important;
+            }
+
+            /* Efeito de mudança de cor no ícone do usuário */
+            #userDropdown {
+                transition: all 0.3s ease;
+            }
+
+            #userDropdown:hover .bi-person-circle {
+                color: #610094 !important;
+                transform: scale(1.1);
+            }
+
+            #userDropdown:active .bi-person-circle,
+            #userDropdown.show .bi-person-circle {
+                color: #3F0071 !important;
+                transform: scale(1.05);
+            }
+
+            /* Efeito quando o dropdown está aberto */
+            .dropdown.show #userDropdown .bi-person-circle {
+                color: #610094 !important;
+            }
+
+            /* Animação suave para o ícone */
+            .bi-person-circle {
+                transition: all 0.3s ease;
+            }
+        </style>
     <?php endif; ?>
     <script src="js/cupomalerta.js"></script>
     <script src="js/carrinho.js"></script>
     <?php if ($pagina === 'paginaRetirada'): ?>
-    <script src="js/modalEndereco.js"></script>
+        <script src="js/modalEndereco.js"></script>
     <?php endif; ?>
-</body>
+    </body>
 
 </html>
