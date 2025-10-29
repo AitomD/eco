@@ -32,6 +32,7 @@ $paginasPermitidas = [
     'metodopagamento',
     'paginaCompra',
     'meuperfil',
+    'venda'
 ];
 
 // Página padrão

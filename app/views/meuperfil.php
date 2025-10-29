@@ -132,7 +132,7 @@ if ($id_usuario_logado) {
                 <?php if ($userData['is_admin'] == 1): ?>
                     <a class="list-group-item list-group-item-action" id="link-minhas-vendas" data-bs-toggle="list" href="#pane-minhas-vendas" role="tab" aria-controls="pane-minhas-vendas" aria-selected="false">
                         <i class="bi bi-shop fs-5 me-3"></i>
-                        Minhas Vendas
+                            Minhas Vendas
                     </a>
                 <?php endif; ?>
 
@@ -166,8 +166,7 @@ if ($id_usuario_logado) {
                 <?php if ($userData['is_admin'] == 1): ?>
                     <div class="tab-pane fade" id="pane-minhas-vendas" role="tabpanel" aria-labelledby="link-minhas-vendas" tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
-                            <h3 class="h5 mb-3">Minhas Vendas</h3>
-                             <?php require_once 'dashboard.php' ?>
+                             <?php require_once 'venda.php' ?>
                         </div>
                     </div>
                 <?php endif; ?>

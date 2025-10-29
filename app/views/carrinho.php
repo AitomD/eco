@@ -372,11 +372,10 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
-
+                        
                         <button class="btn btn-success w-100 btn-lg mb-3" id="finalizar-compra">
                             <i class="bi bi-arrow-right me-2"></i>Próximo: Entrega
                         </button>
-                        
                         <div class="text-center">
                             <small class="text-muted">
                                 <i class="bi bi-shield-check me-1"></i>

@@ -84,7 +84,6 @@ class Auth {
             'is_admin' => $_SESSION['is_admin'] ?? false
         ];
     }
-
     // ================================
     // MÉTODOS DE INSTÂNCIA
     // ================================
@@ -102,6 +101,18 @@ class Auth {
         $_SESSION['is_admin'] = (bool)$userData['is_admin'];
     }
     
+     public static function getAdminId()
+{
+    self::startSessionSafe();
+
+    if (!isset($_SESSION['user_id'])) {
+        return null; // Usuário não logado
+    }
+
+    require_once __DIR__ . '/../model/Admin.php';
+    $adminModel = new Admin();
+    return $adminModel->getIdAdminByUser($_SESSION['user_id']);
+}
     public function logout() {
         $_SESSION = [];
         
