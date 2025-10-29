@@ -119,9 +119,6 @@ $cartCount = CarrinhoController::contarItens();
                                 <a class="nav-link p-btn mx-1" aria-current="page" href="index.php?url=home">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link p-btn mx-1" href="index.php?url=ofertas">Ofertas</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link p-btn mx-1" href="index.php?url=cupons">Cupons</a>
                             </li>
                             <li class="nav-item dropdown">
