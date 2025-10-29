@@ -109,8 +109,6 @@ class Dadosuser
         }
     }
   
-
-
 }
 
 ?>
