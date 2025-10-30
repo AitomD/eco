@@ -27,9 +27,9 @@
                 <i class="fa-solid fa-clipboard "></i>
                 Categorias
             </h5>
+            <p class="link-produto" >Mostrar Todos</p>
             <p class="link-produto" data-categoria="1">Computadores Desktop</p>
             <p class="link-produto" data-categoria="2">Notebooks</p>
-            <p class="link-produto" data-categoria="3">SmartTV</p>
             <p class="link-produto" data-categoria="4">Smartphones</p>
             <br>
             <h5 class="text-light">
@@ -58,16 +58,7 @@
             <p class="link-produto" data-marca="8">Oppo</p>
             <p class="link-produto" data-marca="9">Samsung</p>
             <p class="link-produto" data-marca="10">Xiaomi</p>
-            <br>
-            <h5 class="text-light">
-                <i class="fa-solid fa-tv"></i>
-                SmartTV
-            </h5>
-            <p class="link-produto" data-marca="11">AOC</p>
-            <p class="link-produto" data-marca="12">LG</p>
-            <p class="link-produto" data-marca="13">Philco</p>
-            <p class="link-produto" data-marca="9">Samsung</p>
-            <p class="link-produto" data-marca="14">Sony</p>
+           
         </div>
 
         <!-- Coluna de produtos -->
@@ -118,19 +109,16 @@
   <img src="${p.imagem}" class="card-img-top" alt="${p.nome}">
   <div class="card-body">
     <h5 class="card-title">${p.nome}</h5>
-    <p class="card-text">Marca: ${p.marca}</p>
-    <p class="card-text">Categoria: ${p.categoria}</p>
     <p class="card-text card-price">R$ ${p.preco}</p>
-    <p class="card-text">Estoque: ${p.quantidade_disponivel}</p>
     <div class="d-flex justify-content-between mt-3">
-      <button class="btn btn-primary btn-sm btn-add-cart" 
+      <button class="btn btn-primary btn-sm mx-3 w-100  btn-add-cart" 
               data-id="${p.id_produto}" 
               data-nome="${p.nome}" 
               data-preco="${p.preco}" 
               data-imagem="${p.imagem}">
         <i class="bi bi-cart2"></i> Carrinho
       </button>
-      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn btn-outline-secondary btn-sm btn-detalhes">
+      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn btn-outline-secondary w-100 btn-sm btn-detalhes">
         <i class="fa-solid fa-clipboard"></i> Ficha Técnica
       </a>
     </div>
