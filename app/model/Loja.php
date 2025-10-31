@@ -10,6 +10,7 @@ class Loja
         $this->pdo = Database::conectar();
     }
 
+    // Filtra por admin
     public function buscarPorAdminId($idAdmin)
     {
         try {
@@ -28,5 +29,6 @@ class Loja
             return null;
         }
     }
+
 }
 ?>

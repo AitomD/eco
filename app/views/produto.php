@@ -29,7 +29,6 @@
             </h5>
             <p class="link-produto" data-categoria="1">Computadores Desktop</p>
             <p class="link-produto" data-categoria="2">Notebooks</p>
-            <p class="link-produto" data-categoria="3">SmartTV</p>
             <p class="link-produto" data-categoria="4">Smartphones</p>
             <br>
             <h5 class="text-light">
