@@ -91,6 +91,9 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/itemCompra.css">
     <link rel="stylesheet" href="css/carrinho.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/carrinhoStep.css">
+    <link rel="stylesheet" href="css/carrinhoCards.css">
+
 </head>
 
 <body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?> data-is-logged-in="<?= $isLoggedIn ? 'true' : 'false' ?>">
