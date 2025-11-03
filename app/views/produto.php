@@ -108,14 +108,14 @@
     <h5 class="card-title">${p.nome}</h5>
     <p class="card-text card-price">R$ ${p.preco}</p>
     <div class="d-flex justify-content-between mt-3">
-      <button class="btn btn-primary btn-sm mx-3 w-100  btn-add-cart" 
+      <button class="btn text-light btn-sm mx-3 w-100  btn-add-cart" 
               data-id="${p.id_produto}" 
               data-nome="${p.nome}" 
               data-preco="${p.preco}" 
               data-imagem="${p.imagem}">
         <i class="bi bi-cart2"></i> Carrinho
       </button>
-      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn btn-outline-secondary w-100 btn-sm btn-detalhes">
+      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn  w-100 btn-sm btn-detalhes">
         <i class="fa-solid fa-clipboard"></i> Ficha Técnica
       </a>
     </div>

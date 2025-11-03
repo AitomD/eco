@@ -81,7 +81,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                         <i class="bi bi-cart-x text-light" style="font-size: 4rem;"></i>
                         <h4 class="text-light mt-3 mb-4">Seu carrinho está vazio</h4>
                         <p class="text-light mb-4">Adicione produtos ao carrinho para continuar suas compras</p>
-                        <a href="index.php?url=home" class="btn btn-primary btn-lg">
+                        <a href="index.php?url=produto" class="btn btn-lg">
                             <i class="bi bi-arrow-left me-2"></i>Continuar Comprando
                         </a>
                     </div>
@@ -218,15 +218,15 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                         -R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?>
                                     </span>
 
-                                    <button
-                                        class="btn btn-sm text-white p-2"
-                                        onclick="removerCupom()"
-                                        title="Remover cupom"
-                                        type="button">
-                                        <i class="bi bi-x-circle"></i>
-                                    </button>
-                                </div>
 
+                                </div>
+                                <button
+                                    class="btn btn-sm h-100 text-white p-2"
+                                    onclick="removerCupom()"
+                                    title="Remover cupom"
+                                    type="button">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
                             </div>
                         <?php endif; ?>
 
@@ -301,12 +301,13 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                                             </small>
                                                         </div>
 
-                                                        <button
-                                                            class="btn btn-sm text-white aplicar-cupom-disponivel py-2">
-                                                            Usar
-                                                        </button>
+
 
                                                     </div>
+                                                    <button
+                                                        class="btn w-100 btn-sm mt-2 text-white aplicar-cupom-disponivel py-2">
+                                                        Usar
+                                                    </button>
                                                 </div>
                                             <?php endforeach; ?>
 
@@ -319,7 +320,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                         <?php endif; ?>
 
                         <!-- Continuar -->
-                        <button class="btn btn-success w-100 btn-lg mb-3" id="finalizar-compra">
+                        <button class="btn btn-success w-100 btn-lg mb-3 mt-3" id="finalizar-compra">
                             <i class="bi bi-arrow-right me-2"></i>
                             Próximo: Entrega
                         </button>

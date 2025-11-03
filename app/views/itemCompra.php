@@ -1,4 +1,9 @@
 <?php
+// <-- MODIFICAÇÃO: Inicia o buffer de saída
+// Isso armazena todo o HTML em memória e só o envia no final.
+// Isso permite que a função header() funcione mesmo estando no meio do arquivo.
+ob_start();
+
 require_once '../app/core/Database.php';
 require_once '../app/model/Loja.php'; // Classe Loja
 
@@ -74,12 +79,23 @@ try {
     $lojaModel = new Loja();
     $loja_endereco = $lojaModel->buscarPorProdutoId($id_produto);
 
+    // <-- MODIFICAÇÃO: Inicialize a variável $condicao
+    // Você precisa definir sua lógica real aqui.
+    // Ex: $condicao = ($produto['quantidade_disponivel'] == 'Sem Estoque');
+    $condicao = false;
+
+    if ($condicao) {
+        // Agora isso funciona, pois o buffer está segurando o HTML
+        header('Location: paginaRetirada.php');
+        exit; // <-- IMPORTANTE: Sempre use exit/die após um redirecionamento.
+    }
 } catch (PDOException $e) {
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
 ?>
+
 <style>
-    li{
+    li {
         color: var(--black);
     }
 </style>
@@ -171,8 +187,20 @@ try {
                         Quantidade: <?= htmlspecialchars($produto['quantidade_disponivel']) ?> unidade(s)
                     </p>
                     <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn">Comprar agora</button>
-                        <a class="cart-button text-center" href=>Adicionar ao carrinho</a>
+
+                        
+                        <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn w-100 btn-sm btn-detalhes btn-product">
+                            <i class="fa-solid fa-clipboard"></i> Comprar Agora
+                        </a>
+
+                        <button class="btn btn-primary btn-sm fs-6 fw-bold w-100 btn-add-cart"
+                            data-id="${p.id_produto}"
+                            data-nome="${p.nome}"
+                            data-preco="${p.preco}"
+                            data-imagem="${p.imagem}">
+                            <i class="bi bi-cart2 fs-6 fw-bold"></i> Carrinho
+                        </button>
+                        
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.

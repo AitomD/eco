@@ -27,223 +27,7 @@ if (empty($itensCarrinho)) {
 }
 ?>
 
-<style>
-    .payment-option {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        cursor: pointer;
-        transition: border-color 0.2s;
-    }
-
-    .payment-option:has(input:checked) {
-        border-color: #3483fa;
-        border-width: 2px;
-        padding: calc(1.25rem - 1px);
-    }
-
-    .payment-option .form-check-input {
-        margin-top: 0.25em;
-    }
-
-    .step-indicator {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 3rem;
-        padding: 2rem 0;
-        background: linear-gradient(135deg, rgba(97, 0, 148, 0.1), rgba(0, 123, 255, 0.1));
-        border-radius: 15px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .step {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 0 1.5rem;
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    .step-number {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-        font-size: 1.2rem;
-        position: relative;
-        z-index: 2;
-        transition: all 0.4s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .step-icon {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .step-label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .step.completed .step-number {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        transform: scale(1.1);
-        animation: pulse-completed 2s infinite;
-    }
-
-    .step.completed .step-icon {
-        color: #28a745;
-        transform: scale(1.1);
-    }
-
-    .step.completed .step-label {
-        color: #28a745;
-        font-weight: 700;
-    }
-
-    .step.active .step-number {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
-        transform: scale(1.2);
-        animation: pulse-active 1.5s infinite;
-        box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
-    }
-
-    .step.active .step-icon {
-        color: #007bff;
-        transform: scale(1.2);
-    }
-
-    .step.active .step-label {
-        color: #007bff;
-        font-weight: 700;
-    }
-
-    .step.pending .step-number {
-        background: linear-gradient(135deg, #6c757d, #495057);
-        color: white;
-    }
-
-    .step.pending .step-icon {
-        color: #6c757d;
-    }
-
-    .step.pending .step-label {
-        color: #6c757d;
-    }
-
-    .step-line {
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(90deg, #dee2e6, #adb5bd);
-        margin: 0 1rem;
-        border-radius: 2px;
-        position: relative;
-        top: -25px;
-        z-index: 1;
-        transition: all 0.3s ease;
-    }
-
-    .step.completed+.step-line {
-        background: linear-gradient(90deg, #28a745, #20c997);
-        box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
-    }
-
-    @keyframes pulse-active {
-        0% {
-            box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
-        }
-
-        50% {
-            box-shadow: 0 0 35px rgba(0, 123, 255, 0.8);
-        }
-
-        100% {
-            box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
-        }
-    }
-
-    @keyframes pulse-completed {
-        0% {
-            transform: scale(1.1);
-        }
-
-        50% {
-            transform: scale(1.15);
-        }
-
-        100% {
-            transform: scale(1.1);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .step {
-            margin: 0 0.5rem;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-        }
-
-        .step-label {
-            font-size: 0.8rem;
-        }
-
-        .step-line {
-            width: 40px;
-            top: -20px;
-        }
-    }
-
-    .credit-card-form {
-        display: none;
-        margin-top: 2rem;
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-    }
-
-    .pix-info {
-        display: none;
-        margin-top: 1rem;
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        text-align: center;
-    }
-
-    .boleto-info {
-        display: none;
-        margin-top: 1rem;
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-    }
-
-    span,
-    h5,
-    h6 {
-        color: var(--black);
-    }
-</style>
-
-<body>
+<body >
 
     <!-- STEP INDICATOR -->
     <div class="container py-4 mt-3">
@@ -278,8 +62,8 @@ if (empty($itensCarrinho)) {
     </div>
 
     <!-- MAIN CONTAINER -->
-    <main class="container py-4 mt-3 rounded shadow-lg"
-        style="background:#161616; border:1px solid #150050;">
+    <main class="container py-4 rounded shadow-lg">
+        
 
         <div class="row g-4">
 
@@ -308,14 +92,14 @@ if (empty($itensCarrinho)) {
                             </div>
 
                             <div class="text-end">
-                                <span class="fw-bold text-success">À vista</span>
+                                <span class="fw-bold text-primary">À vista</span>
                                 <div class="text-light" style="font-size:0.9em;">5% de desconto</div>
                             </div>
 
                         </div>
 
                         <div id="pix-info"
-                            class="pix-info mt-3 p-3 rounded"
+                            class="pix-info mt-3 p-3 rounded text-center"
                             style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
                             <i class="bi bi-qr-code bg-white p-2 rounded-2 fs-1" style="font-size:2rem; color:var(--black);"></i>
                             <p class="mt-2 mb-1"><strong>Pagamento via PIX</strong></p>
@@ -340,7 +124,7 @@ if (empty($itensCarrinho)) {
                             </div>
 
                             <div class="text-end">
-                                <span class="fw-bold text-success">À vista</span>
+                                <span class="fw-bold text-primary">À vista</span>
                                 <div class="text-light" style="font-size:0.9em;">3% de desconto</div>
                             </div>
                         </div>
@@ -363,7 +147,7 @@ if (empty($itensCarrinho)) {
                             </div>
 
                             <div class="text-end">
-                                <span class="fw-bold text-success">À vista</span>
+                                <span class="fw-bold text-primary">À vista</span>
                                 <div class="text-light" style="font-size:0.9em;">2% de desconto</div>
                             </div>
                         </div>
@@ -513,7 +297,7 @@ if (empty($itensCarrinho)) {
 
                     <div class="d-flex justify-content-between mb-3">
                         <span class="text-light">Frete:</span>
-                        <span class="text-success">GRÁTIS</span>
+                        <span class="text-primary">GRÁTIS</span>
                     </div>
 
                     <hr style="border-color:rgba(255,255,255,0.1);">
@@ -533,7 +317,7 @@ if (empty($itensCarrinho)) {
                             <span class="fw-bold text-success">Compra 100% Segura</span>
                         </div>
 
-                        <small class=" text-light">Seus dados estão protegidos.</small>
+                        <small class="text-light">Seus dados estão protegidos.</small>
 
                     </div>
 
@@ -541,6 +325,7 @@ if (empty($itensCarrinho)) {
             </div>
 
         </div>
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

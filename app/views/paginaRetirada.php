@@ -29,11 +29,9 @@ if (empty($itensCarrinho)) {
 
 
 <body>
-   <!-- Indicador de progresso -->
-<div class="container py-4 mt-3">
+    <div class="container py-4 mt-3">
     <div class="step-indicator bg-dark p-4 rounded shadow-lg">
 
-        <!-- Etapa 1 -->
         <div class="step completed">
             <div class="step-number" style="background: var(--pmain); color: var(--clear);">
                 <i class="bi bi-check-circle-fill"></i>
@@ -43,7 +41,6 @@ if (empty($itensCarrinho)) {
 
         <div class="step-line" style="background: var(--pmain);"></div>
 
-        <!-- Etapa 2 -->
         <div class="step active">
             <div class="step-number" style="background: var(--psec); color: var(--clear);">
                 <i class="bi bi-truck"></i>
@@ -53,7 +50,6 @@ if (empty($itensCarrinho)) {
 
         <div class="step-line"></div>
 
-        <!-- Etapa 3 -->
         <div class="step pending">
             <div class="step-number bg-secondary text-white">
                 <i class="bi bi-credit-card"></i>
@@ -64,19 +60,16 @@ if (empty($itensCarrinho)) {
     </div>
 </div>
 
-<!-- Conteúdo principal -->
 <main class="container py-4 mt-3 bg-dark rounded shadow-lg">
 
     <div class="row g-4">
 
-        <!-- Formas de entrega -->
         <div class="col-lg-7">
 
             <div class="bg-dark border border-secondary rounded p-4 shadow">
 
                 <h5 class="fw-bold mb-4 text-white">Escolha a forma de entrega</h5>
 
-                <!-- Opção 1 -->
                 <label for="mudaEndereco" class="shipping-option w-100 py-3 px-3 rounded mb-3"
                        style="background: rgba(255,255,255,0.05); cursor:pointer;">
                     <div class="d-flex justify-content-between">
@@ -91,7 +84,6 @@ if (empty($itensCarrinho)) {
                     </div>
                 </label>
 
-                <!-- Opção 2 -->
                 <label for="envEndereco" class="shipping-option w-100 py-3 px-3 rounded mb-3"
                        style="background: rgba(255,255,255,0.05); cursor:pointer;">
                     <div class="d-flex justify-content-between">
@@ -108,7 +100,6 @@ if (empty($itensCarrinho)) {
                     </div>
                 </label>
 
-                <!-- Opção 3 -->
                 <label for="retiraAgencia" class="shipping-option w-100 py-3 px-3 rounded"
                        style="background: rgba(255,255,255,0.05); cursor:pointer;">
                     <div class="d-flex justify-content-between">
@@ -127,20 +118,17 @@ if (empty($itensCarrinho)) {
             </div>
         </div>
 
-        <!-- Resumo da compra -->
         <div class="col-lg-5">
 
             <div class="bg-dark border border-secondary rounded p-4 shadow" style="position: sticky; top: 20px;">
 
                 <h6 class="fw-bold mb-3 text-white">Resumo da compra</h6>
 
-                <!-- Subtotal -->
                 <div class="d-flex justify-content-between mb-2">
                     <span class="text-light">Produto</span>
                     <span class="text-light">R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?></span>
                 </div>
 
-                <!-- Desconto -->
                 <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-success">
@@ -152,7 +140,6 @@ if (empty($itensCarrinho)) {
                     </div>
                 <?php endif; ?>
 
-                <!-- Frete -->
                 <div class="d-flex justify-content-between mb-3">
                     <span class="text-light">Frete</span>
                     <span class="fw-bold text-primary">GRÁTIS</span>
@@ -160,7 +147,6 @@ if (empty($itensCarrinho)) {
 
                 <hr class="border-secondary my-3">
 
-                <!-- Total -->
                 <div class="d-flex justify-content-between fs-5 fw-bold">
                     <span class="text-white">Total</span>
                     <span class="text-white">
@@ -170,7 +156,6 @@ if (empty($itensCarrinho)) {
 
             </div>
 
-            <!-- Navegação -->
             <div class="text-center mt-4 w-100">
                 <div class="d-flex justify-content-between">
 
@@ -190,7 +175,6 @@ if (empty($itensCarrinho)) {
     </div>
 </main>
 
-<!-- Modal de endereço -->
 <div class="modal fade" id="enderecoModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content bg-dark text-white border border-secondary">
@@ -249,6 +233,7 @@ if (empty($itensCarrinho)) {
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const btnContinuar = document.getElementById('btn-continuar');
@@ -262,8 +247,16 @@ if (empty($itensCarrinho)) {
                 return;
             }
             
-            // Redirecionar para a página de método de pagamento
-            window.location.href = 'index.php?url=metodopagamento';
+            // **INÍCIO DA MODIFICAÇÃO**
+            // Verificar o ID da opção selecionada
+            if (entregaSelecionada.id === 'retiraAgencia') {
+                // Se for "Retirada na Agência", redireciona para a página de retirada
+                window.location.href = 'index.php?url=paginaRetirada';
+            } else {
+                // Para as outras opções, redireciona para a página de método de pagamento
+                window.location.href = 'index.php?url=metodopagamento';
+            }
+            // **FIM DA MODIFICAÇÃO**
         });
         
         // Abrir modal de endereço quando selecionar "Alterar meu endereço"
