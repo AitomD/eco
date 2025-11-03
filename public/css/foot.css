@@ -6,6 +6,11 @@ footer {
   margin-top: auto;
   flex-shrink: 0;
   padding: 20px 0;
+  border-top: 1px solid #333;
+}
+
+.footer-column {
+  max-width: 100%;
 }
 
 .dev-list {
@@ -16,31 +21,70 @@ footer {
 
 .dev-list li {
   margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   color: #ccc;
   font-size: 15px;
+  width: 100%;
 }
 
-.dev-list li span {
+.social-links {
+  display: flex;
+  gap: 8px;
   flex-shrink: 0;
-  width: 200px;
-  font-weight: 500;
 }
 
 .dev-list li a {
   color: #ccc;
   font-size: 16px;
   text-decoration: none;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
 }
 
 .dev-list li a:hover {
-  color: #fff;
-  text-decoration: underline;
+  color: #610094;
+  transform: scale(1.1);
 }
 
 .footer-column > h4 {
   margin-top: 15px;
+  color: #fff !important;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+  .dev-list li .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px;
+  }
+  
+  .social-links {
+    align-self: flex-start;
+  }
+  
+  footer {
+    padding: 15px 0;
+  }
+  
+  .footer-column {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Ajustes para melhor layout */
+.container-fluid hr {
+  border-color: #333 !important;
+}
+
+footer .text-muted {
+  color: #adb5bd !important;
+}
+
+footer .text-muted:hover {
+  color: #610094 !important;
+}
+
+/* Garantir que os elementos não extrapolem */
+footer * {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

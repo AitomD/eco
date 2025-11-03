@@ -43,7 +43,7 @@ class CuponsCarrinhoController {
             $pdo = Database::conectar();
             
             $query = "
-                SELECT codigo, descricao, tipo_desconto, valor_desconto, uso_total, uso_user, data_fim
+                SELECT id_cupom, codigo, descricao, tipo_desconto, valor_desconto, uso_total, uso_user, data_fim
                 FROM cupons
                 WHERE codigo = :codigo
                   AND ativo = 1
@@ -97,6 +97,7 @@ class CuponsCarrinhoController {
         
         // Salvar cupom aplicado na sessão (sem o valor do desconto calculado)
         $_SESSION['cupom_aplicado'] = [
+            'id_cupom' => $cupom['id_cupom'],
             'codigo' => $cupom['codigo'],
             'descricao' => $cupom['descricao'],
             'tipo_desconto' => $cupom['tipo_desconto'],
@@ -292,6 +293,45 @@ class CuponsCarrinhoController {
             $resultado = self::aplicarCupom($codigo, $totalCarrinho);
             echo json_encode($resultado);
             exit;
+        }
+    }
+
+    /**
+     * Registrar uso de cupom por um usuário
+     * @param int $idCupom ID do cupom
+     * @param int $idUser ID do usuário
+     * @return bool Sucesso da operação
+     */
+    public static function registrarUsoCupom($idCupom, $idUser) {
+        try {
+            $pdo = Database::conectar();
+            
+            // Verificar se o cupom existe
+            $stmt = $pdo->prepare("SELECT id_cupom FROM cupons WHERE id_cupom = ?");
+            $stmt->execute([$idCupom]);
+            
+            if (!$stmt->fetch()) {
+                return false;
+            }
+            
+            // Verificar se já existe registro para este cupom e usuário
+            $stmt = $pdo->prepare("SELECT id_cupom_user, usos FROM cupom_user WHERE id_cupom = ? AND id_user = ?");
+            $stmt->execute([$idCupom, $idUser]);
+            $registro = $stmt->fetch();
+            
+            if ($registro) {
+                // Incrementar uso existente
+                $stmt = $pdo->prepare("UPDATE cupom_user SET usos = usos + 1 WHERE id_cupom_user = ?");
+                return $stmt->execute([$registro['id_cupom_user']]);
+            } else {
+                // Criar novo registro
+                $stmt = $pdo->prepare("INSERT INTO cupom_user (id_cupom, id_user, usos) VALUES (?, ?, 1)");
+                return $stmt->execute([$idCupom, $idUser]);
+            }
+            
+        } catch (PDOException $e) {
+            error_log("Erro ao registrar uso do cupom: " . $e->getMessage());
+            return false;
         }
     }
 }

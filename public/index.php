@@ -30,6 +30,7 @@ $paginasPermitidas = [
     'paginaSeguro',
     'paginaRetirada',
     'metodopagamento',
+    'pedido-sucesso',
     'paginaCompra',
     'meuperfil',
     'venda',
@@ -62,6 +63,31 @@ $isLoggedIn = Auth::isUserLoggedIn();
 $userData = null;
 if ($isLoggedIn) {
     $userData = Auth::getCurrentUserData();
+}
+
+// Processar finalização de compra se for uma requisição POST para metodopagamento
+if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finalizar_compra'])) {
+    require_once __DIR__ . '/../app/controller/PedidoController.php';
+    
+    $resultado = PedidoController::processarFinalizacaoCompra();
+    
+    if ($resultado['sucesso']) {
+        // Redirecionar para página de sucesso com o ID do pedido
+        header('Location: index.php?url=pedido-sucesso&id=' . $resultado['id_pedido']);
+        exit;
+    } else {
+        // Armazenar mensagem de erro na sessão
+        $_SESSION['erro_compra'] = $resultado['mensagem'];
+    }
+}
+
+// Verificar se está tentando acessar metodopagamento com carrinho vazio
+if ($pagina === 'metodopagamento') {
+    $itensCarrinho = CarrinhoController::getItens();
+    if (empty($itensCarrinho)) {
+        header('Location: index.php?url=carrinho');
+        exit;
+    }
 }
 
 // Contar itens no carrinho
@@ -204,53 +230,85 @@ $cartCount = CarrinhoController::contarItens();
 
     </main>
     <?php if (!$isAuthPage): ?>
-        <footer class="z-3 ">
-            <div class="footer-container d-flex mx-4">
-                <div class="footer-column mx-5">
-                    <h4 class="text-light">Sobre Nós</h4>
-                    <ul class="dev-list">
-                        <li>
-                            <span class="text-light text-dimmed">Fernando Consolin Rosa</span>
-                            <a href="#" target="_blank"><i class="bi bi-instagram"></i></a>
-                            <a href="#" target="_blank"><i class="bi bi-github"></i></a>
-                        </li>
-                        <li>
-                            <span class="text-light text-dimmed">Aitom Henrique Donatoni</span>
-                            <a href="#" target="_blank"><i class="bi bi-instagram"></i></a>
-                            <a href="#" target="_blank"><i class="bi bi-github"></i></a>
-                        </li>
-                        <li>
-                            <span class="text-light text-dimmed">Hiago Nascimento</span>
-                            <a href="#" target="_blank"><i class="bi bi-instagram"></i></a>
-                            <a href="#" target="_blank"><i class="bi bi-github"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="footer-column mx-3">
-                    <h4 class="text-light">Novidades e Promoções</h4>
-                    <div class="d-flex">
-                        <ul class="dev-list">
-                            <li>Dia Das Crianças</li>
-                            <li>Black Friday</li>
-                        </ul>
-                        <ul class="dev-list mx-3">
-                            <li>Oferta Tech</li>
-                            <li>Gift Card HAFTECH!</li>
-                        </ul>
+        <footer class="mt-5 py-4">
+            <div class="container-fluid">
+                <div class="row g-4 mx-2">
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="footer-column">
+                            <h4 class="text-light mb-3">Sobre Nós</h4>
+                            <ul class="dev-list">
+                                <li>
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <span class="text-light flex-grow-1">Fernando Consolin Rosa</span>
+                                        <div class="social-links">
+                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <span class="text-light flex-grow-1">Aitom Henrique Donatoni</span>
+                                        <div class="social-links">
+                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <span class="text-light flex-grow-1">Hiago Nascimento</span>
+                                        <div class="social-links">
+                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="footer-column">
+                            <h4 class="text-light mb-3">Novidades e Promoções</h4>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="dev-list">
+                                        <li class="text-muted">Dia Das Crianças</li>
+                                        <li class="text-muted">Black Friday</li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="dev-list">
+                                        <li class="text-muted">Oferta Tech</li>
+                                        <li class="text-muted">Gift Card HAFTECH!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="footer-column">
+                            <h4 class="text-light mb-3">Atendimento</h4>
+                            <ul class="dev-list">
+                                <li><a href="#" class="text-muted">Entre em Contato</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="footer-column">
+                            <h4 class="text-light mb-3">Outros</h4>
+                            <ul class="dev-list">
+                                <li><a href="#" class="text-muted">Termos e Condições</a></li>
+                                <li><a href="#" class="text-muted">Política de Privacidade</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="footer-column mx-5">
-                    <h4 class="text-light">Atendimento</h4>
-                    <ul class="dev-list">
-                        <li><a href="#">Entre em Contato</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column mx-5">
-                    <h4 class="text-light">Outros</h4>
-                    <ul class="dev-list">
-                        <li><a href="#">Termos e Condições</a></li>
-                        <li><a href="#">Política de Privacidade</a></li>
-                    </ul>
+                <hr class="border-secondary my-4 mx-2">
+                <div class="row mx-2">
+                    <div class="col-12 text-center">
+                        <p class="text-muted mb-0">&copy; 2024 HAFTECH. Todos os direitos reservados.</p>
+                    </div>
                 </div>
             </div>
         </footer>
