@@ -31,7 +31,8 @@ $paginasPermitidas = [
     'paginaCompra',
     'meuperfil',
     'venda',
-    'adicionaproduto'
+    'adicionaproduto',
+    'meusprodutos'
 ];
 
 // Página padrão
@@ -158,13 +159,6 @@ $cartCount = CarrinhoController::contarItens();
                                             <i class="bi bi-person me-2"></i>Meu Perfil
                                         </a>
                                     </li>
-                                    <?php if ($userData['is_admin'] == 1): ?>
-                                        <li>
-                                            <a class="dropdown-item text-light" href="index.php?url=adicionaproduto" style="border-bottom: 1px solid #3F0071;">
-                                                <i class="bi bi-person me-2"></i>Novo Produto
-                                            </a>
-                                        </li>
-                                    <?php endif; ?>
 
                                     <li>
                                         <a class="dropdown-item text-danger" href="#" id="logoutBtn">

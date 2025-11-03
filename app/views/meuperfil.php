@@ -30,11 +30,6 @@ function showMessage($type, $text)
     echo $text;
     echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
 }
-
-
-// 1. Incluir a classe Pedido
-// (Ajuste o caminho conforme a estrutura do seu projeto)
-
 // 2. Obter o ID do usuário logado (ASSUMINDO que está na sessão)
 // Verifique se a sessão já foi iniciada no topo da sua página
 if (session_status() == PHP_SESSION_NONE) {
@@ -132,10 +127,20 @@ if ($id_usuario_logado) {
                 <?php if ($userData['is_admin'] == 1): ?>
                     <a class="list-group-item list-group-item-action" id="link-minhas-vendas" data-bs-toggle="list" href="#pane-minhas-vendas" role="tab" aria-controls="pane-minhas-vendas" aria-selected="false">
                         <i class="bi bi-shop fs-5 me-3"></i>
-                            Minhas Vendas
+                        Minhas Vendas
                     </a>
                 <?php endif; ?>
 
+                <?php if ($userData['is_admin'] == 1): ?>
+                    <a class="list-group-item list-group-item-action" id="link-adiciona" data-bs-toggle="list" href="#pane-adiciona" role="tab" aria-controls="pane-adiciona" aria-selected="false">
+                        <i class="bi bi-cart-plus me-3"></i>
+                        Adicionar Produto
+                    </a>
+                <?php endif; ?>
+                    <a class="list-group-item list-group-item-action" id="link-meus-produtos" data-bs-toggle="list" href="#pane-meus-produtos" role="tab" aria-controls="pane-adiciona" aria-selected="false">
+                        <i class="bi bi-card-list me-3"></i>
+                        Meus Produtos
+                    </a>
                 <a href="?url=logout" class="list-group-item list-group-item-action text-danger mt-3">
                     <i class="bi bi-box-arrow-right fs-5 me-3"></i>
                     Sair
@@ -145,14 +150,14 @@ if ($id_usuario_logado) {
         <div class="col-lg-9">
             <div class="tab-content" id="myTabContent">
                 <!-- MEUS DADOS --->
-                 <?php 
-                        include 'meusDados.php';
+                <?php
+                include 'meusDados.php';
                 ?>
 
                 <!--MEUS PEDIDOS-->
-                    <?php 
-                        include 'meusPedidos.php';
-                    ?>
+                <?php
+                include 'meusPedidos.php';
+                ?>
 
                 <!--LISTA DE DESEJO-->
                 <div class="tab-pane fade" id="pane-lista-desejo" role="tabpanel" aria-labelledby="link-lista-desejo" tabindex="0">
@@ -166,16 +171,31 @@ if ($id_usuario_logado) {
                 <?php if ($userData['is_admin'] == 1): ?>
                     <div class="tab-pane fade" id="pane-minhas-vendas" role="tabpanel" aria-labelledby="link-minhas-vendas" tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
-                             <?php require_once 'venda.php' ?>
+                            <?php require_once 'venda.php' ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($userData['is_admin'] == 1): ?>
+                    <div class="tab-pane fade" id="pane-adiciona" role="tabpanel" aria-labelledby="link-adiciona" tabindex="0">
+                        <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                            <?php require_once 'adicionaproduto.php' ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <?php if ($userData['is_admin'] == 1): ?>
+                    <div class="tab-pane fade" id="pane-meus-produtos" role="tabpanel" aria-labelledby="link-meus-produtos" tabindex="0">
+                        <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                            <?php require_once 'meusprodutos.php' ?>
                         </div>
                     </div>
                 <?php endif; ?>
 
             </div>
         </div>
-        
+
     </div>
-    
+
 </main>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

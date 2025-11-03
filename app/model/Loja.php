@@ -21,6 +21,8 @@ class Loja
      *                    ou null se não for encontrado.
      */
     public function buscarPorProdutoId($idProduto)
+    // Filtra por admin
+    public function buscarPorAdminId($idAdmin)
     {
         try {
             $sql = "
@@ -52,5 +54,6 @@ class Loja
             return null;
         }
     }
+
 }
 ?>
