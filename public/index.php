@@ -21,13 +21,11 @@ $paginasPermitidas = [
     'home',
     'login',
     'cadastro',
-    'ofertas',
     'produto',
     'cupons',
     'carrinho',
     '404',
     'itemCompra',
-    'paginaSeguro',
     'paginaRetirada',
     'metodopagamento',
     'paginaCompra',
@@ -94,6 +92,9 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/itemCompra.css">
     <link rel="stylesheet" href="css/carrinho.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/carrinhoStep.css">
+    <link rel="stylesheet" href="css/carrinhoCards.css">
+
 </head>
 
 <body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?> data-is-logged-in="<?= $isLoggedIn ? 'true' : 'false' ?>">
@@ -150,7 +151,7 @@ $cartCount = CarrinhoController::contarItens();
                                 <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center"
                                     href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
-                                    <span class="d-none d-md-inline">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="d-none d-md-inline text-light">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
                                     <li>
@@ -198,7 +199,7 @@ $cartCount = CarrinhoController::contarItens();
 
     </main>
     <?php if (!$isAuthPage): ?>
-        <footer class="z-3 ">
+        <footer class="z-3 mt-5">
             <div class="footer-container d-flex mx-4">
                 <div class="footer-column mx-5">
                     <h4 class="text-light">Sobre Nós</h4>

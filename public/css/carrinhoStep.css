@@ -1,0 +1,110 @@
+:root {
+    --pmain: #610094; /* Roxo principal */
+    --psec: #3f0071;  /* Roxo escuro */
+}
+
+ main.page-container {
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+/* CONTAINER */
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px;
+    background: #161616 !important;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* STEP BASE */
+.step {
+    text-align: center;
+}
+
+.step-number {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: 0.3s ease-in-out;
+}
+
+.step-label {
+    margin-top: 7px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.3s ease-in-out;
+}
+
+/* LINHAS ENTRE OS STEPS */
+.step-line {
+    flex-grow: 1;
+    height: 3.4px;
+    border-radius: 5px;
+    margin: 0 20px;
+    transition: 0.3s;
+}
+
+
+
+/* =============================
+        ESTADOS DOS STEPS
+================================*/
+
+/* ✅ FINALIZADO */
+.step.completed .step-number {
+    background: rgba(0, 255, 100, 0.18) !important;
+    border: 2px solid #00d169;
+    color: #00d169 !important;
+    box-shadow: 0 0 14px rgba(0, 255, 100, 0.45);
+}
+
+.step.completed .step-label {
+    color: #00d169 !important;
+}
+
+.step.completed + .step-line {
+    background: #00d169 !important;
+}
+
+
+
+/* ✅ ATUAL / FAZENDO */
+.step.active .step-number {
+    background: var(--pmain) !important;
+    border: 2px solid var(--pmain);
+    color: #fff !important;
+    box-shadow: 0 0 18px rgba(97, 0, 148, 0.8);
+}
+
+.step.active .step-label {
+    color: #fff !important;
+    text-shadow: 0 0 7px rgba(97, 0, 148, 0.7);
+}
+
+.step.active + .step-line {
+    background: var(--pmain) !important;
+}
+
+
+
+/* ✅ AINDA NÃO FEITO */
+.step.pending .step-number {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 2px solid #6c757d;
+    color: #6c757d !important;
+    box-shadow: 0 0 12px rgba(120, 120, 120, 0.25);
+}
+
+.step.pending .step-label {
+    color: #6c757d !important;
+}
+
+.step.pending + .step-line {
+    background: rgba(255,255,255,0.2) !important;
+}

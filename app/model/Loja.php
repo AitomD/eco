@@ -10,22 +10,47 @@ class Loja
         $this->pdo = Database::conectar();
     }
 
+    /**
+     * Busca as informações do produto, incluindo:
+     * - nome do produto, cor e preço
+     * - nome da loja responsável
+     * - endereço e cidade da loja
+     *
+     * @param int $idProduto O ID do produto.
+     * @return array|null Retorna um array associativo com os dados combinados
+     *                    ou null se não for encontrado.
+     */
+    public function buscarPorProdutoId($idProduto)
     // Filtra por admin
     public function buscarPorAdminId($idAdmin)
     {
         try {
-            $stmt = $this->pdo->prepare("
-                SELECT id_loja, id_endereco, id_admin, nome, cnpj 
-                FROM loja 
-                WHERE id_admin = ?
+            $sql = "
+                SELECT 
+                    p.id_produto,
+                    p.nome AS nome_produto,
+                    p.cor,
+                    p.preco,
+                    l.id_loja,
+                    l.nome AS nome_loja,
+                    e.endereco,
+                    e.cidade,
+                    e.estado
+                FROM produto AS p
+                INNER JOIN loja AS l ON p.id_loja = l.id_loja
+                INNER JOIN endereco AS e ON l.id_endereco = e.id_endereco
+                WHERE p.id_produto = ?
                 LIMIT 1
-            ");
-            $stmt->execute([$idAdmin]);
-            $loja = $stmt->fetch(PDO::FETCH_ASSOC);
+            ";
 
-            return $loja ?: null;
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$idProduto]);
+            $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $dados ?: null;
+
         } catch (PDOException $e) {
-            error_log("Erro ao buscar loja: " . $e->getMessage());
+            error_log("Erro ao buscar loja e endereço pelo produto: " . $e->getMessage());
             return null;
         }
     }
