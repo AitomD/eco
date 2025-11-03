@@ -58,15 +58,6 @@
             <p class="link-produto" data-marca="9">Samsung</p>
             <p class="link-produto" data-marca="10">Xiaomi</p>
             <br>
-            <h5 class="text-light">
-                <i class="fa-solid fa-tv"></i>
-                SmartTV
-            </h5>
-            <p class="link-produto" data-marca="11">AOC</p>
-            <p class="link-produto" data-marca="12">LG</p>
-            <p class="link-produto" data-marca="13">Philco</p>
-            <p class="link-produto" data-marca="9">Samsung</p>
-            <p class="link-produto" data-marca="14">Sony</p>
         </div>
 
         <!-- Coluna de produtos -->

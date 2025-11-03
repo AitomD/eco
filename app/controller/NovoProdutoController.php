@@ -26,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'placa_mae' => $dados['placa_mae'] ?? '',
         'fonte' => $dados['fonte'] ?? '',
         'url_imagem' => $dados['url_imagem'] ?? [],
-        'id_loja' => $dados['id_loja'] ?? 1
+        'id_loja' => $dados['id_loja'] ?? 1,
+        'quantidade' => $dados['quantidade'] ?? 0,
+        'tipo' => $dados['tipo'] ?? 'entrada'
     ];
 
     $novoProduto = new NovoProduto();

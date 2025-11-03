@@ -124,23 +124,22 @@ if ($id_usuario_logado) {
                     Lista de Desejo
                 </a>
 
+                <!-- Paginas para o vendedor acessar -->
                 <?php if ($userData['is_admin'] == 1): ?>
                     <a class="list-group-item list-group-item-action" id="link-minhas-vendas" data-bs-toggle="list" href="#pane-minhas-vendas" role="tab" aria-controls="pane-minhas-vendas" aria-selected="false">
                         <i class="bi bi-shop fs-5 me-3"></i>
                         Minhas Vendas
                     </a>
-                <?php endif; ?>
 
-                <?php if ($userData['is_admin'] == 1): ?>
                     <a class="list-group-item list-group-item-action" id="link-adiciona" data-bs-toggle="list" href="#pane-adiciona" role="tab" aria-controls="pane-adiciona" aria-selected="false">
                         <i class="bi bi-cart-plus me-3"></i>
                         Adicionar Produto
                     </a>
-                <?php endif; ?>
                     <a class="list-group-item list-group-item-action" id="link-meus-produtos" data-bs-toggle="list" href="#pane-meus-produtos" role="tab" aria-controls="pane-adiciona" aria-selected="false">
                         <i class="bi bi-card-list me-3"></i>
                         Meus Produtos
                     </a>
+                    <?php endif; ?>
                 <a href="?url=logout" class="list-group-item list-group-item-action text-danger mt-3">
                     <i class="bi bi-box-arrow-right fs-5 me-3"></i>
                     Sair
@@ -167,7 +166,7 @@ if ($id_usuario_logado) {
                     </div>
                 </div>
 
-                <!--MINHAS VENDAS (if this user is admin = 1) -->
+                <!--Paginas que o vendedor acessa -->
                 <?php if ($userData['is_admin'] == 1): ?>
                     <div class="tab-pane fade" id="pane-minhas-vendas" role="tabpanel" aria-labelledby="link-minhas-vendas" tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
