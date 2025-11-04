@@ -207,26 +207,16 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
                         <!-- Cupom aplicado -->
                         <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                <div class="text-primary">
-                                    Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>):
-                                </div>
-
-                                <div class="d-flex align-items-center">
-                                    <span class="text-primary me-2">
-                                        -R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="flex-grow-1 me-2">
+                                    <span class="text-success d-block">
+                                        Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>)
                                     </span>
-
-
+                                    <button class="btn btn-link btn-sm text-danger p-0 mt-1" onclick="removerCupom()" title="Remover cupom">
+                                        <i class="bi bi-x-circle me-1"></i>Remover
+                                    </button>
                                 </div>
-                                <button
-                                    class="btn btn-sm h-100 text-white p-2"
-                                    onclick="removerCupom()"
-                                    title="Remover cupom"
-                                    type="button">
-                                    <i class="bi bi-x-circle"></i>
-                                </button>
+                                <span class="text-success fw-bold">-R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
                             </div>
                         <?php endif; ?>
 
@@ -255,14 +245,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                     <input type="hidden" name="valor_carrinho" value="<?= $totalCarrinho ?>">
 
                                     <div class="input-group">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="codigo_cupom"
-                                            placeholder="Código do cupom"
-                                            id="cupom-input">
-
-                                        <button class="btn btn-outline-secondary" type="submit">
+                                        <input type="text" class="form-control cupom-input" name="codigo_cupom" placeholder="Código do cupom" id="cupom-input" value="">
+                                        <button class="btn btn-outline-secondary cupom-btn" type="submit">
                                             Aplicar
                                         </button>
                                     </div>
@@ -286,23 +270,13 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                         <div class="mt-2">
 
                                             <?php foreach (array_slice($cuponsDisponiveis, 0, 3) as $cupom): ?>
-                                                <div
-                                                    class="border border-secondary rounded p-2 mb-2 cupom-disponivel"
-                                                    data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
-                                                    <div class="d-flex justify-content-between align-items-center">
-
-                                                        <div>
-                                                            <small class="fw-bold text-white">
-                                                                <?= htmlspecialchars($cupom['codigo']) ?>
-                                                            </small>
-                                                            <br>
-                                                            <small class="text-white text-muted">
-                                                                <?= htmlspecialchars($cupom['descricao']) ?>
-                                                            </small>
+                                                <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel" data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="flex-grow-1 me-2">
+                                                            <small class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
+                                                            <small class="text-muted"><?= htmlspecialchars($cupom['descricao']) ?></small>
                                                         </div>
-
-
-
+                                                        <button class="btn btn-outline-primary btn-sm aplicar-cupom-disponivel flex-shrink-0">Usar</button>
                                                     </div>
                                                     <button
                                                         class="btn w-100 btn-sm mt-2 text-white aplicar-cupom-disponivel py-2">
@@ -331,10 +305,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                 Compra 100% segura
                             </small>
                         </div>
-
                     </div>
                 </div>
-
             </div>
 
         </div>
@@ -379,6 +351,147 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 <form id="form-remover-cupom" method="POST" style="display: none;">
     <input type="hidden" name="acao_cupom" value="remover">
 </form>
+
+<style>
+.item-carrinho {
+    transition: all 0.3s ease;
+}
+
+.item-carrinho:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.quantidade-input {
+    background-color: #2d2d2d !important;
+    border-color: #555 !important;
+    color: white !important;
+}
+
+.quantidade-input:focus {
+    background-color: #2d2d2d !important;
+    border-color: #610094 !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25) !important;
+}
+
+/* Input de cupom */
+.cupom-input {
+    background-color: #2d2d2d !important;
+    border-color: #555 !important;
+    color: white !important;
+    flex: 1;
+    min-width: 0;
+}
+
+.cupom-input:focus {
+    background-color: #2d2d2d !important;
+    border-color: #610094 !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25) !important;
+}
+
+.cupom-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-outline-secondary {
+    border-color: #555 !important;
+    color: #adb5bd !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #610094 !important;
+    border-color: #610094 !important;
+    color: white !important;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.badge {
+    background-color: #610094 !important;
+}
+
+.carrinho-container {
+    margin-bottom: 2rem;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.carrinho-container .card {
+    background-color: #1a1a1a !important;
+    border-color: #333 !important;
+    max-width: 100%;
+}
+
+.carrinho-container .text-white {
+    color: white !important;
+}
+
+.cupom-disponivel {
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.cupom-disponivel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #610094 !important;
+}
+
+.aplicar-cupom-disponivel {
+    font-size: 12px;
+    padding: 4px 8px;
+    min-width: 50px;
+    white-space: nowrap;
+}
+
+/* Melhorar layout da seção de desconto */
+.desconto-section {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.desconto-section .btn-link {
+    font-size: 11px;
+    padding: 2px 0;
+    white-space: nowrap;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .cupom-disponivel .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    
+    .cupom-disponivel .flex-shrink-0 {
+        margin-top: 8px;
+        align-self: flex-end;
+    }
+    
+    .aplicar-cupom-disponivel {
+        width: auto;
+        min-width: auto;
+    }
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.btn-link {
+    text-decoration: none !important;
+}
+
+.btn-link:hover {
+    text-decoration: underline !important;
+}
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

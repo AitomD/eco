@@ -20,11 +20,7 @@ $totalItens = CarrinhoController::contarItens();
 $cupomAplicado = CuponsCarrinhoController::getCupomAplicado();
 $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
-// Se o carrinho estiver vazio, redirecionar
-if (empty($itensCarrinho)) {
-    header('Location: index.php?url=carrinho');
-    exit;
-}
+
 ?>
 
 <body >
@@ -61,13 +57,18 @@ if (empty($itensCarrinho)) {
         </div>
     </div>
 
-    <!-- MAIN CONTAINER -->
-    <main class="container py-4 rounded shadow-lg">
+    <main class="container py-4 mt-3 bg-white my-3">
+        <?php if ($erroCompra): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <?= htmlspecialchars($erroCompra) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
         
-
-        <div class="row g-4">
-
-            <!-- FORMAS DE PAGAMENTO -->
+        <form id="form-pagamento" method="POST" action="">
+            <input type="hidden" name="finalizar_compra" value="1">
+            <div class="row g-4">
             <div class="col-lg-7">
 
                 <div class="bg-dark border border-secondary rounded p-4 shadow"
@@ -325,7 +326,7 @@ if (empty($itensCarrinho)) {
             </div>
 
         </div>
-
+        </form>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -469,21 +470,14 @@ if (empty($itensCarrinho)) {
                         return;
                     }
                 }
-
-                // Simular processamento
-                btnFinalizar.disabled = true;
-                btnFinalizar.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Processando...';
-
-                setTimeout(function() {
-                    alert('Pedido finalizado com sucesso!\n\nNúmero do pedido: #' + Math.floor(Math.random() * 100000) + '\n\nVocê receberá um email com os detalhes do pedido.');
-                    // Redirecionar para página de confirmação ou limpar carrinho
-                    window.location.href = 'index.php?url=home';
-                }, 2000);
-            });
-
-            // Inicializar
-            togglePaymentForms();
-            atualizarTotal();
+            }
+            
+            // Enviar formulário
+            btnFinalizar.disabled = true;
+            btnFinalizar.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Processando...';
+            
+            // Submit do formulário
+            document.getElementById('form-pagamento').submit();
         });
     </script>
 </body>
