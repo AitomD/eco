@@ -23,7 +23,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
 ?>
 
-<body >
+<body>
 
     <!-- STEP INDICATOR -->
     <div class="container py-4 mt-3">
@@ -58,280 +58,277 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
     </div>
 
     <main class="container py-4 mt-3 bg-dark my-3">
-     <!---   <?php if ($erroCompra): ?>
+        <!---   <?php if ($erroCompra): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <?= htmlspecialchars($erroCompra) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?> -->
-        
+
         <form id="form-pagamento" method="POST" action="">
             <input type="hidden" name="finalizar_compra" value="1">
             <div class="row g-4">
-            <div class="col-lg-7">
+                <div class="col-lg-7">
 
-                <div class="bg-dark border border-secondary rounded p-4 shadow"
-                    style="background:#161616;">
+                    <div class="bg-dark border border-secondary rounded p-4 shadow" style="background:#161616;">
 
-                    <h5 class="fw-bold mb-4 text-white">Escolha a forma de pagamento</h5>
+                        <h5 class="fw-bold mb-4 text-white">Escolha a forma de pagamento</h5>
 
-                    <!-- PIX -->
-                    <label for="pix"
-                        class="payment-option w-100 py-3 px-3 rounded mb-3"
-                        style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
+                        <!-- PIX -->
+                        <label for="pix" class="payment-option w-100 py-3 px-3 rounded mb-3"
+                            style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
 
-                        <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between">
 
-                            <div class="d-flex">
-                                <input class="form-check-input me-3"
-                                    type="radio" name="payment-option" id="pix" checked>
-                                <div>
-                                    <span class="fw-bold text-white d-block">PIX</span>
-                                    <span class="text-light" style="font-size:0.9em;">Aprovação imediata</span>
-                                </div>
-                            </div>
-
-                            <div class="text-end">
-                                <span class="fw-bold text-primary">À vista</span>
-                                <div class="text-light" style="font-size:0.9em;">5% de desconto</div>
-                            </div>
-
-                        </div>
-
-                        <div id="pix-info"
-                            class="pix-info mt-3 p-3 rounded text-center"
-                            style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
-                            <i class="bi bi-qr-code bg-white p-2 rounded-2 fs-1" style="font-size:2rem; color:var(--black);"></i>
-                            <p class="mt-2 mb-1"><strong>Pagamento via PIX</strong></p>
-                            <p class="text-light small">Após confirmar o pedido, você receberá o QR Code para pagamento.</p>
-                        </div>
-
-                    </label>
-
-                    <!-- DÉBITO -->
-                    <label for="debito"
-                        class="payment-option w-100 py-3 px-3 rounded mb-3"
-                        style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
-
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex">
-                                <input class="form-check-input me-3"
-                                    type="radio" name="payment-option" id="debito">
-                                <div>
-                                    <span class="fw-bold text-white d-block">Cartão de Débito</span>
-                                    <span class="text-light" style="font-size:0.9em;">Débito imediato</span>
-                                </div>
-                            </div>
-
-                            <div class="text-end">
-                                <span class="fw-bold text-primary">À vista</span>
-                                <div class="text-light" style="font-size:0.9em;">3% de desconto</div>
-                            </div>
-                        </div>
-
-                    </label>
-
-                    <!-- BOLETO -->
-                    <label for="boleto"
-                        class="payment-option w-100 py-3 px-3 rounded mb-3"
-                        style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
-
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex">
-                                <input class="form-check-input me-3"
-                                    type="radio" name="payment-option" id="boleto">
-                                <div>
-                                    <span class="fw-bold text-white d-block">Boleto Bancário</span>
-                                    <span class="text-light" style="font-size:0.9em;">3 dias úteis</span>
-                                </div>
-                            </div>
-
-                            <div class="text-end">
-                                <span class="fw-bold text-primary">À vista</span>
-                                <div class="text-light" style="font-size:0.9em;">2% de desconto</div>
-                            </div>
-                        </div>
-
-                        <div id="boleto-info"
-                            class="boleto-info mt-3 p-3 rounded"
-                            style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
-
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-file-earmark-text text-primary me-3" style="font-size:2rem;"></i>
-                                <div>
-                                    <p class="mb-1"><strong>Pagamento via boleto</strong></p>
-                                    <p class="text-light small mb-0">
-                                        O boleto será enviado ao seu e-mail.
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </label>
-
-                    <!-- CRÉDITO -->
-                    <label for="credito"
-                        class="payment-option w-100 py-3 px-3 rounded mb-3"
-                        style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
-
-                        <div class="d-flex justify-content-between">
-
-                            <div class="d-flex">
-                                <input class="form-check-input me-3"
-                                    type="radio" name="payment-option" id="credito">
-
-                                <div>
-                                    <span class="fw-bold text-white d-block">Cartão de Crédito</span>
-                                    <span class="text-light" style="font-size:0.9em;">Até 12x sem juros</span>
-                                </div>
-                            </div>
-
-                            <i class="bi bi-credit-card text-primary" style="font-size:1.5rem;"></i>
-
-                        </div>
-
-                        <!-- FORM CARTÃO -->
-                        <div id="credit-card-form"
-                            class="credit-card-form mt-3 p-3 rounded"
-                            style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
-
-                            <div class="row g-3">
-
-                                <div class="col-12">
-                                    <label class="form-label text-white">Número do Cartão</label>
-                                    <input class="form-control bg-dark text-white border-secondary"
-                                        id="card-number" maxlength="19" placeholder="0000 0000 0000 0000">
+                                <div class="d-flex">
+                                    <input class="form-check-input me-3" type="radio" name="payment-option" id="pix"
+                                        checked>
+                                    <div>
+                                        <span class="fw-bold text-white d-block">PIX</span>
+                                        <span class="text-light" style="font-size:0.9em;">Aprovação imediata</span>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label text-white">Nome no Cartão</label>
-                                    <input class="form-control bg-dark text-white border-secondary"
-                                        id="card-name" placeholder="Nome completo">
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label text-white">Validade</label>
-                                    <input class="form-control bg-dark text-white border-secondary"
-                                        id="card-expiry" maxlength="5" placeholder="MM/AA">
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label text-white">CVV</label>
-                                    <input class="form-control bg-dark text-white border-secondary"
-                                        id="card-cvv" maxlength="4" placeholder="000">
-                                </div>
-
-                                <div class="col-12">
-                                    <label class="form-label text-white">Parcelas</label>
-                                    <select class="form-select bg-dark text-white border-secondary" id="installments"></select>
+                                <div class="text-end">
+                                    <span class="fw-bold text-primary">À vista</span>
+                                    <div class="text-light" style="font-size:0.9em;">5% de desconto</div>
                                 </div>
 
                             </div>
 
-                        </div>
+                            <div id="pix-info" class="pix-info mt-3 p-3 rounded text-center"
+                                style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
+                                <i class="bi bi-qr-code bg-white p-2 rounded-2 fs-1"
+                                    style="font-size:2rem; color:var(--black);"></i>
+                                <p class="mt-2 mb-1"><strong>Pagamento via PIX</strong></p>
+                                <p class="text-light small">Após confirmar o pedido, você receberá o QR Code para
+                                    pagamento.</p>
+                            </div>
 
-                    </label>
+                        </label>
 
-                </div>
+                        <!-- DÉBITO -->
+                        <label for="debito" class="payment-option w-100 py-3 px-3 rounded mb-3"
+                            style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
 
-                <!-- BOTÕES -->
-                <div class="d-flex justify-content-between mt-4">
-                    <a href="index.php?url=paginaRetirada"
-                        class="btn btn-outline-secondary"
-                        style="border-color:#444; color:#ccc;">
-                        <i class="bi bi-arrow-left me-2"></i>Voltar
-                    </a>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex">
+                                    <input class="form-check-input me-3" type="radio" name="payment-option" id="debito">
+                                    <div>
+                                        <span class="fw-bold text-white d-block">Cartão de Débito</span>
+                                        <span class="text-light" style="font-size:0.9em;">Débito imediato</span>
+                                    </div>
+                                </div>
 
-                    <button id="btn-finalizar"
-                        class="btn-product w-50 mx-2"
-                        style="background:var(--pmain); color:white; border:none;">
-                        <i class="bi bi-check-circle me-2"></i>
-                        Finalizar Compra
-                    </button>
-                </div>
+                                <div class="text-end">
+                                    <span class="fw-bold text-primary">À vista</span>
+                                    <div class="text-light" style="font-size:0.9em;">3% de desconto</div>
+                                </div>
+                            </div>
 
-            </div>
+                        </label>
 
-            <!-- RESUMO -->
-            <div class="col-lg-5">
+                        <!-- BOLETO -->
+                        <label for="boleto" class="payment-option w-100 py-3 px-3 rounded mb-3"
+                            style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
 
-                <div class="bg-dark border border-secondary rounded p-4 shadow"
-                    style="position:sticky; top:20px; background:#161616;">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex">
+                                    <input class="form-check-input me-3" type="radio" name="payment-option" id="boleto">
+                                    <div>
+                                        <span class="fw-bold text-white d-block">Boleto Bancário</span>
+                                        <span class="text-light" style="font-size:0.9em;">3 dias úteis</span>
+                                    </div>
+                                </div>
 
-                    <h6 class="fw-bold mb-3 text-white">Resumo da compra</h6>
+                                <div class="text-end">
+                                    <span class="fw-bold text-primary">À vista</span>
+                                    <div class="text-light" style="font-size:0.9em;">2% de desconto</div>
+                                </div>
+                            </div>
 
-                    <?php foreach ($itensCarrinho as $item): ?>
-                        <div class="d-flex align-items-center mb-3 pb-3"
-                            style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                            <div id="boleto-info" class="boleto-info mt-3 p-3 rounded"
+                                style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
 
-                            <img src="<?= htmlspecialchars($item['imagem']) ?>"
-                                class="img-fluid rounded me-3"
-                                style="width:60px; height:60px; object-fit:cover;">
-
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1 text-white" style="font-size:0.9rem;">
-                                    <?= htmlspecialchars($item['nome']) ?>
-                                </h6>
-
-                                <small class="text-light">Qtd: <?= $item['quantidade'] ?></small>
-                                <div class="fw-bold text-white">
-                                    R$ <?= number_format($item['preco'] * $item['quantidade'], 2, ',', '.') ?>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-text text-primary me-3" style="font-size:2rem;"></i>
+                                    <div>
+                                        <p class="mb-1"><strong>Pagamento via boleto</strong></p>
+                                        <p class="text-light small mb-0">
+                                            O boleto será enviado ao seu e-mail.
+                                        </p>
+                                    </div>
                                 </div>
 
                             </div>
-                        </div>
-                    <?php endforeach; ?>
 
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-light">Subtotal:</span>
-                        <span class="text-white">R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?></span>
+                        </label>
+
+                        <!-- CRÉDITO -->
+                        <label for="credito" class="payment-option w-100 py-3 px-3 rounded mb-3"
+                            style="background:rgba(255,255,255,0.05); cursor:pointer; border:1px solid rgba(255,255,255,0.15);">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div class="d-flex">
+                                    <input class="form-check-input me-3" type="radio" name="payment-option"
+                                        id="credito">
+
+                                    <div>
+                                        <span class="fw-bold text-white d-block">Cartão de Crédito</span>
+                                        <span class="text-light" style="font-size:0.9em;">Até 12x sem juros</span>
+                                    </div>
+                                </div>
+
+                                <i class="bi bi-credit-card text-primary" style="font-size:1.5rem;"></i>
+
+                            </div>
+
+                            <!-- FORM CARTÃO -->
+                            <div id="credit-card-form" class="credit-card-form mt-3 p-3 rounded"
+                                style="display:none; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:white;">
+
+                                <div class="row g-3">
+
+                                    <div class="col-12">
+                                        <label class="form-label text-white">Número do Cartão</label>
+                                        <input class="form-control bg-dark text-white border-secondary" id="card-number"
+                                            maxlength="19" placeholder="0000 0000 0000 0000">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-white">Nome no Cartão</label>
+                                        <input class="form-control bg-dark text-white border-secondary" id="card-name"
+                                            placeholder="Nome completo">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label text-white">Validade</label>
+                                        <input class="form-control bg-dark text-white border-secondary" id="card-expiry"
+                                            maxlength="5" placeholder="MM/AA">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label text-white">CVV</label>
+                                        <input class="form-control bg-dark text-white border-secondary" id="card-cvv"
+                                            maxlength="4" placeholder="000">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label text-white">Parcelas</label>
+                                        <select class="form-select bg-dark text-white border-secondary"
+                                            id="installments"></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
                     </div>
 
-                    <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
+                    <!-- BOTÕES -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="index.php?url=paginaRetirada" class="btn btn-outline-secondary"
+                            style="border-color:#444; color:#ccc;">
+                            <i class="bi bi-arrow-left me-2"></i>Voltar
+                        </a>
+
+                        <button id="btn-finalizar" class="btn-product w-50 mx-2"
+                            style="background:var(--pmain); color:white; border:none;">
+                            <div class="d-flex " style="gap: 40px;">
+                                <div class="justify-content-start">
+                                    <i class="bi bi-check-circle "></i>
+                                </div>
+                                <div class="text-center mx-5">Finalizar Compra</div>
+                            </div>
+
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- RESUMO -->
+                <div class="col-lg-5">
+
+                    <div class="bg-dark border border-secondary rounded p-4 shadow"
+                        style="position:sticky; top:20px; background:#161616;">
+
+                        <h6 class="fw-bold mb-3 text-white">Resumo da compra</h6>
+
+                        <?php foreach ($itensCarrinho as $item): ?>
+                            <div class="d-flex align-items-center mb-3 pb-3"
+                                style="border-bottom:1px solid rgba(255,255,255,0.1);">
+
+                                <img src="<?= htmlspecialchars($item['imagem']) ?>" class="img-fluid rounded me-3"
+                                    style="width:60px; height:60px; object-fit:cover;">
+
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 text-white" style="font-size:0.9rem;">
+                                        <?= htmlspecialchars($item['nome']) ?>
+                                    </h6>
+
+                                    <small class="text-light">Qtd: <?= $item['quantidade'] ?></small>
+                                    <div class="fw-bold text-white">
+                                        R$ <?= number_format($item['preco'] * $item['quantidade'], 2, ',', '.') ?>
+                                    </div>
+
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="text-success">Desconto (<?= $cupomAplicado['codigo'] ?>):</span>
-                            <span class="text-success">-R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
-                        </div>
-                    <?php endif; ?>
-
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="text-light">Frete:</span>
-                        <span class="text-primary">GRÁTIS</span>
-                    </div>
-
-                    <hr style="border-color:rgba(255,255,255,0.1);">
-
-                    <div class="d-flex justify-content-between fs-5 fw-bold">
-                        <span class="text-white">Total</span>
-                        <span class="text-white" id="total-final">
-                            R$ <?= number_format($valoresCarrinho['valor_final'], 2, ',', '.') ?>
-                        </span>
-                    </div>
-
-                    <div class="mt-3 p-3 rounded"
-                        style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
-
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-shield-check text-success me-2"></i>
-                            <span class="fw-bold text-success">Compra 100% Segura</span>
+                            <span class="text-light">Subtotal:</span>
+                            <span class="text-white">R$
+                                <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?></span>
                         </div>
 
-                        <small class="text-light">Seus dados estão protegidos.</small>
+                        <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-success">Desconto (<?= $cupomAplicado['codigo'] ?>):</span>
+                                <span class="text-success">-R$
+                                    <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-light">Frete:</span>
+                            <span class="text-primary">GRÁTIS</span>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.1);">
+
+                        <div class="d-flex justify-content-between fs-5 fw-bold">
+                            <span class="text-white">Total</span>
+                            <span class="text-white" id="total-final">
+                                R$ <?= number_format($valoresCarrinho['valor_final'], 2, ',', '.') ?>
+                            </span>
+                        </div>
+
+                        <div class="mt-3 p-3 rounded"
+                            style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
+
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-shield-check text-success me-2"></i>
+                                <span class="fw-bold text-success">Compra 100% Segura</span>
+                            </div>
+
+                            <small class="text-light">Seus dados estão protegidos.</small>
+
+                        </div>
 
                     </div>
-
                 </div>
-            </div>
 
-        </div>
+            </div>
         </form>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const paymentOptions = document.querySelectorAll('input[name="payment-option"]');
             const creditCardForm = document.getElementById('credit-card-form');
             const pixInfo = document.getElementById('pix-info');
@@ -405,7 +402,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
             }
 
             paymentOptions.forEach(option => {
-                option.addEventListener('change', function() {
+                option.addEventListener('change', function () {
                     togglePaymentForms();
                     atualizarTotal();
                 });
@@ -413,7 +410,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
             // Máscara para número do cartão
             const cardNumber = document.getElementById('card-number');
-            cardNumber.addEventListener('input', function(e) {
+            cardNumber.addEventListener('input', function (e) {
                 let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
                 let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
                 e.target.value = formattedValue;
@@ -421,7 +418,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
             // Máscara para data de validade
             const cardExpiry = document.getElementById('card-expiry');
-            cardExpiry.addEventListener('input', function(e) {
+            cardExpiry.addEventListener('input', function (e) {
                 let value = e.target.value.replace(/\D/g, '');
                 if (value.length >= 2) {
                     value = value.substring(0, 2) + '/' + value.substring(2, 4);
@@ -431,11 +428,11 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
             // Máscara para CVV
             const cardCvv = document.getElementById('card-cvv');
-            cardCvv.addEventListener('input', function(e) {
+            cardCvv.addEventListener('input', function (e) {
                 e.target.value = e.target.value.replace(/\D/g, '');
             });
 
-            btnFinalizar.addEventListener('click', function() {
+            btnFinalizar.addEventListener('click', function () {
                 const paymentSelected = document.querySelector('input[name="payment-option"]:checked');
 
                 if (!paymentSelected) {
@@ -471,15 +468,14 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                     }
                 }
             }
-            
+
             // Enviar formulário
             btnFinalizar.disabled = true;
             btnFinalizar.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Processando...';
-            
+
             // Submit do formulário
             document.getElementById('form-pagamento').submit();
         });
+
     </script>
 </body>
-
-</html>

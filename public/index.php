@@ -302,7 +302,7 @@ $cartCount = CarrinhoController::contarItens();
                 <hr class="border-secondary my-4 mx-2">
                 <div class="row mx-2">
                     <div class="col-12 text-center">
-                        <p class="text-muted mb-0">&copy; 2024 HAFTECH. Todos os direitos reservados.</p>
+                        <p class="text-muted mb-0">&copy; 2025 HAFTECH. Todos os direitos reservados.</p>
                     </div>
                 </div>
             </div>

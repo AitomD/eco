@@ -164,7 +164,7 @@ if (empty($itensCarrinho)) {
                     </a>
 
                     <button id="btn-continuar" class="btn-product w-50 mx-2" >
-                        Finalizar Pedido <i class="bi bi-arrow-right ms-2"></i>
+                        Próximo <i class="bi bi-arrow-right ms-2"></i>
                     </button>
 
                 </div>

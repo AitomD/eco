@@ -34,79 +34,86 @@ $produtos = $detalhesPedido['produtos'];
 ?>
 
 <style>
-.success-container {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(25, 135, 84, 0.1));
-}
-
-.success-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    max-width: 600px;
-    width: 100%;
-}
-
-.success-header {
-    background: linear-gradient(135deg, #28a745, #20c997);
-    color: white;
-    padding: 2rem;
-    text-align: center;
-}
-
-.success-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    animation: bounce 2s infinite;
-}
-
-.pedido-info {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.produto-item {
-    border-bottom: 1px solid #e9ecef;
-    padding: 1rem 0;
-}
-
-.produto-item:last-child {
-    border-bottom: none;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
+    .success-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(25, 135, 84, 0.1));
     }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
-}
 
-.btn-group-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+    .success-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 1000px;
+        width: 100%;
+    }
 
-@media (max-width: 576px) {
+    .success-header {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s infinite;
+    }
+
+    .pedido-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+
+    .produto-item {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1rem 0;
+    }
+
+    .produto-item:last-child {
+        border-bottom: none;
+    }
+
+    @keyframes bounce {
+
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
     .btn-group-actions {
-        flex-direction: column;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
     }
-}
+
+    @media (max-width: 576px) {
+        .btn-group-actions {
+            flex-direction: column;
+        }
+    }
 </style>
 
-<div class="success-container">
+<div class="success-container my-5">
     <div class="success-card">
         <!-- Header de sucesso -->
         <div class="success-header">
@@ -156,7 +163,8 @@ $produtos = $detalhesPedido['produtos'];
                                     <small class="text-muted">Cor: <?= htmlspecialchars($produto['cor']) ?></small>
                                 <?php endif; ?>
                                 <div class="small text-muted">
-                                    Quantidade: <?= $produto['quantidade'] ?> x R$ <?= number_format($produto['preco_unitario'], 2, ',', '.') ?>
+                                    Quantidade: <?= $produto['quantidade'] ?> x R$
+                                    <?= number_format($produto['preco_unitario'], 2, ',', '.') ?>
                                 </div>
                             </div>
                             <div class="col-md-4 text-end">
@@ -205,23 +213,28 @@ $produtos = $detalhesPedido['produtos'];
 
             <!-- Botões de ação -->
             <div class="btn-group-actions mt-4">
-                <a href="index.php?url=meusPedidos" class="btn btn-primary">
-                    <i class="bi bi-list-ul me-2"></i>Ver Meus Pedidos
-                </a>
-                <a href="index.php?url=home" class="btn btn-outline-secondary">
-                    <i class="bi bi-house me-2"></i>Voltar à Loja
-                </a>
-                <a href="index.php?url=home" class="btn btn-success">
+                <!-- Botão Continuar Comprando acima dos outros -->
+                <a href="index.php?url=produto" class="btn btn-success w-50 mb-3">
                     <i class="bi bi-plus-circle me-2"></i>Continuar Comprando
                 </a>
+
+                <!-- Outros botões, todos com a mesma largura -->
+                <div class="d-flex col-md-6 gap-4">
+                    <a href="index.php?url=meuperfil" class="btn btn-product w-50 mb-3">
+                        <i class="bi bi-list-ul me-2"></i>Ver Meus Pedidos
+                    </a>
+                    <a href="index.php?url=produto" class="btn btn-product w-50 mb-3">
+                        <i class="bi bi-house me-2"></i>Voltar à Loja
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
-</div>
 
-<script>
-// Opcional: Scroll suave para o topo quando a página carregar
-document.addEventListener('DOMContentLoaded', function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-</script>
+    <script>
+        // Opcional: Scroll suave para o topo quando a página carregar
+        document.addEventListener('DOMContentLoaded', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>

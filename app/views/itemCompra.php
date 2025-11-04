@@ -195,7 +195,7 @@ try {
                                 data-nome="<?= htmlspecialchars($produto['nome']) ?>"
                                 data-preco="<?= htmlspecialchars($produto['preco']) ?>"
                                 data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
-                                <i class="bi bi-cart2 fs-6 fw-bold"></i> Comprar Agora
+                                 Comprar Agora
                             </button>
                         </div>
 
