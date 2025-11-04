@@ -57,14 +57,14 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
         </div>
     </div>
 
-    <main class="container py-4 mt-3 bg-white my-3">
-        <?php if ($erroCompra): ?>
+    <main class="container py-4 mt-3 bg-dark my-3">
+     <!---   <?php if ($erroCompra): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <?= htmlspecialchars($erroCompra) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        <?php endif; ?>
+        <?php endif; ?> -->
         
         <form id="form-pagamento" method="POST" action="">
             <input type="hidden" name="finalizar_compra" value="1">

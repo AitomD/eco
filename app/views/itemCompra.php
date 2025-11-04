@@ -188,19 +188,17 @@ try {
                     </p>
                     <div class="d-grid gap-2 mt-3">
 
-                        
-                        <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn w-100 btn-sm btn-detalhes btn-product">
-                            <i class="fa-solid fa-clipboard"></i> Comprar Agora
-                        </a>
 
-                        <button class="btn btn-primary btn-sm fs-6 fw-bold w-100 btn-add-cart"
-                            data-id="${p.id_produto}"
-                            data-nome="${p.nome}"
-                            data-preco="${p.preco}"
-                            data-imagem="${p.imagem}">
-                            <i class="bi bi-cart2 fs-6 fw-bold"></i> Carrinho
-                        </button>
-                        
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn btn-product btn-add-cart btn-sm fs-6 fw-bold w-100"
+                                data-id="<?= htmlspecialchars($produto['id_produto']) ?>"
+                                data-nome="<?= htmlspecialchars($produto['nome']) ?>"
+                                data-preco="<?= htmlspecialchars($produto['preco']) ?>"
+                                data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
+                                <i class="bi bi-cart2 fs-6 fw-bold"></i> Comprar Agora
+                            </button>
+                        </div>
+
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
@@ -282,24 +280,16 @@ try {
 </style>
 
 <script>
-    function trocarImagemPrincipal(novaImagem, elemento) {
-        // Atualiza a imagem principal
-        const imagemPrincipal = document.getElementById('imagem-principal');
-
-        // Efeito de fade
-        imagemPrincipal.style.opacity = '0.5';
-
-        setTimeout(() => {
-            imagemPrincipal.src = novaImagem;
-            imagemPrincipal.style.opacity = '1';
-        }, 150);
-
-        // Remove a classe 'active' de todas as miniaturas
-        document.querySelectorAll('.miniatura-img').forEach(img => {
-            img.classList.remove('active');
+    // ADD o produto para o carrinho
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const produto = {
+                id: this.dataset.id,
+                nome: this.dataset.nome,
+                preco: this.dataset.preco,
+                imagem: this.dataset.imagem
+            };
+            adicionarAoCarrinho(produto);
         });
-
-        // Adiciona a classe 'active' na miniatura clicada
-        elemento.classList.add('active');
-    }
+    });
 </script>

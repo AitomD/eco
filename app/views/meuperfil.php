@@ -119,10 +119,6 @@ if ($id_usuario_logado) {
                     Meus Pedidos
                 </a>
 
-                <a class="list-group-item list-group-item-action" id="link-lista-desejo" data-bs-toggle="list" href="#pane-lista-desejo" role="tab" aria-controls="pane-lista-desejo" aria-selected="false">
-                    <i class="bi bi-heart fs-5 me-3"></i>
-                    Lista de Desejo
-                </a>
 
                 <!-- Paginas para o vendedor acessar -->
                 <?php if ($userData['is_admin'] == 1): ?>
@@ -158,13 +154,6 @@ if ($id_usuario_logado) {
                 include 'meusPedidos.php';
                 ?>
 
-                <!--LISTA DE DESEJO-->
-                <div class="tab-pane fade" id="pane-lista-desejo" role="tabpanel" aria-labelledby="link-lista-desejo" tabindex="0">
-                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
-                        <h2 class="h4 mb-0 fw-bold">Lista de Desejo</h2>
-                        <p class="text-muted">Aqui você poderá visualizar seus produtos favoritos.</p>
-                    </div>
-                </div>
 
                 <!--Paginas que o vendedor acessa -->
                 <?php if ($userData['is_admin'] == 1): ?>

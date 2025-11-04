@@ -21,8 +21,6 @@ class Loja
      *                    ou null se não for encontrado.
      */
     public function buscarPorProdutoId($idProduto)
-    // Filtra por admin
-    public function buscarPorAdminId($idAdmin)
     {
         try {
             $sql = "
@@ -55,5 +53,37 @@ class Loja
         }
     }
 
+    /**
+     * Filtra lojas por ID do administrador
+     *
+     * @param int $idAdmin O ID do administrador.
+     * @return array|null Retorna um array com os dados ou null se não encontrado.
+     */
+    public function buscarPorAdminId($idAdmin)
+    {
+        try {
+            $sql = "
+                SELECT 
+                    l.id_loja,
+                    l.nome AS nome_loja,
+                    e.endereco,
+                    e.cidade,
+                    e.estado
+                FROM loja AS l
+                INNER JOIN endereco AS e ON l.id_endereco = e.id_endereco
+                WHERE l.id_admin = ?
+            ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$idAdmin]);
+            $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $dados ?: null;
+
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar lojas por admin: " . $e->getMessage());
+            return null;
+        }
+    }
 }
 ?>

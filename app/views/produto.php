@@ -27,7 +27,7 @@
         <p class="link-produto">Mostrar Todos</p>
         <p class="link-produto" data-categoria="1">Computadores Desktop</p>
         <p class="link-produto" data-categoria="2">Notebooks</p>
-        <p class="link-produto" data-categoria="3">Smartphones</p>
+        <p class="link-produto" data-categoria="4">Smartphones</p>
         <br>
         <h5 class="text-light">
           <i class="fa-solid fa-microchip"></i>
@@ -103,7 +103,7 @@
           card.classList.add('card', 'm-6', 'col-sm-3'); // 4 cards por linha
           card.dataset.id = p.id_produto;
           card.innerHTML = `
-  <img src="${p.imagem}" class="card-img-top" alt="${p.nome}">
+  <img src="${p.imagem}" class="card-img-top object-fit-fill" alt="${p.nome}" >
   <div class="card-body">
     <h5 class="card-title">${p.nome}</h5>
     <p class="card-text card-price">R$ ${p.preco}</p>
@@ -147,7 +147,7 @@
       });
     });
 
-  
+
 
   </script>
 

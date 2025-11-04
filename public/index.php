@@ -417,6 +417,9 @@ $cartCount = CarrinhoController::contarItens();
     <?php if ($pagina === 'paginaRetirada'): ?>
         <script src="js/modalEndereco.js"></script>
     <?php endif; ?>
+    <?php if ($pagina === 'itemCompra'): ?>
+        <script src="js/trocarImg.js"></script>
+    <?php endif; ?>
     </body>
 
 </html>

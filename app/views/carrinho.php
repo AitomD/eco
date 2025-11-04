@@ -165,7 +165,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
                 <!-- Botões de ação -->
                 <div class="d-flex justify-content-between">
-                    <a href="index.php?url=home" class="btn btn-outline-light">
+                    <a href="index.php?url=produto" class="btn btn-outline-light">
                         <i class="bi bi-arrow-left me-2"></i>
                         Continuar Comprando
                     </a>
@@ -212,7 +212,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                     <span class="text-success d-block">
                                         Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>)
                                     </span>
-                                    <button class="btn btn-link btn-sm text-danger p-0 mt-1" onclick="removerCupom()" title="Remover cupom">
+                                    <button class="btn btn-link text-light btn-sm text-danger p-0 mt-1 w-100" onclick="removerCupom()" title="Remover cupom">
                                         <i class="bi bi-x-circle me-1"></i>Remover
                                     </button>
                                 </div>
@@ -274,10 +274,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                                     <div class="d-flex justify-content-between align-items-start">
                                                         <div class="flex-grow-1 me-2">
                                                             <small class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
-                                                            <small class="text-muted"><?= htmlspecialchars($cupom['descricao']) ?></small>
-                                                        </div>
-                                                        <button class="btn btn-outline-primary btn-sm aplicar-cupom-disponivel flex-shrink-0">Usar</button>
-                                                    </div>
+                                                            <small class="text-light"><?= htmlspecialchars($cupom['descricao']) ?></small>
                                                     <button
                                                         class="btn w-100 btn-sm mt-2 text-white aplicar-cupom-disponivel py-2">
                                                         Usar
