@@ -21,17 +21,17 @@
                 {
                     // Define a prioridade 
                     $ordemStatus = [
-                       
-                        'entregue'  => 1,
-                        'enviado'   => 1,
+
+                        'entregue' => 1,
+                        'enviado' => 1,
                         'concluido' => 1,
-                    
-                        'confirmado'  => 2,
+
+                        'confirmado' => 2,
                         'processando' => 2,
-                        
-                        'pendente'    => 3,
-                        
-                        'cancelado'   => 4,
+
+                        'pendente' => 3,
+
+                        'cancelado' => 4,
                     ];
 
                     // Pega o valor da ordem para $a e $b (usa 5 como padrão se não encontrar)
@@ -86,6 +86,7 @@
 
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">Pedido #<?php echo htmlspecialchars($pedido['id_pedido']); ?></h5>
+
                                 <small class="text-muted">
                                     <?php
                                     $data = new DateTime($pedido['data_pedido']);
@@ -100,13 +101,21 @@
                                 </span>
                             </p>
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong class="h5"> Total: R$ <?php echo number_format($pedido['total_final'], 2, ',', '.'); ?>
-                                </strong>
-                                <a href="detalhes_pedido.php?id=<?php echo $pedido['id_pedido']; ?>" class="btn-product w-25 text-center text-decoration-none btn-sm">
-                                    Ver Detalhes
-                                </a>
-                            </div>
+                            <<p class="mb-1">
+                                Vendido por: <strong><?php echo htmlspecialchars($pedido['nome_loja']); ?></strong>
+                                <br>
+                                <small class="text-muted">
+                                    <?php echo $pedido['quantidade_itens']; ?>
+
+                                    <?php echo ($pedido['quantidade_itens'] > 1) ? 'itens' : 'item'; ?>
+                                </small>
+                                </p>
+                        
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <strong class="h5 mb-0">
+                                        Total: R$ <?php echo number_format($pedido['total_final'], 2, ',', '.'); ?>
+                                    </strong>
+                                </div>
 
                         </div>
                     <?php endforeach; ?>

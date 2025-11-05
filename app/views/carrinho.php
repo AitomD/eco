@@ -33,9 +33,6 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                 <div class="step-number">
                     <i class="bi bi-cart-check"></i>
                 </div>
-                <div class="step-icon">
-                    <i class="bi bi-cart-check"></i>
-                </div>
                 <span class="step-label" style="color: white;">Carrinho</span>
             </div>
             <div class="step-line"></div>
@@ -43,17 +40,11 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                 <div class="step-number">
                     <i class="bi bi-truck"></i>
                 </div>
-                <div class="step-icon">
-                    <i class="bi bi-truck"></i>
-                </div>
                 <span class="step-label" style="color: white;">Entrega</span>
             </div>
             <div class="step-line"></div>
             <div class="step pending">
                 <div class="step-number">
-                    <i class="bi bi-credit-card"></i>
-                </div>
-                <div class="step-icon">
                     <i class="bi bi-credit-card"></i>
                 </div>
                 <span class="step-label" style="color: white;">Pagamento</span>
@@ -66,7 +57,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
             <h2 class="text-white mb-4">
                 <i class="bi bi-cart2 me-3"></i>Meu Carrinho
                 <?php if ($totalItens > 0): ?>
-                    <span class="badge bg-primary ms-2"><?= $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?></span>
+                    <span class="badge bg-primary ms-2"><?= $totalItens ?>
+                        <?= $totalItens === 1 ? 'item' : 'itens' ?></span>
                 <?php endif; ?>
             </h2>
         </div>
@@ -108,10 +100,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
                                 <!-- Imagem do produto -->
                                 <div class="col-md-2">
-                                    <img
-                                        src="<?= htmlspecialchars($item['imagem']) ?>"
-                                        alt="<?= htmlspecialchars($item['nome']) ?>"
-                                        class="img-fluid rounded">
+                                    <img src="<?= htmlspecialchars($item['imagem']) ?>"
+                                        alt="<?= htmlspecialchars($item['nome']) ?>" class="img-fluid rounded">
                                 </div>
 
                                 <!-- Nome e preço -->
@@ -131,11 +121,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                             <i class="bi bi-dash"></i>
                                         </button>
 
-                                        <input
-                                            class="form-control text-center quantidade-input"
-                                            value="<?= $item['quantidade'] ?>"
-                                            min="1"
-                                            max="99">
+                                        <input class="form-control text-center quantidade-input"
+                                            value="<?= $item['quantidade'] ?>" min="1" max="99">
 
                                         <button class="btn btn-outline-secondary btn-sm btn-aumentar" type="button">
                                             <i class="bi bi-plus"></i>
@@ -172,9 +159,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
                     <form method="POST" class="d-inline">
                         <input type="hidden" name="acao" value="limpar">
-                        <button
-                            type="submit"
-                            class="btn btn-outline-danger"
+                        <button type="submit" class="btn btn-outline-danger"
                             onclick="return confirm('Tem certeza que deseja limpar o carrinho?')">
                             <i class="bi bi-trash me-2"></i>
                             Limpar Carrinho
@@ -198,7 +183,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                         <!-- Subtotal -->
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-light">
-                                Subtotal (<?= $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?>):
+                                Subtotal (<?= $totalItens ?>     <?= $totalItens === 1 ? 'item' : 'itens' ?>):
                             </span>
                             <span class="text-light">
                                 R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?>
@@ -212,11 +197,13 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                     <span class="text-success d-block">
                                         Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>)
                                     </span>
-                                    <button class="btn btn-link text-light btn-sm text-danger p-0 mt-1 w-100" onclick="removerCupom()" title="Remover cupom">
+                                    <button class="btn btn-link text-light btn-sm text-danger p-0 mt-1 w-100"
+                                        onclick="removerCupom()" title="Remover cupom">
                                         <i class="bi bi-x-circle me-1"></i>Remover
                                     </button>
                                 </div>
-                                <span class="text-success fw-bold">-R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
+                                <span class="text-success fw-bold">-R$
+                                    <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
                             </div>
                         <?php endif; ?>
 
@@ -245,7 +232,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                     <input type="hidden" name="valor_carrinho" value="<?= $totalCarrinho ?>">
 
                                     <div class="input-group">
-                                        <input type="text" class="form-control cupom-input" name="codigo_cupom" placeholder="Código do cupom" id="cupom-input" value="">
+                                        <input type="text" class="form-control cupom-input" name="codigo_cupom"
+                                            placeholder="Código do cupom" id="cupom-input" value="">
                                         <button class="btn btn-outline-secondary cupom-btn" type="submit">
                                             Aplicar
                                         </button>
@@ -257,10 +245,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                             <?php if (!empty($cuponsDisponiveis)): ?>
 
                                 <div class="mb-2">
-                                    <button
-                                        class="btn btn-sm text-white p-2 w-100"
-                                        type="button"
-                                        data-bs-toggle="collapse"
+                                    <button class="btn btn-sm text-white p-2 w-100" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#cuponsDisponiveis">
                                         <i class="bi bi-tag me-1"></i>
                                         Ver cupons disponíveis
@@ -270,48 +255,51 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                         <div class="mt-2">
 
                                             <?php foreach (array_slice($cuponsDisponiveis, 0, 3) as $cupom): ?>
-                                                <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel" data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
+                                                <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel"
+                                                    data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
                                                     <div class="d-flex justify-content-between align-items-start">
                                                         <div class="flex-grow-1 me-2">
-                                                            <small class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
-                                                            <small class="text-light"><?= htmlspecialchars($cupom['descricao']) ?></small>
-                                                    <button
-                                                        class="btn w-100 btn-sm mt-2 text-white aplicar-cupom-disponivel py-2">
-                                                        Usar
-                                                    </button>
+                                                            <small
+                                                                class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
+                                                            <small
+                                                                class="text-light"><?= htmlspecialchars($cupom['descricao']) ?></small>
+                                                            <button
+                                                                class="btn w-100 btn-sm mt-2 text-white aplicar-cupom-disponivel py-2">
+                                                                Usar
+                                                            </button>
+                                                        </div>
+                                                    <?php endforeach; ?>
+
                                                 </div>
-                                            <?php endforeach; ?>
-
+                                            </div>
                                         </div>
-                                    </div>
+
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+
+                                <!-- Continuar -->
+                                <button class="btn btn-success w-100 btn-lg mb-3 mt-3" id="finalizar-compra">
+                                    <i class="bi bi-arrow-right me-2"></i>
+                                    Próximo: Entrega
+                                </button>
+
+                                <div class="text-center">
+                                    <small class="text-white text-muted">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Compra 100% segura
+                                    </small>
                                 </div>
-
-                            <?php endif; ?>
-
-                        <?php endif; ?>
-
-                        <!-- Continuar -->
-                        <button class="btn btn-success w-100 btn-lg mb-3 mt-3" id="finalizar-compra">
-                            <i class="bi bi-arrow-right me-2"></i>
-                            Próximo: Entrega
-                        </button>
-
-                        <div class="text-center">
-                            <small class="text-white text-muted">
-                                <i class="bi bi-shield-check me-1"></i>
-                                Compra 100% segura
-                            </small>
+                            </div>
                         </div>
                     </div>
+
                 </div>
+
+
             </div>
-
         </div>
-
-
-</div>
-</div>
-<?php endif; ?>
+    <?php endif; ?>
 </div>
 
 <!-- Modal de confirmação de remoção -->
@@ -350,10 +338,10 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 </form>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Atualizar quantidade
         document.querySelectorAll('.btn-aumentar').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const itemRow = this.closest('.item-carrinho');
                 const quantidadeInput = itemRow.querySelector('.quantidade-input');
                 const novaQuantidade = parseInt(quantidadeInput.value) + 1;
@@ -366,7 +354,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
         });
 
         document.querySelectorAll('.btn-diminuir').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const itemRow = this.closest('.item-carrinho');
                 const quantidadeInput = itemRow.querySelector('.quantidade-input');
                 const novaQuantidade = parseInt(quantidadeInput.value) - 1;
@@ -380,7 +368,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
         // Atualizar quantidade diretamente no input
         document.querySelectorAll('.quantidade-input').forEach(input => {
-            input.addEventListener('change', function() {
+            input.addEventListener('change', function () {
                 const itemRow = this.closest('.item-carrinho');
                 const quantidade = parseInt(this.value);
 
@@ -395,7 +383,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
         // Remover item
         document.querySelectorAll('.btn-remover').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const itemRow = this.closest('.item-carrinho');
                 const itemId = itemRow.dataset.id;
 
@@ -406,7 +394,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
         });
 
         // Finalizar compra
-        document.getElementById('finalizar-compra')?.addEventListener('click', function() {
+        document.getElementById('finalizar-compra')?.addEventListener('click', function () {
             <?php if (!$isLoggedIn): ?>
                 if (confirm('Você precisa estar logado para finalizar a compra. Deseja fazer login agora?')) {
                     window.location.href = 'index.php?url=login';
@@ -419,7 +407,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
         // Aplicar cupons disponíveis
         document.querySelectorAll('.aplicar-cupom-disponivel').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const cupomDiv = this.closest('.cupom-disponivel');
                 const codigo = cupomDiv.dataset.codigo;
                 const cupomInput = document.getElementById('cupom-input');

@@ -25,7 +25,7 @@
         <!-- Imagem à direita -->
         <div class="col-12 col-md-6 text-center mt-5 mt-md-0" data-aos="zoom-in" data-aos-duration="1000">
             <div class="error-404">
-                <img src="../public/img/erro404site.png" alt="Erro 404 - Mascote" class="img-fluid" style="max-width: 350px;">
+                <img src="../public/img/erro404site.png" alt="Erro 404 - Mascote" class="img-fluid w-100" style="max-width: 350px;">
             </div>
         </div>
 

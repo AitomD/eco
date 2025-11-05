@@ -333,74 +333,62 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
             const creditCardForm = document.getElementById('credit-card-form');
             const pixInfo = document.getElementById('pix-info');
             const boletoInfo = document.getElementById('boleto-info');
-            const descontoPagamento = document.getElementById('desconto-pagamento');
-            const descontoValor = document.getElementById('desconto-valor');
             const totalFinal = document.getElementById('total-final');
             const btnFinalizar = document.getElementById('btn-finalizar');
 
             const baseTotal = <?= $valoresCarrinho['valor_final'] ?>;
 
+            // Tabela de descontos
             const descontos = {
-                'pix': 0.05, // 5%
-                'credito': 0, // 0%
-                'debito': 0.03, // 3%
-                'boleto': 0.02 // 2%
+                'pix': 0.05,
+                'debito': 0.03,
+                'boleto': 0.02,
+                'credito': 0
             };
 
+            // Atualiza o total de acordo com o método selecionado
             function atualizarTotal() {
                 const paymentSelected = document.querySelector('input[name="payment-option"]:checked');
                 if (!paymentSelected) return;
 
                 const desconto = descontos[paymentSelected.id] || 0;
-                const valorDesconto = Math.round(baseTotal * desconto * 100) / 100; // Arredondar para 2 casas decimais
+                const valorDesconto = baseTotal * desconto;
                 const novoTotal = baseTotal - valorDesconto;
 
-                if (desconto > 0) {
-                    descontoPagamento.style.display = 'flex';
-                    descontoValor.textContent = '-R$ ' + valorDesconto.toLocaleString('pt-BR', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-                } else {
-                    descontoPagamento.style.display = 'none';
-                }
-
+                // Atualiza total na tela
                 totalFinal.textContent = 'R$ ' + novoTotal.toLocaleString('pt-BR', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
 
-                // Atualizar parcelas do cartão de crédito
+                // Atualiza parcelas do cartão
                 const installmentsSelect = document.getElementById('installments');
                 if (installmentsSelect) {
                     installmentsSelect.innerHTML = `
-                    <option value="1">1x de R$ ${novoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} à vista</option>
-                    <option value="2">2x de R$ ${(novoTotal / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</option>
-                    <option value="3">3x de R$ ${(novoTotal / 3).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</option>
-                    <option value="6">6x de R$ ${(novoTotal / 6).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</option>
-                    <option value="12">12x de R$ ${(novoTotal / 12).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} sem juros</option>
-                `;
+                <option value="1">1x de R$ ${novoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} à vista</option>
+                <option value="2">2x de R$ ${(novoTotal / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} sem juros</option>
+                <option value="3">3x de R$ ${(novoTotal / 3).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} sem juros</option>
+                <option value="6">6x de R$ ${(novoTotal / 6).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} sem juros</option>
+                <option value="12">12x de R$ ${(novoTotal / 12).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} sem juros</option>
+            `;
                 }
             }
 
+            // Mostra/esconde blocos conforme o pagamento selecionado
             function togglePaymentForms() {
-                // Esconder todos os formulários
                 creditCardForm.style.display = 'none';
                 pixInfo.style.display = 'none';
                 boletoInfo.style.display = 'none';
 
-                // Mostrar o formulário correspondente
                 const selected = document.querySelector('input[name="payment-option"]:checked');
+                if (!selected) return;
 
-                if (selected.id === 'credito') {
-                    creditCardForm.style.display = 'block';
-                } else if (selected.id === 'pix') {
-                    pixInfo.style.display = 'block';
-                } else if (selected.id === 'boleto') {
-                    boletoInfo.style.display = 'block';
-                }
+                if (selected.id === 'credito') creditCardForm.style.display = 'block';
+                if (selected.id === 'pix') pixInfo.style.display = 'block';
+                if (selected.id === 'boleto') boletoInfo.style.display = 'block';
             }
 
+            // Eventos para troca de pagamento
             paymentOptions.forEach(option => {
                 option.addEventListener('change', function () {
                     togglePaymentForms();
@@ -408,31 +396,35 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                 });
             });
 
-            // Máscara para número do cartão
+            // Máscaras
             const cardNumber = document.getElementById('card-number');
-            cardNumber.addEventListener('input', function (e) {
-                let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
-                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-                e.target.value = formattedValue;
-            });
-
-            // Máscara para data de validade
             const cardExpiry = document.getElementById('card-expiry');
-            cardExpiry.addEventListener('input', function (e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length >= 2) {
-                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                }
-                e.target.value = value;
-            });
-
-            // Máscara para CVV
             const cardCvv = document.getElementById('card-cvv');
-            cardCvv.addEventListener('input', function (e) {
-                e.target.value = e.target.value.replace(/\D/g, '');
-            });
 
-            btnFinalizar.addEventListener('click', function () {
+            if (cardNumber) {
+                cardNumber.addEventListener('input', e => {
+                    let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+                    e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                });
+            }
+
+            if (cardExpiry) {
+                cardExpiry.addEventListener('input', e => {
+                    let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+                    if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+                    e.target.value = value;
+                });
+            }
+
+            if (cardCvv) {
+                cardCvv.addEventListener('input', e => {
+                    e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+                });
+            }
+
+            // Botão Finalizar
+            btnFinalizar.addEventListener('click', function (e) {
+                e.preventDefault();
                 const paymentSelected = document.querySelector('input[name="payment-option"]:checked');
 
                 if (!paymentSelected) {
@@ -440,42 +432,42 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                     return;
                 }
 
-                // Validar formulário do cartão de crédito se selecionado
+                // Validação de cartão de crédito
                 if (paymentSelected.id === 'credito') {
-                    const cardNumber = document.getElementById('card-number').value;
-                    const cardName = document.getElementById('card-name').value;
-                    const cardExpiry = document.getElementById('card-expiry').value;
-                    const cardCvv = document.getElementById('card-cvv').value;
+                    const cardNumberVal = cardNumber.value.replace(/\s/g, '');
+                    const cardName = document.getElementById('card-name').value.trim();
+                    const cardExpiryVal = cardExpiry.value.trim();
+                    const cardCvvVal = cardCvv.value.trim();
 
-                    if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
-                        alert('Por favor, preencha todos os campos do cartão de crédito.');
+                    if (!cardNumberVal || cardNumberVal.length < 16) {
+                        alert('Número do cartão inválido.');
                         return;
                     }
-
-                    if (cardNumber.replace(/\s/g, '').length < 16) {
-                        alert('Número do cartão deve ter 16 dígitos.');
+                    if (!cardName) {
+                        alert('Informe o nome no cartão.');
                         return;
                     }
-
-                    if (cardExpiry.length < 5) {
-                        alert('Data de validade inválida.');
+                    if (!/^\d{2}\/\d{2}$/.test(cardExpiryVal)) {
+                        alert('Validade inválida. Use o formato MM/AA.');
                         return;
                     }
-
-                    if (cardCvv.length < 3) {
-                        alert('CVV deve ter pelo menos 3 dígitos.');
+                    if (cardCvvVal.length < 3) {
+                        alert('CVV inválido.');
                         return;
                     }
                 }
-            }
 
-            // Enviar formulário
-            btnFinalizar.disabled = true;
-            btnFinalizar.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Processando...';
+                // Bloqueia botão e envia o form
+                btnFinalizar.disabled = true;
+                btnFinalizar.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Processando...';
 
-            // Submit do formulário
-            document.getElementById('form-pagamento').submit();
+                document.getElementById('form-pagamento').submit();
+            });
+
+            // Inicializa o estado correto ao carregar
+            togglePaymentForms();
+            atualizarTotal();
         });
-
     </script>
+
 </body>

@@ -135,6 +135,7 @@ class Pedido
         }
     }
 
+    // --- COMENTÁRIO DUPLICADO REMOVIDO ---
     /**
      * Buscar todos os pedidos de um usuário
      * @param int $idUser
@@ -143,6 +144,7 @@ class Pedido
     public function buscarPorUsuario($idUser)
     {
         try {
+            // ESTA É A CONSULTA CORRIGIDA (do commit anterior)
             $stmt = $this->pdo->prepare("
                 SELECT 
                     p.id_pedido,
@@ -158,7 +160,19 @@ class Pedido
                 LEFT JOIN loja l ON l.id_loja = p.id_loja
                 LEFT JOIN pedido_produto pp ON pp.id_pedido = p.id_pedido
                 WHERE p.id_user = ?
-                GROUP BY p.id_pedido
+                
+                -- CORREÇÃO: Adicionamos todos os campos selecionados 
+                -- (exceto o COUNT) ao GROUP BY para evitar erros de SQL mode
+                GROUP BY 
+                    p.id_pedido, 
+                    p.id_loja, 
+                    p.data_pedido, 
+                    p.status, 
+                    p.total, 
+                    p.desconto, 
+                    p.total_final, 
+                    l.nome
+                    
                 ORDER BY p.data_pedido DESC
             ");
             
@@ -179,7 +193,8 @@ class Pedido
      */
     public function atualizarStatus($idPedido, $novoStatus)
     {
-        $statusValidos = ['pendente', 'confirmado', 'enviado', 'entregue'];
+        // Você pode expandir esta lista ou buscá-la da tabela 'pedido_status'
+        $statusValidos = ['pendente', 'confirmado', 'enviado', 'entregue', 'cancelado'];
         if (!in_array($novoStatus, $statusValidos)) {
             return false;
         }
@@ -200,7 +215,10 @@ class Pedido
     }
 
     /**
-     * Buscar loja predominante nos itens do carrinho
+     * --- REFORMULADO ---
+     * Buscar loja predominante (com maior subtotal) nos itens do carrinho.
+     * Este método agora reutiliza validarProdutosCarrinho() para uma lógica correta.
+     *
      * @param array $itensCarrinho
      * @return int|null ID da loja predominante
      */
@@ -211,33 +229,36 @@ class Pedido
         }
 
         try {
-            // Criar uma lista de IDs dos produtos
-            $produtoIds = array_keys($itensCarrinho);
-            $placeholders = str_repeat('?,', count($produtoIds) - 1) . '?';
+            // Reutiliza a lógica de validação que já calcula o subtotal
+            $produtosValidados = $this->validarProdutosCarrinho($itensCarrinho);
 
-            $stmt = $this->pdo->prepare("
-                SELECT 
-                    pr.id_loja,
-                    COUNT(*) as quantidade_produtos,
-                    SUM(pr.preco * ?) as valor_total
-                FROM produto pr 
-                WHERE pr.id_produto IN ($placeholders)
-                GROUP BY pr.id_loja
-                ORDER BY valor_total DESC, quantidade_produtos DESC
-                LIMIT 1
-            ");
+            if (empty($produtosValidados)) {
+                // Pode acontecer se os produtos do carrinho não existirem mais
+                return null;
+            }
 
-            // Calcular quantidade total para peso
-            $quantidadeTotal = array_sum(array_column($itensCarrinho, 'quantidade'));
-            $params = [$quantidadeTotal];
-            $params = array_merge($params, $produtoIds);
+            // Agrupa os subtotais por loja
+            $subtotalPorLoja = [];
+            foreach ($produtosValidados as $produto) {
+                $idLoja = $produto['id_loja'];
+                if (!isset($subtotalPorLoja[$idLoja])) {
+                    $subtotalPorLoja[$idLoja] = 0;
+                }
+                // Acumula o subtotal (preço * quantidade)
+                $subtotalPorLoja[$idLoja] += $produto['subtotal'];
+            }
 
-            $stmt->execute($params);
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (empty($subtotalPorLoja)) {
+                return null;
+            }
 
-            return $resultado ? (int)$resultado['id_loja'] : null;
+            // Ordena o array pelos valores (subtotais) em ordem decrescente
+            arsort($subtotalPorLoja);
+            
+            // Retorna a chave (id_loja) do primeiro item, que é o maior
+            return key($subtotalPorLoja);
 
-        } catch (PDOException $e) {
+        } catch (Exception $e) { // Pega qualquer exceção, incluindo da validação
             error_log("Erro ao determinar loja do pedido: " . $e->getMessage());
             return null;
         }
@@ -256,6 +277,8 @@ class Pedido
 
         try {
             $produtoIds = array_keys($itensCarrinho);
+            
+            // Prepara os placeholders (?) para a consulta IN
             $placeholders = str_repeat('?,', count($produtoIds) - 1) . '?';
 
             $stmt = $this->pdo->prepare("
@@ -274,17 +297,23 @@ class Pedido
             $produtosBanco = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $produtosValidados = [];
+            // Mapeia os produtos do banco com os dados do carrinho (quantidade)
             foreach ($produtosBanco as $produto) {
                 $idProduto = $produto['id_produto'];
+                
+                // Confere se o produto ainda está no carrinho (deve estar)
                 if (isset($itensCarrinho[$idProduto])) {
+                    $quantidade = (int)$itensCarrinho[$idProduto]['quantidade'];
+                    $preco = (float)$produto['preco'];
+                    
                     $produtosValidados[] = [
                         'id_produto' => $idProduto,
                         'nome' => $produto['nome'],
-                        'preco_unitario' => $produto['preco'],
-                        'quantidade' => $itensCarrinho[$idProduto]['quantidade'],
+                        'preco_unitario' => $preco,
+                        'quantidade' => $quantidade,
                         'id_loja' => $produto['id_loja'],
                         'nome_loja' => $produto['nome_loja'],
-                        'subtotal' => $produto['preco'] * $itensCarrinho[$idProduto]['quantidade']
+                        'subtotal' => $preco * $quantidade // Calcula o subtotal
                     ];
                 }
             }
