@@ -140,7 +140,7 @@ $produtos = $detalhesPedido['produtos'];
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <h6 class="text-muted mb-1">Status</h6>
-                        <span class="badge bg-warning text-dark">
+                        <span class="badge bg-warning text-light">
                             <?= ucfirst($pedido['status']) ?>
                         </span>
                     </div>
@@ -191,7 +191,7 @@ $produtos = $detalhesPedido['produtos'];
                 <?php if ($pedido['desconto'] > 0): ?>
                     <div class="d-flex justify-content-between mb-2 text-success">
                         <span>Desconto:</span>
-                        <span>-R$ <?= number_format($pedido['desconto'], 2, ',', '.') ?></span>
+                        <span>-R$ <?= number_format($pedido['cupom'], 2, ',', '.') ?></span>
                     </div>
                 <?php endif; ?>
                 <hr>
@@ -205,8 +205,7 @@ $produtos = $detalhesPedido['produtos'];
             <div class="mt-4 p-3 border rounded">
                 <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>Próximos Passos</h6>
                 <ul class="mb-0">
-                    <li>Você receberá um email de confirmação em breve</li>
-                    <li>Acompanhe o status do seu pedido na área "Meus Pedidos"</li>
+                    <li>Acompanhe o status do seu pedido na área "Meus Pedidos" no perfil do usuário.</li>
                     <li>Em caso de dúvidas, entre em contato conosco</li>
                 </ul>
             </div>

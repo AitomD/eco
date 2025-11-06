@@ -188,17 +188,21 @@ try {
                     </p>
                     <div class="d-grid gap-2 mt-3">
 
+                        <?php if ($produto['quantidade_disponivel'] <= 0): ?>
 
-                        <div class="d-grid gap-2 mt-3">
+                            <p class="fs-5 fw-bold text-danger">Produto fora de estoque</p>
+
+                        <?php else: ?>
+
                             <button class="btn btn-product btn-add-cart btn-sm fs-6 fw-bold w-100"
                                 data-id="<?= htmlspecialchars($produto['id_produto']) ?>"
                                 data-nome="<?= htmlspecialchars($produto['nome']) ?>"
                                 data-preco="<?= htmlspecialchars($produto['preco']) ?>"
                                 data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
-                                 Comprar Agora
+                                Comprar Agora
                             </button>
-                        </div>
 
+                        <?php endif; ?>
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
