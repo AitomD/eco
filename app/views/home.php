@@ -11,17 +11,17 @@
       <div class="carousel-inner">
 
         <div class="carousel-item active">
-          <img src="img/banner1.png" class="d-block w-100" style="height: 450px; object-fit: fill;"
+          <img src="img/banner1.png" class="d-block w-100" style="height: 500px; object-fit: cover;"
             alt="Descrição do Banner 1">
         </div>
 
         <div class="carousel-item">
-          <img src="img/banner2.png" class="d-block w-100" style="height: 450px; object-fit: fill;"
+          <img src="img/banner2.png" class="d-block w-100" style="height: 500px; object-fit: cover;"
             alt="Descrição do Banner 2">
         </div>
 
         <div class="carousel-item">
-          <img src="img/banner3.png" class="d-block w-100" style="height: 450px; object-fit: fill;"
+          <img src="img/banner3.png" class="d-block w-100" style="height: 500px; object-fit: cover;"
             alt="Descrição do Banner 3">
         </div>
 

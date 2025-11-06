@@ -237,7 +237,7 @@ $cartCount = CarrinhoController::contarItens();
                                         <span class="text-light flex-grow-1">Fernando Consolin Rosa</span>
                                         <div class="social-links">
                                             <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://github.com/FernandoConsolinRosa11" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -245,8 +245,8 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Aitom Henrique Donatoni</span>
                                         <div class="social-links">
-                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://www.instagram.com/aitomdonatoni?igsh=aXlsYTAyd2phajIy" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/AitomD" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -254,8 +254,8 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Hiago Nascimento</span>
                                         <div class="social-links">
-                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://www.instagram.com/haiagos_48?igsh=MXRidG14aHJxYnU3cQ==" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/haiagos48" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>

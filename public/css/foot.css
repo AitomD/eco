@@ -39,7 +39,7 @@ footer {
   transition: all 0.3s ease;
 }
 
-.dev-list li a:hover {
+.dev-list li a:hover .footer-column {
   color: #610094;
   transform: scale(1.1);
 }
