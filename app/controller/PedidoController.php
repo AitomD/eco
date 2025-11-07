@@ -21,7 +21,7 @@ class PedidoController {
     public static function finalizarCompra($dadosCompra = []) {
         try {
             // Verificar se usuário está logado
-            if (!isset($_SESSION['user_id'])) {
+            if (!empty($_SESSION['user_id'])) {
                 return [
                     'sucesso' => false,
                     'mensagem' => 'Usuário não está logado.',
@@ -88,7 +88,7 @@ class PedidoController {
                 'id_loja' => $idLoja,
                 'id_cupom' => ($cupomAplicado && isset($cupomAplicado['id_cupom'])) ? $cupomAplicado['id_cupom'] : null,
                 'total' => $totalCarrinho,
-                'desconto' => ($valoresCarrinho['desconto_aplicado'] ?? 0) + $descontoAdicional,
+                'desconto' => ($valoresCarrinho['desconto'] ?? 0) + $descontoAdicional, // Use 'desconto' e não 'desconto_aplicado'
                 'total_final' => $valorFinal,
                 'produtos' => $produtosValidados
             ];
@@ -111,25 +111,27 @@ class PedidoController {
                     'id_pedido' => $idPedido,
                     'dados' => [
                         'total' => $totalCarrinho,
-                        'desconto' => ($valoresCarrinho['desconto_aplicado'] ?? 0) + $descontoAdicional,
+                        'desconto' => ($valoresCarrinho['desconto'] ?? 0) + $descontoAdicional,
                         'total_final' => $valorFinal,
                         'forma_pagamento' => $dadosCompra['forma_pagamento'] ?? 'não informado',
                         'produtos' => $produtosValidados
                     ]
                 ];
             } else {
+  
                 return [
                     'sucesso' => false,
-                    'mensagem' => 'Erro ao processar o pedido. Tente novamente.',
-                    'erro' => 'erro_banco_dados'
+                    'mensagem' => 'Falha ao criar pedido (retorno "false" do Model). Verifique Pedido.php.',
+                    'erro' => 'erro_banco_dados_model'
                 ];
             }
 
         } catch (Exception $e) {
+ 
             error_log("Erro ao finalizar compra: " . $e->getMessage());
             return [
                 'sucesso' => false,
-                'mensagem' => 'Erro interno. Tente novamente.',
+                'mensagem' => 'Erro: ' . $e->getMessage(), // <-- Retorna a MENSAGEM REAL do erro
                 'erro' => 'erro_interno'
             ];
         }
@@ -156,6 +158,11 @@ class PedidoController {
             }
 
             $produtos = $pedidoModel->buscarProdutosPedido($idPedido);
+
+            // Adiciona o nome da loja principal ao pedido se não houver um específico
+            if ($pedido && empty($pedido['nome_loja']) && !empty($produtos)) {
+                 $pedido['nome_loja'] = $produtos[0]['nome_loja'] ?? 'Loja Padrão';
+            }
 
             return [
                 'pedido' => $pedido,
@@ -261,19 +268,6 @@ class PedidoController {
             error_log("Erro ao gerar resumo da compra: " . $e->getMessage());
             return false;
         }
-    }
-}
-
-// PedidoController.php
- function detalhesPedido($idPedido) {
-    $pedidoModel = new Pedido();
-    $pedido = $pedidoModel->buscarPorId($idPedido);
-    if ($pedido) {
-        $produtos = $pedidoModel->buscarProdutosPedido($idPedido);
-        // Passar para a view
-        require_once 'views/detalhesPedido.php';
-    } else {
-        // Se o pedido não for encontrado, redirecionar ou exibir erro
     }
 }
 

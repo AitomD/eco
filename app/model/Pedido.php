@@ -13,7 +13,8 @@ class Pedido
     /**
      * Criar um novo pedido
      * @param array $dadosPedido Array com os dados do pedido
-     * @return int|false ID do pedido criado ou false em caso de erro
+     * @return int ID do pedido criado
+     * @throws Exception Se ocorrer um erro de banco de dados
      */
     public function criarPedido($dadosPedido)
     {
@@ -58,9 +59,16 @@ class Pedido
             return $idPedido;
 
         } catch (PDOException $e) {
+            // =================================================================
+            // MUDANÇA PRINCIPAL AQUI
+            // =================================================================
             $this->pdo->rollback();
-            error_log("Erro ao criar pedido: " . $e->getMessage());
-            return false;
+            error_log("Erro de PDO ao criar pedido: " . $e->getMessage());
+            
+            // Em vez de "return false", "lance" (throw) a exceção.
+            // O PedidoController irá capturá-la e mostrar a mensagem de erro real.
+            throw new Exception("Erro de banco de dados: " . $e->getMessage());
+            // =================================================================
         }
     }
 
@@ -84,10 +92,12 @@ class Pedido
                     p.desconto,
                     p.total_final,
                     l.nome as nome_loja,
-                    u.nome as nome_usuario
+                    u.nome as nome_usuario,
+                    c.codigo as codigo_cupom -- <<< ADICIONADO PARA PEGAR O CÓDIGO DO CUPOM
                 FROM pedido p
                 LEFT JOIN loja l ON l.id_loja = p.id_loja
                 LEFT JOIN user u ON u.id_user = p.id_user
+                LEFT JOIN cupom c ON c.id_cupom = p.id_cupom -- <<< ADICIONADO JOIN DO CUPOM
                 WHERE p.id_pedido = ?
             ");
             
@@ -135,7 +145,6 @@ class Pedido
         }
     }
 
-    // --- COMENTÁRIO DUPLICADO REMOVIDO ---
     /**
      * Buscar todos os pedidos de um usuário
      * @param int $idUser
@@ -144,7 +153,6 @@ class Pedido
     public function buscarPorUsuario($idUser)
     {
         try {
-            // ESTA É A CONSULTA CORRIGIDA (do commit anterior)
             $stmt = $this->pdo->prepare("
                 SELECT 
                     p.id_pedido,
@@ -161,8 +169,6 @@ class Pedido
                 LEFT JOIN pedido_produto pp ON pp.id_pedido = p.id_pedido
                 WHERE p.id_user = ?
                 
-                -- CORREÇÃO: Adicionamos todos os campos selecionados 
-                -- (exceto o COUNT) ao GROUP BY para evitar erros de SQL mode
                 GROUP BY 
                     p.id_pedido, 
                     p.id_loja, 
@@ -193,7 +199,6 @@ class Pedido
      */
     public function atualizarStatus($idPedido, $novoStatus)
     {
-        // Você pode expandir esta lista ou buscá-la da tabela 'pedido_status'
         $statusValidos = ['pendente', 'confirmado', 'enviado', 'entregue', 'cancelado'];
         if (!in_array($novoStatus, $statusValidos)) {
             return false;
@@ -215,10 +220,7 @@ class Pedido
     }
 
     /**
-     * --- REFORMULADO ---
      * Buscar loja predominante (com maior subtotal) nos itens do carrinho.
-     * Este método agora reutiliza validarProdutosCarrinho() para uma lógica correta.
-     *
      * @param array $itensCarrinho
      * @return int|null ID da loja predominante
      */
@@ -229,22 +231,18 @@ class Pedido
         }
 
         try {
-            // Reutiliza a lógica de validação que já calcula o subtotal
             $produtosValidados = $this->validarProdutosCarrinho($itensCarrinho);
 
             if (empty($produtosValidados)) {
-                // Pode acontecer se os produtos do carrinho não existirem mais
                 return null;
             }
 
-            // Agrupa os subtotais por loja
             $subtotalPorLoja = [];
             foreach ($produtosValidados as $produto) {
                 $idLoja = $produto['id_loja'];
                 if (!isset($subtotalPorLoja[$idLoja])) {
                     $subtotalPorLoja[$idLoja] = 0;
                 }
-                // Acumula o subtotal (preço * quantidade)
                 $subtotalPorLoja[$idLoja] += $produto['subtotal'];
             }
 
@@ -252,13 +250,10 @@ class Pedido
                 return null;
             }
 
-            // Ordena o array pelos valores (subtotais) em ordem decrescente
             arsort($subtotalPorLoja);
-            
-            // Retorna a chave (id_loja) do primeiro item, que é o maior
             return key($subtotalPorLoja);
 
-        } catch (Exception $e) { // Pega qualquer exceção, incluindo da validação
+        } catch (Exception $e) { 
             error_log("Erro ao determinar loja do pedido: " . $e->getMessage());
             return null;
         }
@@ -277,8 +272,6 @@ class Pedido
 
         try {
             $produtoIds = array_keys($itensCarrinho);
-            
-            // Prepara os placeholders (?) para a consulta IN
             $placeholders = str_repeat('?,', count($produtoIds) - 1) . '?';
 
             $stmt = $this->pdo->prepare("
@@ -297,11 +290,9 @@ class Pedido
             $produtosBanco = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $produtosValidados = [];
-            // Mapeia os produtos do banco com os dados do carrinho (quantidade)
             foreach ($produtosBanco as $produto) {
                 $idProduto = $produto['id_produto'];
                 
-                // Confere se o produto ainda está no carrinho (deve estar)
                 if (isset($itensCarrinho[$idProduto])) {
                     $quantidade = (int)$itensCarrinho[$idProduto]['quantidade'];
                     $preco = (float)$produto['preco'];
@@ -313,7 +304,7 @@ class Pedido
                         'quantidade' => $quantidade,
                         'id_loja' => $produto['id_loja'],
                         'nome_loja' => $produto['nome_loja'],
-                        'subtotal' => $preco * $quantidade // Calcula o subtotal
+                        'subtotal' => $preco * $quantidade 
                     ];
                 }
             }

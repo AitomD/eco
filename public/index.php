@@ -1,87 +1,80 @@
 <?php
+/*
+ * ======================================================================
+ * FASE 1: INICIALIZAÇÃO E AÇÕES GERAIS (sempre rodam)
+ * ======================================================================
+ */
+
 // Iniciar sessão
 session_start();
 
 // Incluir sistema de autenticação
 require_once __DIR__ . '/../app/core/user.php';
 
-// Incluir controladores
+// Incluir controladores principais
 require_once __DIR__ . '/../app/controller/CarrinhoController.php';
 require_once __DIR__ . '/../app/controller/cupons-carrinho.php';
 
-// Processar ações do carrinho e cupons antes de qualquer output
+// Processar ações de formulário (ex: adicionar/remover do carrinho)
 CarrinhoController::processarAcao();
 CuponsCarrinhoController::processarAcao();
 
-// Processar requisições AJAX de cupons
+// Processar requisições AJAX de cupons (isso deve ter um 'exit' dentro dele)
 CuponsCarrinhoController::aplicarCupomAjax();
 
-// Lista de páginas permitidas
+
+/*
+ * ======================================================================
+ * FASE 2: DEFINIÇÃO DE ROTA E VARIÁVEIS GERAIS
+ * ======================================================================
+ */
+
+// Lista de páginas permitidas (whitelist)
 $paginasPermitidas = [
-    'home',
-    'login',
-    'cadastro',
-    'produto',
-    'cupons',
-    'carrinho',
-    '404',
-    'itemCompra',
-    'paginaRetirada',
-    'metodopagamento',
-    'pedido-sucesso',
-    'paginaCompra',
-    'meuperfil',
-    'venda',
-    'adicionaproduto',
-    'meusprodutos'
+    'home', 'login', 'cadastro', 'produto', 'cupons', 'carrinho', '404',
+    'itemCompra', 'paginaRetirada', 'metodopagamento', 'pedido-sucesso',
+    'paginaCompra', 'meuperfil', 'venda', 'adicionaproduto', 'meusprodutos'
 ];
 
-// Página padrão
+// Obter a página da URL, com 'home' como padrão
 $pagina = $_GET['url'] ?? 'home';
 
-// Sanitiza a URL para evitar path traversal (ex: ../)
+// Sanitizar a URL para evitar path traversal (ex: ../)
 $pagina = basename($pagina);
 
-// Caminho base das views (corrigido para sair da pasta public)
-$viewFile = __DIR__ . "/../app/views/{$pagina}.php";
-
-// Configura classes do body e CSS condicional para páginas de autenticação
-$isAuthPage = in_array($pagina, ['login', 'cadastro']);
-$bodyClass = '';
-if ($isAuthPage) {
-    $bodyClass = 'auth-page ' . ($pagina === 'login' ? 'login-page' : 'register-page');
-}
-
-// Verifica se o arquivo existe e é permitido
-if (!in_array($pagina, $paginasPermitidas) || !file_exists($viewFile)) {
-    $viewFile = __DIR__ . "/../app/views/404.php";
-}
-
-// Verificar se o usuário está logado
+// Verificar se o usuário está logado (usado por várias lógicas e pela view)
 $isLoggedIn = Auth::isUserLoggedIn();
 $userData = null;
 if ($isLoggedIn) {
     $userData = Auth::getCurrentUserData();
 }
 
-// Processar finalização de compra se for uma requisição POST para metodopagamento
+/*
+ * ======================================================================
+ * FASE 3: LÓGICA DE CONTROLADOR (ANTES DO HTML)
+ * Aqui ficam todas as verificações que podem causar um redirecionamento.
+ * ======================================================================
+ */
+
+// --- Lógica para 'metodopagamento' (POST) ---
 if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finalizar_compra'])) {
     require_once __DIR__ . '/../app/controller/PedidoController.php';
     
     $resultado = PedidoController::processarFinalizacaoCompra();
     
     if ($resultado['sucesso']) {
-        // Redirecionar para página de sucesso com o ID do pedido
+        // Sucesso: Redirecionar para página de sucesso com o ID
         header('Location: index.php?url=pedido-sucesso&id=' . $resultado['id_pedido']);
         exit;
     } else {
-        // Armazenar mensagem de erro na sessão
+        // Falha: Armazenar mensagem de erro na sessão e deixar a página carregar
         $_SESSION['erro_compra'] = $resultado['mensagem'];
     }
 }
 
-// Verificar se está tentando acessar metodopagamento com carrinho vazio
-if ($pagina === 'metodopagamento') {
+// --- Lógica para 'metodopagamento' (GET) ---
+// Verificar se está tentando acessar a página de pagamento com carrinho vazio
+if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $itensCarrinho = CarrinhoController::getItens();
     if (empty($itensCarrinho)) {
         header('Location: index.php?url=carrinho');
@@ -89,10 +82,70 @@ if ($pagina === 'metodopagamento') {
     }
 }
 
-// Contar itens no carrinho
-$cartCount = CarrinhoController::contarItens();
-?>
+// --- Lógica para 'pedido-sucesso' (GET) ---
+// Esta é a lógica que estava causando o erro, agora movida para cá.
+if ($pagina === 'pedido-sucesso') {
+    
+    // 1. Verificar se o usuário está logado
+    if (!$isLoggedIn) {
+        header('Location: index.php?url=login');
+        exit;
+    }
 
+    // 2. Obter ID do pedido da URL
+    $idPedido = isset($_GET['id']) ? intval($_GET['id']) : null;
+    if (!$idPedido) {
+        // Se não houver ID, não há o que mostrar
+        header('Location: index.php?url=carrinho');
+        exit;
+    }
+
+    // 3. Buscar detalhes do pedido
+    require_once __DIR__ . '/../app/controller/PedidoController.php';
+    $detalhesPedido = PedidoController::buscarDetalhesPedido($idPedido, $_SESSION['user_id']);
+
+    // 4. Verificar se o pedido existe e pertence ao usuário
+    if (!$detalhesPedido) {
+        // Se o pedido não for encontrado ou não for do usuário, redireciona
+        header('Location: index.php?url=meusPedidos');
+        exit;
+    }
+
+    // 5. Preparar variáveis para a View ($pedido e $produtos)
+    // Essas variáveis estarão disponíveis no arquivo 'pedido-sucesso.php'
+    $pedido = $detalhesPedido['pedido'];
+    $produtos = $detalhesPedido['produtos'];
+}
+
+
+/*
+ * ======================================================================
+ * FASE 4: PREPARAÇÃO FINAL DA VIEW (DEPOIS DE TODA LÓGICA)
+ * ======================================================================
+ */
+
+// Caminho base das views
+$viewFile = __DIR__ . "/../app/views/{$pagina}.php";
+
+// Verificar se o arquivo da view existe e é permitido
+if (!in_array($pagina, $paginasPermitidas) || !file_exists($viewFile)) {
+    // Se a página não for permitida ou não existir, forçar a página de 404
+    $pagina = '404'; 
+    $viewFile = __DIR__ . "/../app/views/404.php";
+}
+
+// Configurar classes do body e CSS condicional para páginas de autenticação
+$isAuthPage = in_array($pagina, ['login', 'cadastro']);
+$bodyClass = '';
+if ($isAuthPage) {
+    $bodyClass = 'auth-page ' . ($pagina === 'login' ? 'login-page' : 'register-page');
+}
+
+// Contar itens no carrinho (para o ícone do header)
+$cartCount = CarrinhoController::contarItens();
+
+// FIM DO SCRIPT PHP. O ARQUIVO HTML COMEÇA AGORA.
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">

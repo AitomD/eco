@@ -42,7 +42,7 @@ public function buscarPorUsuario(int $id_user): array
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
-            error_log("Erro ao buscar pedidos por usuário: " . $e.getMessage());
+            error_log("Erro ao buscar pedidos por usuário: " . $e->getMessage());
             return [];
         }
     }
