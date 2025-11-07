@@ -10,41 +10,40 @@ class Pedidos
         $this->pdo = Database::conectar();
     }
 
-    public function buscarPorUsuario(int $id_user): array
+public function buscarPorUsuario(int $id_user): array
     {
-        // SQL para selecionar todos os campos da tabela 'pedido'
+  
         $sql = "SELECT 
-                    id_pedido,
-                    id_user,
-                    id_loja,
-                    id_cupom,
-                    data_pedido,
-                    status,
-                    total,
-                    desconto,
-                    total_final
+                    p.id_pedido,
+                    p.id_user,
+                    p.id_loja,
+                    p.id_cupom,
+                    p.data_pedido,
+                    p.status,
+                    p.total,
+                    p.desconto,
+                    p.total_final,
+                    c.codigo as codigo_cupom  
                 FROM 
-                    pedido  -- Confirme se o nome da tabela é 'pedido'
+                    pedido p 
+                LEFT JOIN
+                    cupom c ON p.id_cupom = c.id_cupom 
                 WHERE 
-                    id_user = :id_user
+                    p.id_user = :id_user
                 ORDER BY 
-                    data_pedido DESC"; // Ordena pelos mais recentes primeiro
+                    p.data_pedido DESC"; 
 
         try {
+
             $stmt = $this->pdo->prepare($sql);
-            
-            // Associa o parâmetro :id_user com a variável $id_user
             $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
-            
             $stmt->execute();
             
-            // Retorna todos os pedidos encontrados como um array associativo
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
-            // Em uma aplicação real, seria ideal logar este erro
-            error_log("Erro ao buscar pedidos por usuário: " . $e->getMessage());
-            return []; // Retorna um array vazio em caso de falha
+            error_log("Erro ao buscar pedidos por usuário: " . $e.getMessage());
+            return [];
         }
     }
 
@@ -58,9 +57,11 @@ class Pedidos
     p.data_pedido,
     p.status,
     p.total,
-    p.desconto,       -- O valor que você acabou de corrigir
+    p.desconto,      
     p.total_final,
-    c.codigo as codigo_cupom  -- A nova informação que queremos
+    c.id_cupom,
+    c.tipo_desconto,
+    c.codigo as codigo_cupom  
 FROM 
     pedido p
 LEFT JOIN 

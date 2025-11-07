@@ -101,7 +101,7 @@ $produtos = $detalhesPedido['produtos'];
                                     Quantidade: <?= $produto['quantidade'] ?> x R$
                                     <?= number_format($produto['preco_unitario'], 2, ',', '.') ?>
                                 </div>
-                                 <?php if ($produto['nome_loja']): ?>
+                                <?php if ($produto['nome_loja']): ?>
                                     <small class="text-muted">
                                         Loja: <?= htmlspecialchars($produto['nome_loja']) ?>
                                     </small>
@@ -123,11 +123,15 @@ $produtos = $detalhesPedido['produtos'];
                 </span>
             </div>
 
+
             <div class="d-flex justify-content-between mb-2 text-success">
                 <span>
                     Cupom:
                 </span>
-                <span>-R$ <?= number_format($pedido['desconto'], 2, ',', '.') ?></span>
+                <span>
+                    <strong><?= $pedido['codigo_cupom'] ?></strong>
+                    (-R$ <?= number_format($pedido['tipo_desconto']) ?>)
+                </span>
             </div>
 
 
@@ -136,12 +140,13 @@ $produtos = $detalhesPedido['produtos'];
                 <span>Total Pago:</span>
                 <span class="text-success">R$ <?= number_format($pedido['total_final'], 2, ',', '.') ?></span>
             </div>
+
             <!-- Informações adicionais -->
             <div class="mt-4 p-3 border rounded">
                 <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>Próximos Passos</h6>
                 <ul class="mb-0">
                     <li>Acompanhe o status do seu pedido na área "Meus Pedidos" no perfil do usuário.</li>
-                    <li>Em caso de dúvidas, entre em contato conosco</li>
+                    <li>Em caso de dúvidas, entre em contato conosco.</li>
                 </ul>
             </div>
 

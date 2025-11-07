@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="pane-meus-pedidos" role="tabpanel" aria-labelledby="link-meus-pedidos" tabindex="0">
+<div class="tab-pane fade overflow-y-auto" id="pane-meus-pedidos" role="tabpanel" aria-labelledby="link-meus-pedidos" tabindex="0" style="max-height:600px;">
     <div class="bg-white p-4 p-md-5 rounded shadow-sm">
         <h2 class="h4 mb-0 fw-bold">Meus Pedidos</h2>
         <p class="text-muted">Aqui você poderá visualizar seu histórico de pedidos.</p>
