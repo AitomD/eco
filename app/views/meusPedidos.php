@@ -45,6 +45,8 @@
 
                     // Ordena pela prioridade do status (1, 2, 3...)
                     return $ordemA - $ordemB;
+
+
                 }
 
                 // Aplica a ordenação ao array $meus_pedidos
@@ -85,8 +87,20 @@
                         <div class="list-group-item list-group-item-action flex-column align-items-start mb-3 border rounded">
 
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Pedido #<?php echo htmlspecialchars($pedido['id_pedido']); ?></h5>
+                                <p class="mb-1">
+                                    <strong>Pedido #</strong> <span class="fw-bold <?php echo $pedido['id_pedido']; ?>">
+                                        <?php echo $pedido['id_pedido']; ?>
+                                    </span>
+                                </p>
 
+                                <p class="mb-1">
+                                    <strong>Status:</strong> <span class="fw-bold <?php echo $status_class; ?>">
+                                        <?php echo $status_texto; ?>
+                                    </span>
+                                </p>
+                                <p><strong>Valor Final:</strong> R$
+                                    <?php echo number_format($pedido['total_final'], 2, ',', '.'); ?>
+                                </p>
                                 <small class="text-muted">
                                     <?php
                                     $data = new DateTime($pedido['data_pedido']);
@@ -95,27 +109,18 @@
                                 </small>
                             </div>
 
-                            <p class="mb-1">
-                                <strong>Status:</strong> <span class="fw-bold <?php echo $status_class; ?>">
-                                    <?php echo $status_texto; ?>
-                                </span>
-                            </p>
+                            <div class="d-flex justify-content-end align-items-end">
 
-                            <<p class="mb-1">
-                                Vendido por: <strong><?php echo htmlspecialchars($pedido['nome_loja']); ?></strong>
-                                <br>
-                                <small class="text-muted">
-                                    <?php echo $pedido['quantidade_itens']; ?>
+                                <?php
+                                // Monta a URL para a página de sucesso, passando o id do pedido
+                                $url_detalhes = "index.php?url=pedido-sucesso&id=" . $pedido['id_pedido'];
+                                ?>
 
-                                    <?php echo ($pedido['quantidade_itens'] > 1) ? 'itens' : 'item'; ?>
-                                </small>
-                                </p>
-                        
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <strong class="h5 mb-0">
-                                        Total: R$ <?php echo number_format($pedido['total_final'], 2, ',', '.'); ?>
-                                    </strong>
-                                </div>
+                                <a href="<?php echo $url_detalhes; ?>" class="btn btn-product w-25 text-center">
+                                    Detalhes
+                                </a>
+
+                            </div>
 
                         </div>
                     <?php endforeach; ?>

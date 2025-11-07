@@ -263,4 +263,19 @@ class PedidoController {
         }
     }
 }
-?>
+
+// PedidoController.php
+ function detalhesPedido($idPedido) {
+    $pedidoModel = new Pedido();
+    $pedido = $pedidoModel->buscarPorId($idPedido);
+    if ($pedido) {
+        $produtos = $pedidoModel->buscarProdutosPedido($idPedido);
+        // Passar para a view
+        require_once 'views/detalhesPedido.php';
+    } else {
+        // Se o pedido não for encontrado, redirecionar ou exibir erro
+    }
+}
+
+
+?> 

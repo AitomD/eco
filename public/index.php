@@ -120,6 +120,7 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/carrinhoStep.css">
     <link rel="stylesheet" href="css/carrinhoCards.css">
+    <link rel="stylesheet" href="css/pedido-sucesso.css">
 
 </head>
 

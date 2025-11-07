@@ -51,19 +51,22 @@ class Pedidos
     public function buscarPorId(int $id_pedido)
     {
         $sql = "SELECT 
-                    id_pedido,
-                    id_user,
-                    id_loja,
-                    id_cupom,
-                    data_pedido,
-                    status,
-                    total,
-                    desconto,
-                    total_final
-                FROM 
-                    pedido
-                WHERE 
-                    id_pedido = :id_pedido";
+    p.id_pedido,
+    p.id_user,
+    p.id_loja,
+    p.id_cupom,
+    p.data_pedido,
+    p.status,
+    p.total,
+    p.desconto,       -- O valor que você acabou de corrigir
+    p.total_final,
+    c.codigo as codigo_cupom  -- A nova informação que queremos
+FROM 
+    pedido p
+LEFT JOIN 
+    cupom c ON p.id_cupom = c.id_cupom -- Juntando as tabelas
+WHERE 
+    p.id_pedido = :id_pedido";
 
         try {
             $stmt = $this->pdo->prepare($sql);

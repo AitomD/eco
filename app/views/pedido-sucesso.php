@@ -4,6 +4,19 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/../controller/CarrinhoController.php';
+require_once __DIR__ . '/../controller/cupons-carrinho.php';
+
+// Obter dados do carrinho através do controlador
+$itensCarrinho = CarrinhoController::getItens();
+$totalCarrinho = CarrinhoController::calcularTotal();
+$totalItens = CarrinhoController::contarItens();
+
+// Obter cupons e calcular valor final
+$cupomAplicado = CuponsCarrinhoController::getCupomAplicado();
+$valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
+
+
 // Verificar se o usuário está logado
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php?url=login');
@@ -33,85 +46,7 @@ $pedido = $detalhesPedido['pedido'];
 $produtos = $detalhesPedido['produtos'];
 ?>
 
-<style>
-    .success-container {
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(25, 135, 84, 0.1));
-    }
 
-    .success-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        max-width: 1000px;
-        width: 100%;
-    }
-
-    .success-header {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        padding: 2rem;
-        text-align: center;
-    }
-
-    .success-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        animation: bounce 2s infinite;
-    }
-
-    .pedido-info {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-    }
-
-    .produto-item {
-        border-bottom: 1px solid #e9ecef;
-        padding: 1rem 0;
-    }
-
-    .produto-item:last-child {
-        border-bottom: none;
-    }
-
-    @keyframes bounce {
-
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-            transform: translateY(0);
-        }
-
-        40% {
-            transform: translateY(-10px);
-        }
-
-        60% {
-            transform: translateY(-5px);
-        }
-    }
-
-    .btn-group-actions {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    @media (max-width: 576px) {
-        .btn-group-actions {
-            flex-direction: column;
-        }
-    }
-</style>
 
 <div class="success-container my-5">
     <div class="success-card">
@@ -166,12 +101,7 @@ $produtos = $detalhesPedido['produtos'];
                                     Quantidade: <?= $produto['quantidade'] ?> x R$
                                     <?= number_format($produto['preco_unitario'], 2, ',', '.') ?>
                                 </div>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <div class="fw-bold">
-                                    R$ <?= number_format($produto['subtotal'], 2, ',', '.') ?>
-                                </div>
-                                <?php if ($produto['nome_loja']): ?>
+                                 <?php if ($produto['nome_loja']): ?>
                                     <small class="text-muted">
                                         Loja: <?= htmlspecialchars($produto['nome_loja']) ?>
                                     </small>
@@ -183,24 +113,29 @@ $produtos = $detalhesPedido['produtos'];
             </div>
 
             <!-- Resumo financeiro -->
-            <div class="mt-4 p-3 bg-light rounded">
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Subtotal:</span>
-                    <span>R$ <?= number_format($pedido['total'], 2, ',', '.') ?></span>
-                </div>
-                <?php if ($pedido['desconto'] > 0): ?>
-                    <div class="d-flex justify-content-between mb-2 text-success">
-                        <span>Desconto:</span>
-                        <span>-R$ <?= number_format($pedido['cupom'], 2, ',', '.') ?></span>
-                    </div>
-                <?php endif; ?>
-                <hr>
-                <div class="d-flex justify-content-between fw-bold fs-5">
-                    <span>Total Pago:</span>
-                    <span class="text-success">R$ <?= number_format($pedido['total_final'], 2, ',', '.') ?></span>
-                </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span>Preço Total: </span>
+                <span class="fw-bold">
+
+
+                    R$ <?= number_format($produto['subtotal'], 2, ',', '.') ?>
+
+                </span>
             </div>
 
+            <div class="d-flex justify-content-between mb-2 text-success">
+                <span>
+                    Cupom:
+                </span>
+                <span>-R$ <?= number_format($pedido['desconto'], 2, ',', '.') ?></span>
+            </div>
+
+
+            <hr>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+                <span>Total Pago:</span>
+                <span class="text-success">R$ <?= number_format($pedido['total_final'], 2, ',', '.') ?></span>
+            </div>
             <!-- Informações adicionais -->
             <div class="mt-4 p-3 border rounded">
                 <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>Próximos Passos</h6>
