@@ -101,11 +101,15 @@ body.auth-page main {
 .auth-page .invalid-feedback {
     color: #ff6b6b;
     font-size: 0.8rem;
+    display: block;
+    margin-top: 0.25rem;
 }
 
 .auth-page .valid-feedback {
     color: #51cf66;
     font-size: 0.8rem;
+    display: block;
+    margin-top: 0.25rem;
 }
 
 /* Botões */

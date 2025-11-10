@@ -258,7 +258,7 @@ if (empty($itensCarrinho)) {
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <?= htmlspecialchars($erroCompra) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+            </div>1
         <?php endif; ?>
         
         <form id="form-pagamento" method="POST" action="">
