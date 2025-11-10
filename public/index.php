@@ -104,17 +104,6 @@ if ($pagina === 'pedido-sucesso') {
     require_once __DIR__ . '/../app/controller/PedidoController.php';
     $detalhesPedido = PedidoController::buscarDetalhesPedido($idPedido, $_SESSION['user_id']);
 
-    // 4. Verificar se o pedido existe e pertence ao usuário
-    if (!$detalhesPedido) {
-        // Se o pedido não for encontrado ou não for do usuário, redireciona
-        header('Location: index.php?url=meusPedidos');
-        exit;
-    }
-
-    // 5. Preparar variáveis para a View ($pedido e $produtos)
-    // Essas variáveis estarão disponíveis no arquivo 'pedido-sucesso.php'
-    $pedido = $detalhesPedido['pedido'];
-    $produtos = $detalhesPedido['produtos'];
 }
 
 

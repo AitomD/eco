@@ -4,6 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+
 // Incluir os controladores
 require_once __DIR__ . '/../controller/CarrinhoController.php';
 require_once __DIR__ . '/../controller/cupons-carrinho.php';
@@ -254,16 +255,7 @@ if (isset($_SESSION['erro_compra'])) {
                                 <i class="bi bi-arrow-left me-2"></i>Voltar
                             </a>
 
-                            <button id="btn-finalizar" class="btn-product w-50 mx-2"
-                                style="background:var(--pmain); color:white; border:none;">
-                                <div class="d-flex " style="gap: 40px;">
-                                    <div class="justify-content-start">
-                                        <i class="bi bi-check-circle "></i>
-                                    </div>
-                                    <div class="text-center mx-5">Finalizar Compra</div>
-                                </div>
 
-                            </button>
                         </div>
 
                     </div>
@@ -336,6 +328,16 @@ if (isset($_SESSION['erro_compra'])) {
                                 <small class="text-light">Seus dados estão protegidos.</small>
 
                             </div>
+
+                            <button id="btn-finalizar" class="btn-product w-100 mt-3"
+                                style="background:var(--pmain); color:white; border:none;">
+                                <div class="d-flex " style="gap: 80px;">
+                                    <div class="justify-content-start">
+                                        <i class="bi bi-check-circle "></i>
+                                    </div>
+                                    <div class="text-center mx-5">Finalizar Compra</div>
+                                </div>
+                            </button>
 
                         </div>
                     </div>
@@ -480,6 +482,7 @@ if (isset($_SESSION['erro_compra'])) {
                     btnFinalizar.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Processando...';
 
                     document.getElementById('form-pagamento').submit();
+                    
                 });
 
                 // Inicializa o estado correto ao carregar

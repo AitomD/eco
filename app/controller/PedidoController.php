@@ -21,7 +21,7 @@ class PedidoController {
     public static function finalizarCompra($dadosCompra = []) {
         try {
             // Verificar se usuário está logado
-            if (!empty($_SESSION['user_id'])) {
+            if (empty($_SESSION['user_id'])) {
                 return [
                     'sucesso' => false,
                     'mensagem' => 'Usuário não está logado.',
