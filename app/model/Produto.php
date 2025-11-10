@@ -21,6 +21,7 @@ class Produto
     pi.ram,
     pi.armazenamento,
     pi.processador,
+    pi.cor,
     pi.placa_video,
     (SELECT i.url 
      FROM imagem i 

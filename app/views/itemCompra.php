@@ -22,10 +22,10 @@ try {
         SELECT 
             p.id_produto,
             p.nome,
-            p.cor,
             p.preco,
             pi.descricao,
             pi.ram,
+            pi.cor,
             pi.armazenamento,
             pi.processador,
             pi.placa_mae,
@@ -55,7 +55,7 @@ try {
             ) AS quantidade_disponivel
 
         FROM produto p
-        JOIN produto_info pi ON p.id_info = pi.id_info
+        LEFT JOIN produto_info pi ON p.id_info = pi.id_info
         LEFT JOIN imagem i ON pi.id_info = i.id_info
         LEFT JOIN marca m ON pi.id_marca = m.id_marca
         LEFT JOIN categoria c ON pi.id_categoria = c.id_categoria

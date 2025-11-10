@@ -59,14 +59,9 @@ class Pedido
             return $idPedido;
 
         } catch (PDOException $e) {
-            // =================================================================
-            // MUDANÇA PRINCIPAL AQUI
-            // =================================================================
             $this->pdo->rollback();
             error_log("Erro de PDO ao criar pedido: " . $e->getMessage());
             
-            // Em vez de "return false", "lance" (throw) a exceção.
-            // O PedidoController irá capturá-la e mostrar a mensagem de erro real.
             throw new Exception("Erro de banco de dados: " . $e->getMessage());
             // =================================================================
         }
