@@ -16,7 +16,6 @@ try {
         SELECT 
             p.id_produto,
             p.nome,
-            p.cor,
             p.preco,
             pi.descricao,
             pi.ram,

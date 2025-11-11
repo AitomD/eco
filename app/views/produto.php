@@ -29,14 +29,14 @@
             </h5>
             <p class="link-produto" data-categoria="1">Computadores Desktop</p>
             <p class="link-produto" data-categoria="2">Notebooks</p>
-            <p class="link-produto" data-categoria="4">Smartphones</p>
+            <p class="link-produto" data-categoria="3">Smartphones</p>
             <br>
             <h5 class="text-light">
                 <i class="fa-solid fa-microchip"></i>
                 Computadores
             </h5>
-            <p class="link-produto" data-marca="16">Intel</p>
-            <p class="link-produto" data-marca="15">AMD</p>
+            <p class="link-produto" data-marca="11">Intel</p>
+            <p class="link-produto" data-marca="12">AMD</p>
             <br>
             <h5 class="text-light">
                 <i class="fa-solid fa-laptop"></i>
