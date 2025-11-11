@@ -133,6 +133,7 @@ if ($isAuthPage) {
 // Contar itens no carrinho (para o ícone do header)
 $cartCount = CarrinhoController::contarItens();
 
+
 // FIM DO SCRIPT PHP. O ARQUIVO HTML COMEÇA AGORA.
 ?>
 

@@ -113,9 +113,6 @@ class Pedido
     public function buscarProdutosPedido($idPedido)
     {
         try {
-            // *** CORREÇÃO APLICADA AQUI ***
-            // 1. Adicionado 'pi.cor' no SELECT
-            // 2. Adicionado 'LEFT JOIN produto_info pi ON pr.id_info = pi.id_info'
             $stmt = $this->pdo->prepare("
                 SELECT 
                     pp.id_pedido_produto,
