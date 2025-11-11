@@ -18,10 +18,6 @@ class Produto
     p.preco,
     m.nome AS marca,
     c.nome AS categoria,
-    pi.ram,
-    pi.armazenamento,
-    pi.processador,
-    pi.placa_video,
     (SELECT i.url 
      FROM imagem i 
      WHERE i.id_info = pi.id_info 

@@ -35,7 +35,9 @@ $paginasPermitidas = [
     'meuperfil',
     'venda',
     'adicionaproduto',
-    'meusprodutos'
+    'meusprodutos',
+    'termos',
+    'politica'
 ];
 
 // Página padrão
@@ -263,37 +265,10 @@ $cartCount = CarrinhoController::contarItens();
                     </div>
                     <div class="col-lg-3 col-md-6 col-12">
                         <div class="footer-column">
-                            <h4 class="text-light mb-3">Novidades e Promoções</h4>
-                            <div class="row">
-                                <div class="col-6">
-                                    <ul class="dev-list">
-                                        <li class="text-muted">Dia Das Crianças</li>
-                                        <li class="text-muted">Black Friday</li>
-                                    </ul>
-                                </div>
-                                <div class="col-6">
-                                    <ul class="dev-list">
-                                        <li class="text-muted">Oferta Tech</li>
-                                        <li class="text-muted">Gift Card HAFTECH!</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="footer-column">
-                            <h4 class="text-light mb-3">Atendimento</h4>
-                            <ul class="dev-list">
-                                <li><a href="#" class="text-muted">Entre em Contato</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="footer-column">
                             <h4 class="text-light mb-3">Outros</h4>
                             <ul class="dev-list">
-                                <li><a href="#" class="text-muted">Termos e Condições</a></li>
-                                <li><a href="#" class="text-muted">Política de Privacidade</a></li>
+                                <li><a href="index.php?url=termos" class="text-muted">Termos e Condições</a></li>
+                                <li><a href="index.php?url=" class="text-muted">Política de Privacidade</a></li>
                             </ul>
                         </div>
                     </div>
@@ -301,7 +276,7 @@ $cartCount = CarrinhoController::contarItens();
                 <hr class="border-secondary my-4 mx-2">
                 <div class="row mx-2">
                     <div class="col-12 text-center">
-                        <p class="text-muted mb-0">&copy; 2024 HAFTECH. Todos os direitos reservados.</p>
+                        <p class="text-light mb-0">&copy; 2025 HAFTECH. Todos os direitos reservados.</p>
                     </div>
                 </div>
             </div>
