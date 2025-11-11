@@ -11,7 +11,7 @@ class CarrinhoController {
     
     public static function init() {
         // Inicializar o carrinho se não existir
-        if (!isset($_SESSION['carrinho'])) {
+        if (!isset($_SESSION['carrinho'])) { 
             $_SESSION['carrinho'] = [];
         }
     }

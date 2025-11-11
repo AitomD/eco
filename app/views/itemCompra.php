@@ -79,9 +79,6 @@ try {
     $lojaModel = new Loja();
     $loja_endereco = $lojaModel->buscarPorProdutoId($id_produto);
 
-    // <-- MODIFICAÇÃO: Inicialize a variável $condicao
-    // Você precisa definir sua lógica real aqui.
-    // Ex: $condicao = ($produto['quantidade_disponivel'] == 'Sem Estoque');
     $condicao = false;
 
     if ($condicao) {
@@ -92,6 +89,7 @@ try {
 } catch (PDOException $e) {
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
+
 ?>
 
 <style>
@@ -283,17 +281,3 @@ try {
     }
 </style>
 
-<script>
-    // ADD o produto para o carrinho
-    document.querySelectorAll('.btn-add-cart').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const produto = {
-                id: this.dataset.id,
-                nome: this.dataset.nome,
-                preco: this.dataset.preco,
-                imagem: this.dataset.imagem
-            };
-            adicionarAoCarrinho(produto);
-        });
-    });
-</script>
