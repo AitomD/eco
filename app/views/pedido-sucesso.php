@@ -1,3 +1,24 @@
+<?php
+
+
+// "Desempacota" a variável principal que veio do roteador
+$pedido = $detalhesPedido['pedido'] ?? null;
+$produtos = $detalhesPedido['produtos'] ?? [];
+
+// Uma verificação de segurança para garantir que o pedido foi carregado
+if (!$pedido) {
+    echo "<div class='container my-5'>
+            <div class='alert alert-danger'>
+                <strong>Erro:</strong> Não foi possível carregar os detalhes do pedido. 
+                Por favor, verifique seus pedidos no seu perfil.
+            </div>
+          </div>";
+    
+    return; 
+}
+
+
+?>
 <div class="success-container my-5">
     <div class="success-card">
         <div class="success-header">

@@ -113,6 +113,9 @@ class Pedido
     public function buscarProdutosPedido($idPedido)
     {
         try {
+            // *** CORREÇÃO APLICADA AQUI ***
+            // 1. Adicionado 'pi.cor' no SELECT
+            // 2. Adicionado 'LEFT JOIN produto_info pi ON pr.id_info = pi.id_info'
             $stmt = $this->pdo->prepare("
                 SELECT 
                     pp.id_pedido_produto,
@@ -120,12 +123,13 @@ class Pedido
                     pp.quantidade,
                     pp.preco_unitario,
                     pr.nome as nome_produto,
-                    pr.cor,
+                    pi.cor, 
                     pr.id_loja,
                     l.nome as nome_loja,
                     (pp.quantidade * pp.preco_unitario) as subtotal
                 FROM pedido_produto pp
                 INNER JOIN produto pr ON pr.id_produto = pp.id_produto
+                LEFT JOIN produto_info pi ON pr.id_info = pi.id_info 
                 LEFT JOIN loja l ON l.id_loja = pr.id_loja
                 WHERE pp.id_pedido = ?
                 ORDER BY pp.id_pedido_produto
@@ -139,7 +143,6 @@ class Pedido
             return [];
         }
     }
-
     /**
      * Buscar todos os pedidos de um usuário
      * @param int $idUser

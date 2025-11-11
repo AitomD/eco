@@ -66,47 +66,7 @@ class CarrinhoManager {
      * Vincula eventos específicos da página do carrinho
      */
     bindCartPageEvents() {
-        // Botões de aumentar quantidade
-        document.querySelectorAll('.btn-aumentar').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const itemRow = e.target.closest('.item-carrinho');
-                if (!itemRow) return;
-                
-                const quantidadeInput = itemRow.querySelector('.quantidade-input');
-                const novaQuantidade = parseInt(quantidadeInput.value) + 1;
-                
-                if (novaQuantidade <= 99) {
-                    quantidadeInput.value = novaQuantidade;
-                    this.updateItemQuantity(itemRow.dataset.id, novaQuantidade);
-                }
-            });
-        });
-
-        // Botões de diminuir quantidade
-        document.querySelectorAll('.btn-diminuir').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const itemRow = e.target.closest('.item-carrinho');
-                if (!itemRow) return;
-                
-                const quantidadeInput = itemRow.querySelector('.quantidade-input');
-                const novaQuantidade = parseInt(quantidadeInput.value) - 1;
-                
-                if (novaQuantidade >= 1) {
-                    quantidadeInput.value = novaQuantidade;
-                    this.updateItemQuantity(itemRow.dataset.id, novaQuantidade);
-                } else if (novaQuantidade === 0) {
-                    // Se quantidade for 0, remover item
-                    if (confirm('Deseja remover este item do carrinho?')) {
-                        this.removeItem(itemRow.dataset.id);
-                    } else {
-                        quantidadeInput.value = 1;
-                    }
-                }
-            });
-        });
-
+      
         // Mudança direta no input de quantidade
         document.querySelectorAll('.quantidade-input').forEach(input => {
             input.addEventListener('change', (e) => {
@@ -134,32 +94,6 @@ class CarrinhoManager {
             });
         });
 
-        // Botões de remover item
-        document.querySelectorAll('.btn-remover').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const itemRow = e.target.closest('.item-carrinho');
-                if (!itemRow) return;
-                
-                const itemId = itemRow.dataset.id;
-                const itemNome = itemRow.querySelector('.item-nome')?.textContent || 'este item';
-                
-                if (confirm(`Tem certeza que deseja remover "${itemNome}" do carrinho?`)) {
-                    this.removeItem(itemId);
-                }
-            });
-        });
-
-        // Botão de limpar carrinho
-        const limparBtn = document.getElementById('limpar-carrinho');
-        if (limparBtn) {
-            limparBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
-                    this.clearCart();
-                }
-            });
-        }
 
         // Botão de finalizar compra
         const finalizarBtn = document.getElementById('finalizar-compra');
@@ -292,72 +226,6 @@ class CarrinhoManager {
         }, 2000);
     }
 
-    /**
-     * Atualiza quantidade de um item
-     * Chama CarrinhoController::atualizarQuantidade()
-     */
-    updateItemQuantity(id, quantidade) {
-        const form = document.getElementById('form-atualizar');
-        if (!form) {
-            console.error('Formulário de atualização não encontrado');
-            return;
-        }
-
-        const idInput = document.getElementById('update-id');
-        const quantidadeInput = document.getElementById('update-quantidade');
-
-        if (idInput && quantidadeInput) {
-            idInput.value = id;
-            quantidadeInput.value = quantidade;
-            
-            // Adicionar feedback visual
-            const itemRow = document.querySelector(`[data-id="${id}"]`);
-            if (itemRow) {
-                itemRow.style.opacity = '0.6';
-            }
-            
-            form.submit();
-        }
-    }
-
-    /**
-     * Remove um item do carrinho
-     * Chama CarrinhoController::removerDoCarrinho()
-     */
-    removeItem(id) {
-        const form = document.getElementById('form-remover');
-        if (!form) {
-            console.error('Formulário de remoção não encontrado');
-            return;
-        }
-
-        const idInput = document.getElementById('remove-id');
-        if (idInput) {
-            idInput.value = id;
-            
-            // Adicionar animação de saída
-            const itemRow = document.querySelector(`[data-id="${id}"]`);
-            if (itemRow) {
-                itemRow.style.transition = 'all 0.3s ease';
-                itemRow.style.opacity = '0';
-                itemRow.style.transform = 'translateX(-20px)';
-            }
-            
-            setTimeout(() => {
-                form.submit();
-            }, 300);
-        }
-    }
-
-    /**
-     * Limpa todo o carrinho
-     * Chama CarrinhoController::limparCarrinho()
-     */
-    clearCart() {
-        const form = this.createForm({ acao: 'limpar' });
-        document.body.appendChild(form);
-        form.submit();
-    }
 
     /**
      * Processa checkout
@@ -383,8 +251,8 @@ class CarrinhoManager {
                 window.location.href = 'index.php?url=login';
             }
         } else {
-            // Redirecionar para página de checkout
-            window.location.href = 'index.php?url=checkout';
+            // Redirecionar para página de retirada
+            window.location.href = 'index.php?url=paginaRetirada';
         }
     }
 
@@ -430,53 +298,7 @@ class CarrinhoManager {
                 }
             });
     }
-
-    /**
-     * Valida cupom
-     * Em produção, fazer requisição AJAX para validar no servidor
-     */
-    async validateCoupon(cupom) {
-        // Simulação de validação (substituir por AJAX real em produção)
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const cuponsValidos = {
-                    'DESC10': { discount: 10, type: 'percentage' },
-                    'PROMO20': { discount: 20, type: 'percentage' },
-                    'WELCOME15': { discount: 15, type: 'percentage' },
-                    'FRETE': { discount: 0, type: 'free_shipping' }
-                };
-
-                if (cuponsValidos[cupom]) {
-                    resolve({
-                        valid: true,
-                        discount: cuponsValidos[cupom].discount,
-                        type: cuponsValidos[cupom].type
-                    });
-                } else {
-                    resolve({
-                        valid: false,
-                        message: 'Cupom inválido ou expirado.'
-                    });
-                }
-            }, 500);
-        });
-
-        /* Implementação real com AJAX:
-        try {
-            const response = await fetch('index.php?url=api/validar-cupom', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ cupom })
-            });
-            return await response.json();
-        } catch (error) {
-            console.error('Erro ao validar cupom:', error);
-            return { valid: false, message: 'Erro ao validar cupom.' };
-        }
-        */
-    }
+ 
 
     /**
      * Aplica cupom ao carrinho
@@ -558,116 +380,7 @@ class CarrinhoManager {
         }, 4000);
     }
 
-    /**
-     * Método estático para adicionar produto programaticamente
-     * Usa CarrinhoController::adicionarAoCarrinho()
-     */
-    static addProduct(id, nome, preco, imagem = '', quantidade = 1) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = 'index.php?url=carrinho';
-        form.style.display = 'none';
-
-        const fields = {
-            acao: 'adicionar',
-            id: id,
-            nome: nome,
-            preco: preco,
-            imagem: imagem,
-            quantidade: quantidade
-        };
-
-        Object.keys(fields).forEach(key => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = fields[key];
-            form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-
-/**
- * ====================================================================
- * FUNÇÃO AJAX PARA ADICIONAR PRODUTO (Alternativa moderna)
- * ====================================================================
- * NOTA: Requer criação de api_carrinho.php que use CarrinhoController
- */
-async function adicionarProdutoAoCarrinho(produto) {
-    // Validação
-    if (!produto || !produto.id || !produto.nome || !produto.preco) {
-        console.error('Dados do produto incompletos:', produto);
-        alert('Erro: Dados do produto incompletos.');
-        return { success: false, message: 'Dados incompletos' };
-    }
-
-    // Preparar dados no formato esperado pelo CarrinhoController
-    const formData = new FormData();
-    formData.append('acao', 'adicionar');
-    formData.append('id', produto.id);
-    formData.append('nome', produto.nome);
-    formData.append('preco', produto.preco);
-    formData.append('imagem', produto.imagem || '');
-    formData.append('quantidade', produto.quantidade || 1);
-
-    try {
-        // Enviar requisição para API que usa CarrinhoController
-        const response = await fetch('api_carrinho.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        // Verificar se a resposta é JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('Resposta do servidor não é JSON');
-        }
-
-        const result = await response.json();
-
-        // Processar resultado
-        if (result.success) {
-            // Atualizar contador do carrinho
-            if (result.totalItens !== undefined) {
-                const cartBadge = document.querySelector('.cart-count');
-                if (cartBadge) {
-                    cartBadge.textContent = result.totalItens;
-                    cartBadge.classList.add('pulse');
-                    setTimeout(() => cartBadge.classList.remove('pulse'), 500);
-                }
-            }
-
-            // Mostrar notificação de sucesso
-            if (window.carrinhoManager) {
-                window.carrinhoManager.showNotification(
-                    `${produto.nome} adicionado ao carrinho!`, 
-                    'success'
-                );
-            } else {
-                alert('Produto adicionado ao carrinho!');
-            }
-
-            return result;
-        } else {
-            throw new Error(result.message || 'Erro ao adicionar produto');
-        }
-
-    } catch (error) {
-        console.error('Erro na requisição AJAX:', error);
-        
-        // Mostrar erro ao usuário
-        const errorMessage = error.message || 'Erro de rede. Tente novamente.';
-        if (window.carrinhoManager) {
-            window.carrinhoManager.showNotification(errorMessage, 'error');
-        } else {
-            alert(errorMessage);
-        }
-
-        return { success: false, message: errorMessage };
-    }
+  
 }
 
 /**
