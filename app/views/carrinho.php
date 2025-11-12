@@ -182,9 +182,6 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                 <div class="step-number">
                     <i class="bi bi-cart-check"></i>
                 </div>
-                <div class="step-icon">
-                    <i class="bi bi-cart-check"></i>
-                </div>
                 <span class="step-label" style="color: white;">Carrinho</span>
             </div>
             <div class="step-line"></div>
@@ -192,17 +189,11 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                 <div class="step-number">
                     <i class="bi bi-truck"></i>
                 </div>
-                <div class="step-icon">
-                    <i class="bi bi-truck"></i>
-                </div>
                 <span class="step-label" style="color: white;">Entrega</span>
             </div>
             <div class="step-line"></div>
             <div class="step pending">
                 <div class="step-number">
-                    <i class="bi bi-credit-card"></i>
-                </div>
-                <div class="step-icon">
                     <i class="bi bi-credit-card"></i>
                 </div>
                 <span class="step-label" style="color: white;">Pagamento</span>
@@ -215,7 +206,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
             <h2 class="text-white mb-4">
                 <i class="bi bi-cart2 me-3"></i>Meu Carrinho
                 <?php if ($totalItens > 0): ?>
-                    <span class="badge bg-primary ms-2"><?= $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?></span>
+                    <span class="badge bg-primary ms-2"><?= $totalItens ?>
+                        <?= $totalItens === 1 ? 'item' : 'itens' ?></span>
                 <?php endif; ?>
             </h2>
         </div>
@@ -250,9 +242,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                         <?php foreach ($itensCarrinho as $item): ?>
                             <div class="row align-items-center py-3 border-bottom border-secondary item-carrinho" data-id="<?= $item['id'] ?>">
                                 <div class="col-md-2">
-                                    <img src="<?= htmlspecialchars($item['imagem']) ?>" 
-                                         alt="<?= htmlspecialchars($item['nome']) ?>" 
-                                         class="img-fluid rounded">
+                                    <img src="<?= htmlspecialchars($item['imagem']) ?>"
+                                        alt="<?= htmlspecialchars($item['nome']) ?>" class="img-fluid rounded">
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="text-white mb-1"><?= htmlspecialchars($item['nome']) ?></h6>
@@ -263,8 +254,10 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                         <button class="btn btn-outline-secondary btn-sm btn-diminuir" type="button">
                                             <i class="bi bi-dash"></i>
                                         </button>
-                                        <input type="number" class="form-control text-center quantidade-input" 
-                                               value="<?= $item['quantidade'] ?>" min="1" max="99">
+
+                                        <input class="form-control text-center quantidade-input"
+                                            value="<?= $item['quantidade'] ?>" min="1" max="99">
+
                                         <button class="btn btn-outline-secondary btn-sm btn-aumentar" type="button">
                                             <i class="bi bi-plus"></i>
                                         </button>
@@ -285,14 +278,16 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
                 <!-- Botões de ação -->
                 <div class="d-flex justify-content-between">
-                    <a href="index.php?url=home" class="btn btn-outline-light">
-                        <i class="bi bi-arrow-left me-2"></i>Continuar Comprando
+                    <a href="index.php?url=produto" class="btn btn-outline-light">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Continuar Comprando
                     </a>
                     <form method="POST" class="d-inline">
                         <input type="hidden" name="acao" value="limpar">
-                        <button type="submit" class="btn btn-outline-danger" 
-                                onclick="return confirm('Tem certeza que deseja limpar o carrinho?')">
-                            <i class="bi bi-trash me-2"></i>Limpar Carrinho
+                        <button type="submit" class="btn btn-outline-danger"
+                            onclick="return confirm('Tem certeza que deseja limpar o carrinho?')">
+                            <i class="bi bi-trash me-2"></i>
+                            Limpar Carrinho
                         </button>
                     </form>
                 </div>
@@ -306,19 +301,27 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
-                            <span class="text-muted">Subtotal (<?= $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?>):</span>
-                            <span class="text-white">R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?></span>
+                            <span class="text-light">
+                                Subtotal (<?= $totalItens ?>     <?= $totalItens === 1 ? 'item' : 'itens' ?>):
+                            </span>
+                            <span class="text-light">
+                                R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?>
+                            </span>
                         </div>
                         
                         <?php if ($cupomAplicado && $valoresCarrinho['desconto'] > 0): ?>
-                            <div class="d-flex justify-content-between mb-3">
-                                <span class="text-success">
-                                    Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>):
-                                    <button class="btn btn-link btn-sm text-danger p-0 ms-2" onclick="removerCupom()" title="Remover cupom">
-                                        <i class="bi bi-x-circle"></i>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="flex-grow-1 me-2">
+                                    <span class="text-success d-block">
+                                        Desconto (<?= htmlspecialchars($cupomAplicado['codigo']) ?>)
+                                    </span>
+                                    <button class="btn btn-link text-light btn-sm text-danger p-0 mt-1 w-100"
+                                        onclick="removerCupom()" title="Remover cupom">
+                                        <i class="bi bi-x-circle me-1"></i>Remover
                                     </button>
-                                </span>
-                                <span class="text-success">-R$ <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
+                                </div>
+                                <span class="text-success fw-bold">-R$
+                                    <?= number_format($valoresCarrinho['desconto'], 2, ',', '.') ?></span>
                             </div>
                         <?php endif; ?>
                         
@@ -339,8 +342,9 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                     <input type="hidden" name="acao_cupom" value="aplicar">
                                     <input type="hidden" name="valor_carrinho" value="<?= $totalCarrinho ?>">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="codigo_cupom" placeholder="Código do cupom" id="cupom-input" value="">
-                                        <button class="btn btn-outline-secondary" type="submit">
+                                        <input type="text" class="form-control cupom-input" name="codigo_cupom"
+                                            placeholder="Código do cupom" id="cupom-input" value="">
+                                        <button class="btn btn-outline-secondary cupom-btn" type="submit">
                                             Aplicar
                                         </button>
                                     </div>
@@ -349,54 +353,58 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                             
                             <!-- Cupons disponíveis -->
                             <?php if (!empty($cuponsDisponiveis)): ?>
-                                <div class="mb-3">
-                                    <button class="btn btn-link btn-sm text-info p-0" type="button" data-bs-toggle="collapse" data-bs-target="#cuponsDisponiveis">
-                                        <i class="bi bi-tag me-1"></i>Ver cupons disponíveis
+
+                                <div class="mb-2">
+                                    <button class="btn btn-sm text-white p-2 w-100" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#cuponsDisponiveis">
+                                        <i class="bi bi-tag me-1"></i>
+                                        Ver cupons disponíveis
                                     </button>
                                     <div class="collapse" id="cuponsDisponiveis">
                                         <div class="mt-2">
                                             <?php foreach (array_slice($cuponsDisponiveis, 0, 3) as $cupom): ?>
-                                                <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel" data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <div>
-                                                            <small class="text-white fw-bold"><?= htmlspecialchars($cupom['codigo']) ?></small>
-                                                            <br>
-                                                            <small class="text-muted"><?= htmlspecialchars($cupom['descricao']) ?></small>
+                                                <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel"
+                                                    data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="flex-grow-1 me-2">
+                                                            <small
+                                                                class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
+                                                            <small
+                                                                class="text-light"><?= htmlspecialchars($cupom['descricao']) ?></small>
+                                                            <button
+                                                                class="btn w-100 btn-sm mt-2 text-white aplicar-cupom-disponivel py-2">
+                                                                Usar
+                                                            </button>
                                                         </div>
-                                                        <button class="btn btn-outline-primary btn-sm aplicar-cupom-disponivel">Usar</button>
-                                                    </div>
+                                                    <?php endforeach; ?>
+
                                                 </div>
-                                            <?php endforeach; ?>
+                                            </div>
                                         </div>
-                                    </div>
+
+                                    <?php endif; ?>
+
+                                <?php endif; ?>
+
+                                <!-- Continuar -->
+                                <button class="btn btn-success w-100 btn-lg mb-3 mt-3" id="finalizar-compra">
+                                    <i class="bi bi-arrow-right me-2"></i>
+                                    Próximo: Entrega
+                                </button>
+
+                                <div class="text-center">
+                                    <small class="text-white text-muted">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Compra 100% segura
+                                    </small>
                                 </div>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        
-                        <button class="btn btn-success w-100 btn-lg mb-3" id="finalizar-compra">
-                            <i class="bi bi-arrow-right me-2"></i>Próximo: Entrega
-                        </button>
-                        <div class="text-center">
-                            <small class="text-muted">
-                                <i class="bi bi-shield-check me-1"></i>
-                                Compra 100% segura
-                            </small>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-                <!-- Formas de pagamento -->
-                <div class="card bg-dark border-secondary mt-3">
-                    <div class="card-body">
-                        <h6 class="text-white mb-3">Formas de Pagamento</h6>
-                        <div class="d-flex justify-content-around">
-                            <i class="bi bi-credit-card text-muted" title="Cartão de Crédito"></i>
-                            <i class="bi bi-credit-card-2-front text-muted" title="Cartão de Débito"></i>
-                            <i class="bi bi-bank text-muted" title="Transferência Bancária"></i>
-                            <i class="bi bi-qr-code text-muted" title="PIX"></i>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     <?php endif; ?>
@@ -437,166 +445,87 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
     <input type="hidden" name="acao_cupom" value="remover">
 </form>
 
-<style>
-.item-carrinho {
-    transition: all 0.3s ease;
-}
-
-.item-carrinho:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.quantidade-input {
-    background-color: #2d2d2d !important;
-    border-color: #555 !important;
-    color: white !important;
-}
-
-.quantidade-input:focus {
-    background-color: #2d2d2d !important;
-    border-color: #610094 !important;
-    color: white !important;
-    box-shadow: 0 0 0 0.2rem rgba(97, 0, 148, 0.25) !important;
-}
-
-.btn-outline-secondary {
-    border-color: #555 !important;
-    color: #adb5bd !important;
-}
-
-.btn-outline-secondary:hover {
-    background-color: #610094 !important;
-    border-color: #610094 !important;
-    color: white !important;
-}
-
-.card {
-    border-radius: 10px;
-}
-
-.badge {
-    background-color: #610094 !important;
-}
-
-.carrinho-container .card {
-    background-color: #1a1a1a !important;
-    border-color: #333 !important;
-}
-
-.carrinho-container .text-white {
-    color: white !important;
-}
-
-.cupom-disponivel {
-    background-color: rgba(255, 255, 255, 0.05);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.cupom-disponivel:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: #610094 !important;
-}
-
-.aplicar-cupom-disponivel {
-    font-size: 12px;
-    padding: 4px 8px;
-}
-
-.alert {
-    border-radius: 8px;
-}
-
-.btn-link {
-    text-decoration: none !important;
-}
-
-.btn-link:hover {
-    text-decoration: underline !important;
-}
-</style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Atualizar quantidade
-    document.querySelectorAll('.btn-aumentar').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const itemRow = this.closest('.item-carrinho');
-            const quantidadeInput = itemRow.querySelector('.quantidade-input');
-            const novaQuantidade = parseInt(quantidadeInput.value) + 1;
-            
-            if (novaQuantidade <= 99) {
-                quantidadeInput.value = novaQuantidade;
-                atualizarItem(itemRow.dataset.id, novaQuantidade);
-            }
-        });
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        // Atualizar quantidade
+        document.querySelectorAll('.btn-aumentar').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const itemRow = this.closest('.item-carrinho');
+                const quantidadeInput = itemRow.querySelector('.quantidade-input');
+                const novaQuantidade = parseInt(quantidadeInput.value) + 1;
 
-    document.querySelectorAll('.btn-diminuir').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const itemRow = this.closest('.item-carrinho');
-            const quantidadeInput = itemRow.querySelector('.quantidade-input');
-            const novaQuantidade = parseInt(quantidadeInput.value) - 1;
-            
-            if (novaQuantidade >= 1) {
-                quantidadeInput.value = novaQuantidade;
-                atualizarItem(itemRow.dataset.id, novaQuantidade);
-            }
+                if (novaQuantidade <= 99) {
+                    quantidadeInput.value = novaQuantidade;
+                    atualizarItem(itemRow.dataset.id, novaQuantidade);
+                }
+            });
         });
-    });
 
-    // Atualizar quantidade diretamente no input
-    document.querySelectorAll('.quantidade-input').forEach(input => {
-        input.addEventListener('change', function() {
-            const itemRow = this.closest('.item-carrinho');
-            const quantidade = parseInt(this.value);
-            
-            if (quantidade >= 1 && quantidade <= 99) {
-                atualizarItem(itemRow.dataset.id, quantidade);
-            } else {
-                this.value = 1;
-                atualizarItem(itemRow.dataset.id, 1);
-            }
+        document.querySelectorAll('.btn-diminuir').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const itemRow = this.closest('.item-carrinho');
+                const quantidadeInput = itemRow.querySelector('.quantidade-input');
+                const novaQuantidade = parseInt(quantidadeInput.value) - 1;
+
+                if (novaQuantidade >= 1) {
+                    quantidadeInput.value = novaQuantidade;
+                    atualizarItem(itemRow.dataset.id, novaQuantidade);
+                }
+            });
         });
-    });
 
-    // Remover item
-    document.querySelectorAll('.btn-remover').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const itemRow = this.closest('.item-carrinho');
-            const itemId = itemRow.dataset.id;
-            
-            if (confirm('Tem certeza que deseja remover este item do carrinho?')) {
-                removerItem(itemId);
-            }
+        // Atualizar quantidade diretamente no input
+        document.querySelectorAll('.quantidade-input').forEach(input => {
+            input.addEventListener('change', function () {
+                const itemRow = this.closest('.item-carrinho');
+                const quantidade = parseInt(this.value);
+
+                if (quantidade >= 1 && quantidade <= 99) {
+                    atualizarItem(itemRow.dataset.id, quantidade);
+                } else {
+                    this.value = 1;
+                    atualizarItem(itemRow.dataset.id, 1);
+                }
+            });
         });
-    });
 
-    // Finalizar compra
-    document.getElementById('finalizar-compra')?.addEventListener('click', function() {
-        <?php if (!$isLoggedIn): ?>
-            if (confirm('Você precisa estar logado para finalizar a compra. Deseja fazer login agora?')) {
-                window.location.href = 'index.php?url=login';
-            }
-        <?php else: ?>
-            // Ir diretamente para a página de entrega
-            window.location.href = 'index.php?url=paginaRetirada';
-        <?php endif; ?>
-    });
+        // Remover item
+        document.querySelectorAll('.btn-remover').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const itemRow = this.closest('.item-carrinho');
+                const itemId = itemRow.dataset.id;
 
-    // Aplicar cupons disponíveis
-    document.querySelectorAll('.aplicar-cupom-disponivel').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const cupomDiv = this.closest('.cupom-disponivel');
-            const codigo = cupomDiv.dataset.codigo;
-            const cupomInput = document.getElementById('cupom-input');
-            
-            if (cupomInput) {
-                cupomInput.value = codigo;
-                document.getElementById('form-cupom').submit();
-            }
+                if (confirm('Tem certeza que deseja remover este item do carrinho?')) {
+                    removerItem(itemId);
+                }
+            });
         });
-    });
+
+        // Finalizar compra
+        document.getElementById('finalizar-compra')?.addEventListener('click', function () {
+            <?php if (!$isLoggedIn): ?>
+                if (confirm('Você precisa estar logado para finalizar a compra. Deseja fazer login agora?')) {
+                    window.location.href = 'index.php?url=login';
+                }
+            <?php else: ?>
+                // Ir diretamente para a página de entrega
+                window.location.href = 'index.php?url=paginaRetirada';
+            <?php endif; ?>
+        });
+
+        // Aplicar cupons disponíveis
+        document.querySelectorAll('.aplicar-cupom-disponivel').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const cupomDiv = this.closest('.cupom-disponivel');
+                const codigo = cupomDiv.dataset.codigo;
+                const cupomInput = document.getElementById('cupom-input');
+
+                if (cupomInput) {
+                    cupomInput.value = codigo;
+                    document.getElementById('form-cupom').submit();
+                }
+            });
+        });
 
     function atualizarItem(id, quantidade) {
         try {

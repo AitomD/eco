@@ -19,6 +19,7 @@ try {
             p.preco,
             pi.descricao,
             pi.ram,
+            pi.cor,
             pi.armazenamento,
             pi.processador,
             pi.placa_mae,
@@ -48,7 +49,7 @@ try {
             ) AS quantidade_disponivel
 
         FROM produto p
-        JOIN produto_info pi ON p.id_info = pi.id_info
+        LEFT JOIN produto_info pi ON p.id_info = pi.id_info
         LEFT JOIN imagem i ON pi.id_info = i.id_info
         LEFT JOIN marca m ON pi.id_marca = m.id_marca
         LEFT JOIN categoria c ON pi.id_categoria = c.id_categoria
@@ -71,9 +72,20 @@ try {
     // Todas as imagens em um array
     $imagens = array_column($resultados, 'imagem');
 
+    $lojaModel = new Loja();
+    $loja_endereco = $lojaModel->buscarPorProdutoId($id_produto);
+
+    $condicao = false;
+
+    if ($condicao) {
+        // Agora isso funciona, pois o buffer está segurando o HTML
+        header('Location: paginaRetirada.php');
+        exit; // <-- IMPORTANTE: Sempre use exit/die após um redirecionamento.
+    }
 } catch (PDOException $e) {
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
+
 ?>
 
 <main class="container py-4">
@@ -163,8 +175,22 @@ try {
                         Quantidade: <?= htmlspecialchars($produto['quantidade_disponivel']) ?> unidade(s)
                     </p>
                     <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn">Comprar agora</button>
-                        <button class="cart-button text-center">Adicionar ao carrinho</button>
+
+                        <?php if ($produto['quantidade_disponivel'] <= 0): ?>
+
+                            <p class="fs-5 fw-bold text-danger">Produto fora de estoque</p>
+
+                        <?php else: ?>
+
+                            <button class="btn btn-product btn-add-cart btn-sm fs-6 fw-bold w-100"
+                                data-id="<?= htmlspecialchars($produto['id_produto']) ?>"
+                                data-nome="<?= htmlspecialchars($produto['nome']) ?>"
+                                data-preco="<?= htmlspecialchars($produto['preco']) ?>"
+                                data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
+                                Comprar Agora
+                            </button>
+
+                        <?php endif; ?>
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
@@ -210,25 +236,3 @@ try {
 }
 </style>
 
-<script>
-function trocarImagemPrincipal(novaImagem, elemento) {
-    // Atualiza a imagem principal
-    const imagemPrincipal = document.getElementById('imagem-principal');
-    
-    // Efeito de fade
-    imagemPrincipal.style.opacity = '0.5';
-    
-    setTimeout(() => {
-        imagemPrincipal.src = novaImagem;
-        imagemPrincipal.style.opacity = '1';
-    }, 150);
-    
-    // Remove a classe 'active' de todas as miniaturas
-    document.querySelectorAll('.miniatura-img').forEach(img => {
-        img.classList.remove('active');
-    });
-    
-    // Adiciona a classe 'active' na miniatura clicada
-    elemento.classList.add('active');
-}
-</script>

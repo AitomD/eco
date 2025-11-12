@@ -1,91 +1,104 @@
 <?php
-// Iniciar sessão
+/*
+ * ======================================================================
+ * FASE 1: INICIALIZAÃ‡ÃƒO E AÃ‡Ã•ES GERAIS (sempre rodam)
+ * ======================================================================
+ */
+
+// Iniciar sessÃ£o
 session_start();
 
-// Incluir sistema de autenticação
+// Incluir sistema de autenticaÃ§Ã£o
 require_once __DIR__ . '/../app/core/user.php';
 
-// Incluir controladores
+// Incluir controladores principais
 require_once __DIR__ . '/../app/controller/CarrinhoController.php';
 require_once __DIR__ . '/../app/controller/cupons-carrinho.php';
 
-// Processar ações do carrinho e cupons antes de qualquer output
+// Processar aÃ§Ãµes de formulÃ¡rio (ex: adicionar/remover do carrinho)
 CarrinhoController::processarAcao();
 CuponsCarrinhoController::processarAcao();
 
-// Processar requisições AJAX de cupons
+// Processar requisiÃ§Ãµes AJAX de cupons (isso deve ter um 'exit' dentro dele)
 CuponsCarrinhoController::aplicarCupomAjax();
 
-// Lista de páginas permitidas
+
+/*
+ * ======================================================================
+ * FASE 2: DEFINIÃ‡ÃƒO DE ROTA E VARIÃVEIS GERAIS
+ * ======================================================================
+ */
+
+// Lista de pÃ¡ginas permitidas (whitelist)
 $paginasPermitidas = [
-    'home',
-    'login',
-    'cadastro',
-    'ofertas',
-    'produto',
-    'cupons',
-    'carrinho',
-    '404',
-    'itemCompra',
-    'paginaSeguro',
-    'paginaRetirada',
-    'metodopagamento',
-    'pedido-sucesso',
-    'paginaCompra',
-    'meuperfil',
-    'venda',
-    'adicionaproduto',
-    'meusprodutos',
-    'termos',
-    'politica'
+    'home', 'login', 'cadastro', 'produto', 'cupons', 'carrinho', '404',
+    'itemCompra', 'paginaRetirada', 'metodopagamento', 'pedido-sucesso',
+    'paginaCompra', 'meuperfil', 'venda', 'adicionaproduto', 'meusprodutos'
 ];
 
-// Página padrão
+// Obter a pÃ¡gina da URL, com 'home' como padrÃ£o
 $pagina = $_GET['url'] ?? 'home';
 
-// Sanitiza a URL para evitar path traversal (ex: ../)
+// Sanitizar a URL para evitar path traversal (ex: ../)
 $pagina = basename($pagina);
 
-// Caminho base das views (corrigido para sair da pasta public)
-$viewFile = __DIR__ . "/../app/views/{$pagina}.php";
-
-// Configura classes do body e CSS condicional para páginas de autenticação
-$isAuthPage = in_array($pagina, ['login', 'cadastro']);
-$bodyClass = '';
-if ($isAuthPage) {
-    $bodyClass = 'auth-page ' . ($pagina === 'login' ? 'login-page' : 'register-page');
-}
-
-// Verifica se o arquivo existe e é permitido
-if (!in_array($pagina, $paginasPermitidas) || !file_exists($viewFile)) {
-    $viewFile = __DIR__ . "/../app/views/404.php";
-}
-
-// Verificar se o usuário está logado
+// Verificar se o usuÃ¡rio estÃ¡ logado (usado por vÃ¡rias lÃ³gicas e pela view)
 $isLoggedIn = Auth::isUserLoggedIn();
 $userData = null;
 if ($isLoggedIn) {
     $userData = Auth::getCurrentUserData();
 }
 
-// Processar finalização de compra se for uma requisição POST para metodopagamento
+/*
+ * ======================================================================
+ * FASE 3: LÃ“GICA DE CONTROLADOR (ANTES DO HTML)
+ * Aqui ficam todas as verificaÃ§Ãµes que podem causar um redirecionamento.
+ * ======================================================================
+ */
+
+// --- LÃ³gica para 'metodopagamento' (POST) ---
 if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finalizar_compra'])) {
     require_once __DIR__ . '/../app/controller/PedidoController.php';
     
     $resultado = PedidoController::processarFinalizacaoCompra();
+    // Registro de depuraÃ§Ã£o: salvar resultado no log do PHP e na sessÃ£o para anÃ¡lise
+    error_log('[DEBUG] Resultado finalizar compra: ' . print_r($resultado, true));
+    $_SESSION['pedido_finalizacao_result'] = $resultado;
     
     if ($resultado['sucesso']) {
-        // Redirecionar para página de sucesso com o ID do pedido
-        header('Location: index.php?url=pedido-sucesso&id=' . $resultado['id_pedido']);
+        // Sucesso: tentar redirecionar para pÃ¡gina de sucesso com o ID
+        $redirectUrl = 'index.php?url=pedido-sucesso&id=' . $resultado['id_pedido'];
+        // Garantir que a sessÃ£o foi gravada
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+        // Sempre tentar redirecionar â€” usar header e tambÃ©m enviar um fallback via JavaScript/meta-refresh no corpo da resposta.
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+
+        // Tentar header (padrÃ£o)
+        if (!headers_sent($file, $line)) {
+            header('Location: ' . $redirectUrl);
+        } else {
+            error_log("[DEBUG] headers already sent in $file on line $line. Usando fallback de redirecionamento para $redirectUrl");
+        }
+
+        // Sempre enviar um fallback no corpo para garantir redirecionamento em navegadores/ambientes onde header nÃ£o funciona
+        echo "<html><head><meta charset=\"utf-8\"><title>Redirecionando...</title></head><body>";
+        echo "<script>window.location.href='" . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . "';</script>";
+        echo "<noscript><meta http-equiv='refresh' content='0;url=" . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . "' /></noscript>";
+        echo "</body></html>";
         exit;
     } else {
-        // Armazenar mensagem de erro na sessão
+        // Falha: Armazenar mensagem de erro na sessÃ£o e deixar a pÃ¡gina carregar
         $_SESSION['erro_compra'] = $resultado['mensagem'];
     }
 }
 
-// Verificar se está tentando acessar metodopagamento com carrinho vazio
-if ($pagina === 'metodopagamento') {
+// --- LÃ³gica para 'metodopagamento' (GET) ---
+// Verificar se estÃ¡ tentando acessar a pÃ¡gina de pagamento com carrinho vazio
+if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $itensCarrinho = CarrinhoController::getItens();
     if (empty($itensCarrinho)) {
         header('Location: index.php?url=carrinho');
@@ -93,10 +106,74 @@ if ($pagina === 'metodopagamento') {
     }
 }
 
-// Contar itens no carrinho
-$cartCount = CarrinhoController::contarItens();
-?>
+// --- LÃ³gica para 'pedido-sucesso' (GET) ---
+// Esta Ã© a lÃ³gica que estava causando o erro, agora movida para cÃ¡.
+$pedido = null;
+$produtos = null;
 
+if ($pagina === 'pedido-sucesso') {
+    
+    // 1. Verificar se o usuÃ¡rio estÃ¡ logado
+    if (!$isLoggedIn) {
+        header('Location: index.php?url=login');
+        exit;
+    }
+
+    // 2. Obter ID do pedido da URL
+    $idPedido = isset($_GET['id']) ? intval($_GET['id']) : null;
+    if (!$idPedido) {
+        // Se nÃ£o houver ID, nÃ£o hÃ¡ o que mostrar
+        header('Location: index.php?url=carrinho');
+        exit;
+    }
+
+    // 3. Buscar detalhes do pedido
+    require_once __DIR__ . '/../app/controller/PedidoController.php';
+    $detalhesPedido = PedidoController::buscarDetalhesPedido($idPedido, $_SESSION['user_id']);
+    
+    // 4. Extrair variÃ¡veis para a view
+    if ($detalhesPedido && is_array($detalhesPedido)) {
+        $pedido = $detalhesPedido['pedido'];
+        $produtos = $detalhesPedido['produtos'];
+    } else {
+        // Se nÃ£o conseguir carregar os detalhes, redirecionar
+        $_SESSION['mensagem_erro'] = 'Pedido nÃ£o encontrado.';
+        header('Location: index.php?url=produto');
+        exit;
+    }
+
+}
+
+
+/*
+ * ======================================================================
+ * FASE 4: PREPARAÃ‡ÃƒO FINAL DA VIEW (DEPOIS DE TODA LÃ“GICA)
+ * ======================================================================
+ */
+
+// Caminho base das views
+$viewFile = __DIR__ . "/../app/views/{$pagina}.php";
+
+// Verificar se o arquivo da view existe e Ã© permitido
+if (!in_array($pagina, $paginasPermitidas) || !file_exists($viewFile)) {
+    // Se a pÃ¡gina nÃ£o for permitida ou nÃ£o existir, forÃ§ar a pÃ¡gina de 404
+    $pagina = '404'; 
+    $viewFile = __DIR__ . "/../app/views/404.php";
+}
+
+// Configurar classes do body e CSS condicional para pÃ¡ginas de autenticaÃ§Ã£o
+$isAuthPage = in_array($pagina, ['login', 'cadastro']);
+$bodyClass = '';
+if ($isAuthPage) {
+    $bodyClass = 'auth-page ' . ($pagina === 'login' ? 'login-page' : 'register-page');
+}
+
+// Contar itens no carrinho (para o Ã­cone do header)
+$cartCount = CarrinhoController::contarItens();
+
+
+// FIM DO SCRIPT PHP. O ARQUIVO HTML COMEÃ‡A AGORA.
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -122,6 +199,10 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/itemCompra.css">
     <link rel="stylesheet" href="css/carrinho.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/carrinhoStep.css">
+    <link rel="stylesheet" href="css/carrinhoCards.css">
+    <link rel="stylesheet" href="css/pedido-sucesso.css">
+
 </head>
 
 <body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?> data-is-logged-in="<?= $isLoggedIn ? 'true' : 'false' ?>">
@@ -130,12 +211,12 @@ $cartCount = CarrinhoController::contarItens();
         <nav class="navbar navbar-expand-lg position-relative z-3 " style="background-color: #09090A;">
             <div class="container-fluid">
 
-                <!-- LOGO À ESQUERDA -->
+                <!-- LOGO Ã€ ESQUERDA -->
                 <a class="navbar-brand " href="index.php?url=home">
                     <img src="img/logoMain.png" alt="logo">
                 </a>
 
-                <!-- BOTÃO TOGGLER -->
+                <!-- BOTÃƒO TOGGLER -->
                 <button id="hamburger-button" class="navbar-toggler" type="button" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -158,10 +239,10 @@ $cartCount = CarrinhoController::contarItens();
                     </div>
                 </div>
 
-                <!-- User Section - Posicionada à direita -->
+                <!-- User Section - Posicionada Ã  direita -->
                 <div class="user-section ms-auto">
                     <?php if ($isLoggedIn): ?>
-                        <!-- Usuário logado -->
+                        <!-- UsuÃ¡rio logado -->
                         <div class="d-flex align-items-center">
                             <!-- Carrinho de compras -->
                             <a href="index.php?url=carrinho" class="text-light fs-4 me-3 position-relative" title="Carrinho de compras">
@@ -173,12 +254,12 @@ $cartCount = CarrinhoController::contarItens();
                                 <?php endif; ?>
                             </a>
 
-                            <!-- Dropdown do usuário -->
+                            <!-- Dropdown do usuÃ¡rio -->
                             <div class="dropdown">
                                 <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center"
                                     href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
-                                    <span class="d-none d-md-inline">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="d-none d-md-inline text-light">OlÃ¡, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
                                     <li>
@@ -196,7 +277,7 @@ $cartCount = CarrinhoController::contarItens();
                             </div>
                         </div>
                     <?php else: ?>
-                        <!-- Usuário não logado -->
+                        <!-- UsuÃ¡rio nÃ£o logado -->
                         <div class="d-flex align-items-center">
                             <!-- Carrinho de compras -->
                             <a href="index.php?url=carrinho" class="text-light fs-4 me-4 position-relative" title="Carrinho de compras">
@@ -208,7 +289,7 @@ $cartCount = CarrinhoController::contarItens();
                                 <?php endif; ?>
                             </a>
 
-                            <!-- Botões de autenticação -->
+                            <!-- BotÃµes de autenticaÃ§Ã£o -->
                             <div class="d-flex">
                                 <a href="index.php?url=login" class="p-btn mx-2">Entrar</a>
                                 <a href="index.php?url=cadastro" class="p-btn mx-2">Cadastrar</a>
@@ -231,14 +312,14 @@ $cartCount = CarrinhoController::contarItens();
                 <div class="row g-4 mx-2">
                     <div class="col-lg-3 col-md-6 col-12">
                         <div class="footer-column">
-                            <h4 class="text-light mb-3">Sobre Nós</h4>
+                            <h4 class="text-light mb-3">Sobre NÃ³s</h4>
                             <ul class="dev-list">
                                 <li>
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Fernando Consolin Rosa</span>
                                         <div class="social-links">
                                             <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://github.com/FernandoConsolinRosa11" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -246,8 +327,8 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Aitom Henrique Donatoni</span>
                                         <div class="social-links">
-                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://www.instagram.com/aitomdonatoni?igsh=aXlsYTAyd2phajIy" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/AitomD" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -255,8 +336,8 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Hiago Nascimento</span>
                                         <div class="social-links">
-                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="#" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://www.instagram.com/haiagos_48?igsh=MXRidG14aHJxYnU3cQ==" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/haiagos48" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -265,10 +346,37 @@ $cartCount = CarrinhoController::contarItens();
                     </div>
                     <div class="col-lg-3 col-md-6 col-12">
                         <div class="footer-column">
+                            <h4 class="text-light mb-3">Novidades e PromoÃ§Ãµes</h4>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="dev-list">
+                                        <li class="text-muted">Dia Das CrianÃ§as</li>
+                                        <li class="text-muted">Black Friday</li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="dev-list">
+                                        <li class="text-muted">Oferta Tech</li>
+                                        <li class="text-muted">Gift Card HAFTECH!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="footer-column">
+                            <h4 class="text-light mb-3">Atendimento</h4>
+                            <ul class="dev-list">
+                                <li><a href="#" class="text-muted">Entre em Contato</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="footer-column">
                             <h4 class="text-light mb-3">Outros</h4>
                             <ul class="dev-list">
-                                <li><a href="index.php?url=termos" class="text-muted">Termos e Condições</a></li>
-                                <li><a href="index.php?url=" class="text-muted">Política de Privacidade</a></li>
+                                <li><a href="#" class="text-muted">Termos e CondiÃ§Ãµes</a></li>
+                                <li><a href="#" class="text-muted">PolÃ­tica de Privacidade</a></li>
                             </ul>
                         </div>
                     </div>
@@ -276,7 +384,7 @@ $cartCount = CarrinhoController::contarItens();
                 <hr class="border-secondary my-4 mx-2">
                 <div class="row mx-2">
                     <div class="col-12 text-center">
-                        <p class="text-light mb-0">&copy; 2025 HAFTECH. Todos os direitos reservados.</p>
+                        <p class="text-muted mb-0">&copy; 2025 HAFTECH. Todos os direitos reservados.</p>
                     </div>
                 </div>
             </div>
@@ -289,7 +397,7 @@ $cartCount = CarrinhoController::contarItens();
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        AOS.init(); // Inicializa as animações
+        AOS.init(); // Inicializa as animaÃ§Ãµes
     </script>
     <script src="../public/js/dropinteracao.js"></script>
     <script src="../public/js/activebtn.js"></script>
@@ -299,20 +407,20 @@ $cartCount = CarrinhoController::contarItens();
     <script src="js/dropinteracao.js"></script>
     <script src="js/auth.js"></script>
 
-    <!-- Script para efeito do ícone do usuário -->
+    <!-- Script para efeito do Ã­cone do usuÃ¡rio -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userDropdown = document.getElementById('userDropdown');
             const userIcon = document.querySelector('#userDropdown .bi-person-circle');
 
             if (userDropdown && userIcon) {
-                // Detectar quando o dropdown é mostrado
+                // Detectar quando o dropdown Ã© mostrado
                 userDropdown.addEventListener('show.bs.dropdown', function() {
                     userIcon.style.color = '#610094';
                     userIcon.style.transform = 'scale(1.1)';
                 });
 
-                // Detectar quando o dropdown é escondido
+                // Detectar quando o dropdown Ã© escondido
                 userDropdown.addEventListener('hide.bs.dropdown', function() {
                     userIcon.style.color = '';
                     userIcon.style.transform = '';
@@ -322,7 +430,7 @@ $cartCount = CarrinhoController::contarItens();
                 userDropdown.addEventListener('click', function() {
                     userIcon.style.color = '#3F0071';
 
-                    // Voltar à cor normal após um tempo se o dropdown não abrir
+                    // Voltar Ã  cor normal apÃ³s um tempo se o dropdown nÃ£o abrir
                     setTimeout(() => {
                         if (!userDropdown.classList.contains('show')) {
                             userIcon.style.color = '';
@@ -359,7 +467,7 @@ $cartCount = CarrinhoController::contarItens();
                 color: #fff !important;
             }
 
-            /* Efeito de mudança de cor no ícone do usuário */
+            /* Efeito de mudanÃ§a de cor no Ã­cone do usuÃ¡rio */
             #userDropdown {
                 transition: all 0.3s ease;
             }
@@ -375,12 +483,12 @@ $cartCount = CarrinhoController::contarItens();
                 transform: scale(1.05);
             }
 
-            /* Efeito quando o dropdown está aberto */
+            /* Efeito quando o dropdown estÃ¡ aberto */
             .dropdown.show #userDropdown .bi-person-circle {
                 color: #610094 !important;
             }
 
-            /* Animação suave para o ícone */
+            /* AnimaÃ§Ã£o suave para o Ã­cone */
             .bi-person-circle {
                 transition: all 0.3s ease;
             }
@@ -390,6 +498,9 @@ $cartCount = CarrinhoController::contarItens();
     <script src="js/carrinho.js"></script>
     <?php if ($pagina === 'paginaRetirada'): ?>
         <script src="js/modalEndereco.js"></script>
+    <?php endif; ?>
+    <?php if ($pagina === 'itemCompra'): ?>
+        <script src="js/trocarImg.js"></script>
     <?php endif; ?>
     </body>
 

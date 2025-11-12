@@ -7,18 +7,21 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-class CarrinhoController {
-    
-    public static function init() {
+class CarrinhoController
+{
+
+    public static function init()
+    {
         // Inicializar o carrinho se não existir
         if (!isset($_SESSION['carrinho'])) {
             $_SESSION['carrinho'] = [];
         }
     }
-    
-    public static function adicionarAoCarrinho($id, $nome, $preco, $imagem, $quantidade = 1) {
+
+    public static function adicionarAoCarrinho($id, $nome, $preco, $imagem, $quantidade = 1)
+    {
         self::init();
-        
+
         if (isset($_SESSION['carrinho'][$id])) {
             $_SESSION['carrinho'][$id]['quantidade'] += $quantidade;
         } else {
@@ -30,25 +33,27 @@ class CarrinhoController {
                 'quantidade' => intval($quantidade)
             ];
         }
-        
+
         // Atualizar cupom com novo valor do carrinho
         self::atualizarCupons();
     }
 
-    public static function removerDoCarrinho($id) {
+    public static function removerDoCarrinho($id)
+    {
         self::init();
-        
+
         if (isset($_SESSION['carrinho'][$id])) {
             unset($_SESSION['carrinho'][$id]);
         }
-        
+
         // Atualizar cupom com novo valor do carrinho
         self::atualizarCupons();
     }
-    
-    public static function atualizarQuantidade($id, $quantidade) {
+
+    public static function atualizarQuantidade($id, $quantidade)
+    {
         self::init();
-        
+
         if (isset($_SESSION['carrinho'][$id])) {
             $quantidade = intval($quantidade);
             if ($quantidade <= 0) {
@@ -57,47 +62,52 @@ class CarrinhoController {
                 $_SESSION['carrinho'][$id]['quantidade'] = $quantidade;
             }
         }
-        
+
         // Atualizar cupom com novo valor do carrinho
         self::atualizarCupons();
     }
-    
-    public static function limparCarrinho() {
+
+    public static function limparCarrinho()
+    {
         $_SESSION['carrinho'] = [];
-        
+
         // Atualizar cupom (vai remover se carrinho vazio)
         self::atualizarCupons();
     }
-    
-    public static function calcularTotal() {
+
+    public static function calcularTotal()
+    {
         self::init();
-        
+
         $total = 0;
         foreach ($_SESSION['carrinho'] as $item) {
             $total += $item['preco'] * $item['quantidade'];
         }
         return $total;
     }
-    
-    public static function contarItens() {
+
+    public static function contarItens()
+    {
         self::init();
-        
+
         $count = 0;
         foreach ($_SESSION['carrinho'] as $item) {
             $count += $item['quantidade'];
         }
         return $count;
     }
-    
-    public static function getItens() {
+
+    public static function getItens()
+    {
         self::init();
         return $_SESSION['carrinho'];
     }
-    
-    public static function processarAcao() {
+
+    public static function processarAcao()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao'])) {
             $acao = $_POST['acao'];
-            
+
             switch ($acao) {
                 case 'adicionar':
                     $id = $_POST['id'] ?? '';
@@ -107,33 +117,34 @@ class CarrinhoController {
                     $quantidade = $_POST['quantidade'] ?? 1;
                     self::adicionarAoCarrinho($id, $nome, $preco, $imagem, $quantidade);
                     break;
-                    
+
                 case 'remover':
                     $id = $_POST['id'] ?? '';
                     self::removerDoCarrinho($id);
                     break;
-                    
+
                 case 'atualizar':
                     $id = $_POST['id'] ?? '';
                     $quantidade = $_POST['quantidade'] ?? 0;
                     self::atualizarQuantidade($id, $quantidade);
                     break;
-                    
+
                 case 'limpar':
                     self::limparCarrinho();
                     break;
             }
-            
+
             // Redirecionar para evitar resubmissão
             header('Location: index.php?url=carrinho');
             exit;
         }
     }
-    
+
     /**
      * Atualiza cupons quando o carrinho é modificado
      */
-    private static function atualizarCupons() {
+    private static function atualizarCupons()
+    {
         // Verificar se existe a classe de cupons
         if (class_exists('CuponsCarrinhoController')) {
             $novoTotal = self::calcularTotal();
@@ -141,4 +152,3 @@ class CarrinhoController {
         }
     }
 }
-?>

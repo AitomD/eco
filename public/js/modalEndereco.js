@@ -17,9 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 3. Adiciona o "escutador" de clique no label "Escolher Endereco"
             triggerLabel.addEventListener('click', function(event) {
                 
-                // event.preventDefault() é a CHAVE!
-                // Impede que o rádio 'mudaEndereco' seja marcado IMEDIATAMENTE.
-                // O rádio só será marcado se o usuário "Salvar" no modal.
                 event.preventDefault();
                 
                 // Abre o modal
@@ -36,20 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // AGORA sim, marcamos manualmente o rádio "Escolher Endereco de envio"
                 document.getElementById('mudaEndereco').checked = true;
                 
-                // (Opcional) Atualizar o texto do label com o novo endereço
-                // const spanTexto = triggerLabel.querySelector('.text-ml-dark');
-                // if(spanTexto) {
-                //    spanTexto.textContent = 'Enviar em: ' + document.getElementById('rua').value;
-                // }
 
                 // Esconde o modal
                 enderecoModal.hide();
             });
 
-            // 5. Lógica para "Cancelar" ou "X"
-            // Se o usuário fechar o modal sem salvar (clicando em "Cancelar",
-            // no "X" ou fora do modal), nenhuma ação é necessária.
-            // O event.preventDefault() no passo 3 já garantiu que a seleção
-            // de rádio original (ex: "Enviar no meu endereço") foi mantida.
+         
 
         });
