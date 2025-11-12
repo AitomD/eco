@@ -30,6 +30,7 @@ if (empty($itensCarrinho)) {
 <!-- Nota: Assumindo que seu <head> e <body> (abertura) estão em um 'header.php' -->
 
 <body>
+    <!-- Indicador de progresso -->
     <div class="container py-4 mt-3">
         <div class="step-indicator bg-dark p-4 rounded shadow-lg">
 
@@ -83,6 +84,8 @@ if (empty($itensCarrinho)) {
                                 </div>
                             </div>
 
+                        </div>
+                    </label>
                         </div>
                     </label>
 

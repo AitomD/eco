@@ -101,7 +101,7 @@
 .btn-success:hover {
     background: linear-gradient(45deg, #218838, #1ea569);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3) !important;
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
 }
 
 .carrinho-vazio {
@@ -256,4 +256,3 @@
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(97, 0, 148, 0.2);
 }
-

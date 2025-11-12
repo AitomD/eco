@@ -307,7 +307,7 @@ $cartCount = CarrinhoController::contarItens();
 
     </main>
     <?php if (!$isAuthPage): ?>
-        <footer class="mt-5 py-4">
+        <footer class=" py-4">
             <div class="container-fluid">
                 <div class="row g-4 mx-2">
                     <div class="col-lg-3 col-md-6 col-12">
