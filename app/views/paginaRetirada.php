@@ -27,6 +27,7 @@ if (empty($itensCarrinho)) {
 }
 ?>
 
+<!-- Nota: Assumindo que seu <head> e <body> (abertura) estão em um 'header.php' -->
 
 <body>
     <div class="container py-4 mt-3">
@@ -72,11 +73,11 @@ if (empty($itensCarrinho)) {
 
                     <label for="mudaEndereco" class="shipping-option w-100 py-3 px-3 rounded mb-3"
                         style="background: rgba(255,255,255,0.05); cursor:pointer;">
-                        
+
                         <div class="d-flex justify-content-between">
                             <div class="d-flex">
                                 <input class="form-check-input me-3" type="radio" name="entrega-option"
-                                    id="mudaEndereco" checked>
+                                    id="mudaEndereco">
                                 <div>
                                     <span class="fw-bold text-white d-block">Alterar meu endereço</span>
                                 </div>
@@ -91,9 +92,10 @@ if (empty($itensCarrinho)) {
 
                             <div class="d-flex">
                                 <input class="form-check-input me-3" type="radio" name="entrega-option"
-                                    id="envEndereco">
+                                    id="envEndereco" checked> <!-- Adicionado 'checked' por padrão -->
                                 <div>
                                     <span class="fw-bold text-white d-block">Enviar no meu endereço</span>
+                                    <!-- Você deve carregar o endereço real do usuário aqui via PHP -->
                                     <span class="text-white" style="font-size: 0.9em;">Terra Boa - CEP 87240000</span>
                                 </div>
                             </div>
@@ -225,26 +227,27 @@ if (empty($itensCarrinho)) {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const btnContinuar = document.getElementById('btn-continuar');
+            const enderecoModal = new bootstrap.Modal(document.getElementById('enderecoModal'));
 
             btnContinuar.addEventListener('click', function () {
-                // Verificar se uma opção de entrega foi selecionada
                 const entregaSelecionada = document.querySelector('input[name="entrega-option"]:checked');
 
                 if (!entregaSelecionada) {
-                    alert('Por favor, selecione uma opção de entrega.');
+                    // Substitua 'alert' por um modal de notificação se tiver um
+                    console.warn('Nenhuma opção de entrega selecionada.');
                     return;
                 }
 
-                // **INÍCIO DA MODIFICAÇÃO**
-                // Verificar o ID da opção selecionada
-                if (entregaSelecionada.id === 'retiraAgencia') {
-                    // Se for "Retirada na Agência", redireciona para a página de retirada
-                    window.location.href = 'index.php?url=paginaRetirada';
-                } else {
-                    // Para as outras opções, redireciona para a página de método de pagamento
+                if (entregaSelecionada.id === 'envEndereco') {
+                    // Opção "Enviar no meu endereço" está selecionada, ir para pagamento.
                     window.location.href = 'index.php?url=metodopagamento';
+
+                } else if (entregaSelecionada.id === 'mudaEndereco') {
+                    // Opção "Alterar meu endereço" está selecionada, apenas abra o modal.
+                    // O usuário precisará salvar o endereço e *depois* clicar em "Próximo".
+                    // (O 'change' listener abaixo já faz isso, mas garantimos aqui)
+                    enderecoModal.show();
                 }
-                // **FIM DA MODIFICAÇÃO**
             });
 
             // Abrir modal de endereço quando selecionar "Alterar meu endereço"
@@ -252,11 +255,23 @@ if (empty($itensCarrinho)) {
             if (mudaEndereco) {
                 mudaEndereco.addEventListener('change', function () {
                     if (this.checked) {
-                        const modal = new bootstrap.Modal(document.getElementById('enderecoModal'));
-                        modal.show();
+                        enderecoModal.show();
                     }
                 });
             }
+            
+            // Lógica para o formulário do modal (Exemplo)
+            const formEndereco = document.getElementById('form-novo-endereco');
+            formEndereco.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Aqui você deve enviar o formulário via AJAX/Fetch para salvar o endereço
+                console.log('Salvando endereço...');
+                
+                // Após salvar, feche o modal e marque a opção "envEndereco"
+                enderecoModal.hide();
+                document.getElementById('envEndereco').checked = true;
+                // Atualize o texto do endereço na tela
+            });
         });
     </script>
 </body>

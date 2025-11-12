@@ -1,5 +1,4 @@
 
-
 <div class="success-container my-5">
     <div class="success-card">
         <div class="success-header">
@@ -64,7 +63,7 @@
             <div class="d-flex justify-content-between mb-2">
                 <span>Subtotal: </span>
                 <span class="fw-bold">
-                    R$ <?= number_format($pedido['total'], 2, ',', '.') ?>
+                    R$ <?php echo isset($pedido['total']) ? number_format($pedido['total'], 2, ',', '.') : '0,00'; ?>
                 </span>
             </div>
 
@@ -84,7 +83,7 @@
             <hr>
             <div class="d-flex justify-content-between fw-bold fs-5">
                 <span>Total Pago:</span>
-                <span class="text-success">R$ <?= number_format($pedido['total_final'], 2, ',', '.') ?></span>
+                <span class="text-success">R$ <?php echo isset($pedido['total_final']) ? number_format($pedido['total_final'], 2, ',', '.') : '0,00'; ?></span>
             </div>
 
             <div class="mt-4 p-3 border rounded">

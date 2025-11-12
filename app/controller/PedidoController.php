@@ -88,7 +88,7 @@ class PedidoController {
                 'id_loja' => $idLoja,
                 'id_cupom' => ($cupomAplicado && isset($cupomAplicado['id_cupom'])) ? $cupomAplicado['id_cupom'] : null,
                 'total' => $totalCarrinho,
-                'desconto' => ($valoresCarrinho['desconto'] ?? 0) + $descontoAdicional, // Use 'desconto' e não 'desconto_aplicado'
+                'desconto' => ($valoresCarrinho['desconto'] ?? 0) + $descontoAdicional, 
                 'total_final' => $valorFinal,
                 'produtos' => $produtosValidados
             ];
@@ -131,7 +131,7 @@ class PedidoController {
             error_log("Erro ao finalizar compra: " . $e->getMessage());
             return [
                 'sucesso' => false,
-                'mensagem' => 'Erro: ' . $e->getMessage(), // <-- Retorna a MENSAGEM REAL do erro
+                'mensagem' => 'Erro: ' . $e->getMessage(),
                 'erro' => 'erro_interno'
             ];
         }
@@ -172,6 +172,68 @@ class PedidoController {
         } catch (Exception $e) {
             error_log("Erro ao buscar detalhes do pedido: " . $e->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Exibir página de sucesso do pedido
+     * @param int $idPedido
+     */
+    public static function sucesso($idPedido) {
+        try {
+            // Verificar se usuário está logado
+            if (empty($_SESSION['user_id'])) {
+                header('Location: index.php?url=login');
+                exit;
+            }
+
+            // Instanciar modelo de pedido
+            $pedidoModel = new Pedido();
+            
+            // Buscar dados do pedido
+            $pedido = $pedidoModel->buscarPorId($idPedido);
+            
+            // Verificar se pedido existe
+            if (!$pedido) {
+                $_SESSION['mensagem_erro'] = 'Pedido não encontrado.';
+                header('Location: index.php?url=produto');
+                exit;
+            }
+            
+            // Verificar se o pedido pertence ao usuário logado
+            if ($pedido['id_user'] != $_SESSION['user_id']) {
+                $_SESSION['mensagem_erro'] = 'Você não tem permissão para visualizar este pedido.';
+                header('Location: index.php?url=produto');
+                exit;
+            }
+            
+            // Buscar produtos do pedido
+            $produtos = $pedidoModel->buscarProdutosPedido($idPedido);
+            
+            // Verificar se há produtos
+            if (empty($produtos)) {
+                $_SESSION['mensagem_erro'] = 'Não foram encontrados produtos neste pedido.';
+                header('Location: index.php?url=produto');
+                exit;
+            }
+            
+            // Buscar informações do cupom se houver
+            if (!empty($pedido['id_cupom'])) {
+                $cupomModel = new Cupom();
+                $cupom = $cupomModel->buscarPorId($pedido['id_cupom']);
+                if ($cupom) {
+                    $pedido['codigo_cupom'] = $cupom['codigo'];
+                }
+            }
+            
+            // Passar variáveis para a view
+            require_once __DIR__ . '/../views/pedido-sucesso.php';
+            
+        } catch (Exception $e) {
+            error_log("Erro ao exibir página de sucesso: " . $e->getMessage());
+            $_SESSION['mensagem_erro'] = 'Erro ao carregar informações do pedido.';
+            header('Location: index.php?url=produto');
+            exit;
         }
     }
 
@@ -272,4 +334,4 @@ class PedidoController {
 }
 
 
-?> 
+?>
