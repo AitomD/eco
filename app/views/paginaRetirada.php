@@ -7,6 +7,7 @@ if (session_status() == PHP_SESSION_NONE) {
 // Incluir os controladores
 require_once __DIR__ . '/../controller/CarrinhoController.php';
 require_once __DIR__ . '/../controller/cupons-carrinho.php';
+require_once __DIR__ . '/../core/Database.php';
 
 // Verificar se o usuário está logado
 $isLoggedIn = isset($_SESSION['user_id']);
@@ -20,6 +21,20 @@ $totalItens = CarrinhoController::contarItens();
 $cupomAplicado = CuponsCarrinhoController::getCupomAplicado();
 $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
+// Obter dados do usuário logado (cidade e CEP)
+$userData = null;
+if ($isLoggedIn) {
+    try {
+        $pdo = Database::conectar();
+        $stmt = $pdo->prepare("SELECT cidade, cep FROM endereco WHERE id_user = ? LIMIT 1");
+        $stmt->execute([$_SESSION['user_id']]);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        error_log("Erro ao buscar dados do endereço: " . $e->getMessage());
+        $userData = null;
+    }
+}
+
 // Se o carrinho estiver vazio, redirecionar
 if (empty($itensCarrinho)) {
     header('Location: index.php?url=carrinho');
@@ -30,7 +45,6 @@ if (empty($itensCarrinho)) {
 <!-- Nota: Assumindo que seu <head> e <body> (abertura) estão em um 'header.php' -->
 
 <body>
-    <!-- Indicador de progresso -->
     <div class="container py-4 mt-3">
         <div class="step-indicator bg-dark p-4 rounded shadow-lg">
 
@@ -86,8 +100,6 @@ if (empty($itensCarrinho)) {
 
                         </div>
                     </label>
-                        </div>
-                    </label>
 
                     <label for="envEndereco" class="shipping-option w-100 py-3 px-3 rounded mb-3"
                         style="background: rgba(255,255,255,0.05); cursor:pointer;">
@@ -98,8 +110,12 @@ if (empty($itensCarrinho)) {
                                     id="envEndereco" checked> <!-- Adicionado 'checked' por padrão -->
                                 <div>
                                     <span class="fw-bold text-white d-block">Enviar no meu endereço</span>
-                                    <!-- Você deve carregar o endereço real do usuário aqui via PHP -->
-                                    <span class="text-white" style="font-size: 0.9em;">Terra Boa - CEP 87240000</span>
+                                    <!-- Endereço do usuário logado -->
+                                    <?php if ($userData && ($userData['cidade'])): ?>
+                                        <span class="text-white" style="font-size: 0.9em;"><?php echo htmlspecialchars($userData['cidade']); ?> - <?php echo htmlspecialchars($userData['cep']); ?></span>
+                                    <?php else: ?>
+                                        <span class="text-light " style="font-size: 0.9em;">Endereço não cadastrado</span>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 
@@ -278,5 +294,3 @@ if (empty($itensCarrinho)) {
         });
     </script>
 </body>
-
-</html>

@@ -7,8 +7,7 @@ if (!isset($pedido) || !isset($produtos)) {
 }
 ?>
 
-<div class="success-container my-5">
-    <div class="success-card">
+    <div class="success-card mx-auto mt-5">
         <div class="success-header">
             <div class="success-icon">
                 <i class="bi bi-check-circle"></i>
@@ -117,7 +116,7 @@ if (!isset($pedido) || !isset($produtos)) {
             </div>
 
         </div>
-    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

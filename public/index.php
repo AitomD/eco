@@ -52,11 +52,11 @@ if ($isLoggedIn) {
 /*
  * ======================================================================
  * FASE 3: LÃ“GICA DE CONTROLADOR (ANTES DO HTML)
- * Aqui ficam todas as verificaÃ§Ãµes que podem causar um redirecionamento.
+ * Aqui ficam todas as verificações que podem causar um redirecionamento.
  * ======================================================================
  */
 
-// --- LÃ³gica para 'metodopagamento' (POST) ---
+// --- Lógica para 'metodopagamento' (POST) ---
 if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finalizar_compra'])) {
     require_once __DIR__ . '/../app/controller/PedidoController.php';
     
@@ -246,7 +246,7 @@ $cartCount = CarrinhoController::contarItens();
                         <div class="d-flex align-items-center">
                             <!-- Carrinho de compras -->
                             <a href="index.php?url=carrinho" class="text-light fs-4 me-3 position-relative" title="Carrinho de compras">
-                                <i class="bi bi-cart2"></i>
+                                <i class="bi bi-cart2 mx-2"></i>
                                 <?php if ($cartCount > 0): ?>
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
                                         <?= $cartCount > 99 ? '99+' : $cartCount ?>
@@ -259,7 +259,7 @@ $cartCount = CarrinhoController::contarItens();
                                 <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center"
                                     href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
-                                    <span class="d-none d-md-inline text-light">OlÃ¡, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="d-none d-md-inline text-light">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
                                     <li>
@@ -277,7 +277,7 @@ $cartCount = CarrinhoController::contarItens();
                             </div>
                         </div>
                     <?php else: ?>
-                        <!-- UsuÃ¡rio nÃ£o logado -->
+                        <!-- Usuário nÃ£o logado -->
                         <div class="d-flex align-items-center">
                             <!-- Carrinho de compras -->
                             <a href="index.php?url=carrinho" class="text-light fs-4 me-4 position-relative" title="Carrinho de compras">
@@ -307,12 +307,13 @@ $cartCount = CarrinhoController::contarItens();
 
     </main>
     <?php if (!$isAuthPage): ?>
-        <footer class=" py-4">
+        <footer class="mt-5 py-4">
             <div class="container-fluid">
                 <div class="row g-4 mx-2">
                     <div class="col-lg-3 col-md-6 col-12">
                         <div class="footer-column">
-                            <h4 class="text-light mb-3">Sobre NÃ³s</h4>
+                            <h4 class="text-light mb-3">Sobre Nós
+                            </h4>
                             <ul class="dev-list">
                                 <li>
                                     <div class="d-flex justify-content-between align-items-center w-100">
@@ -344,44 +345,17 @@ $cartCount = CarrinhoController::contarItens();
                             </ul>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="footer-column">
-                            <h4 class="text-light mb-3">Novidades e PromoÃ§Ãµes</h4>
-                            <div class="row">
-                                <div class="col-6">
-                                    <ul class="dev-list">
-                                        <li class="text-muted">Dia Das CrianÃ§as</li>
-                                        <li class="text-muted">Black Friday</li>
-                                    </ul>
-                                </div>
-                                <div class="col-6">
-                                    <ul class="dev-list">
-                                        <li class="text-muted">Oferta Tech</li>
-                                        <li class="text-muted">Gift Card HAFTECH!</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="footer-column">
-                            <h4 class="text-light mb-3">Atendimento</h4>
-                            <ul class="dev-list">
-                                <li><a href="#" class="text-muted">Entre em Contato</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-12">
+                    <div class="col-lg-3 col-md-6 col-12 mx-4">
                         <div class="footer-column">
                             <h4 class="text-light mb-3">Outros</h4>
                             <ul class="dev-list">
-                                <li><a href="#" class="text-muted">Termos e CondiÃ§Ãµes</a></li>
-                                <li><a href="#" class="text-muted">PolÃ­tica de Privacidade</a></li>
+                                <li><a href="#" class="text-muted">Termos e Condições</a></li>
+                                <li><a href="#" class="text-muted">Polí­tica de Privacidade</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <hr class="border-secondary my-4 mx-2">
+                <hr class="border-secondary my-4 mx-4">
                 <div class="row mx-2">
                     <div class="col-12 text-center">
                         <p class="text-muted mb-0">&copy; 2025 HAFTECH. Todos os direitos reservados.</p>
