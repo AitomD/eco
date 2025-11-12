@@ -219,6 +219,7 @@ class PedidoController {
             
             // Buscar informações do cupom se houver
             if (!empty($pedido['id_cupom'])) {
+                require_once __DIR__ . '/../model/Cupom.php';
                 $cupomModel = new Cupom();
                 $cupom = $cupomModel->buscarPorId($pedido['id_cupom']);
                 if ($cupom) {
@@ -332,6 +333,3 @@ class PedidoController {
         }
     }
 }
-
-
-?>

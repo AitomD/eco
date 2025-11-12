@@ -1,4 +1,12 @@
 
+<?php
+// Verificar se as variáveis necessárias estão definidas
+if (!isset($pedido) || !isset($produtos)) {
+    echo '<div class="alert alert-danger">Erro ao carregar os detalhes do pedido.</div>';
+    exit;
+}
+?>
+
 <div class="success-container my-5">
     <div class="success-card">
         <div class="success-header">

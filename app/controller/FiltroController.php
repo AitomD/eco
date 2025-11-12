@@ -11,4 +11,5 @@ $marca     = isset($_GET['marca']) ? intval($_GET['marca']) : null;
 $resultado = $produto->filtrar($categoria, $marca);
 
 echo json_encode($resultado);
-?>
+exit;
+

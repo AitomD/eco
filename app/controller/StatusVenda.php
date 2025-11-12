@@ -25,5 +25,5 @@ echo json_encode([
     'success' => $ok,
     'message' => $ok ? 'Status atualizado com sucesso!' : 'Falha ao atualizar status.'
 ]);
+exit;
 
-?>

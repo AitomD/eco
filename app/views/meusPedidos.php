@@ -1,8 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+// Sessão já iniciada no index.php
 require_once __DIR__ . '/../model/Pedido.php';
 
 // Verifica se o usuário está logado

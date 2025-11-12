@@ -403,4 +403,4 @@ class Auth {
 if (basename($_SERVER['SCRIPT_NAME']) === 'user.php') {
     Auth::handleRequest();
 }
-?>
+

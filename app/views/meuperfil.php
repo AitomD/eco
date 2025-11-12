@@ -1,55 +1,46 @@
 <?php
-// 1. **VERIFICAR SESSÃO** // session_start(); // (Descomente se não estiver no seu index.php)
+// Sessão já iniciada no index.php
+// Incluir as classes necessárias
+require_once __DIR__ . '/../model/dadosuser.php';
+require_once __DIR__ . '/../model/Pedido.php';
 
-// 2. **INCLUSÃO DA CLASSE**
-require_once "../app/model/dadosuser.php";
-require_once "../app/model/pedidos.php";
-// 3. **OBTER O ID DO USUÁRIO**
+// Obter o ID do usuário
 if (isset($_SESSION['user_id'])) {
     $id_user = (int) $_SESSION['user_id'];
 } else {
     die("Acesso negado. Por favor, faça login.");
 }
 
-// 4. **INSTANCIAR A CLASSE**
+// Instanciar a classe e buscar dados do usuário
 $dadosUser = new Dadosuser();
-
-// 5. **CHAMAR A FUNÇÃO DE BUSCA**
 $userDataList = $dadosUser->buscarUsuarioEEnderecos($id_user);
 
-// 6. **VALIDAR OS RESULTADOS E PREPARAR AS VARIÁVEIS**
+// Validar os resultados
 if (!$userDataList || empty($userDataList)) {
     die("Erro ao carregar o perfil ou usuário não encontrado.");
 }
 $userData = $userDataList[0];
 
-// 7. Função para exibir mensagens na UI
+// Função para exibir mensagens na UI
 function showMessage($type, $text)
 {
     echo "<div id='statusMessage' class='alert alert-{$type} alert-dismissible fade show' role='alert'>";
     echo $text;
     echo "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
 }
-// 2. Obter o ID do usuário logado (ASSUMINDO que está na sessão)
-// Verifique se a sessão já foi iniciada no topo da sua página
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 
-$id_usuario_logado = $_SESSION['user_id'] ?? null; // Pega o ID da sessão
+// Buscar os pedidos do usuário
+$id_usuario_logado = $_SESSION['user_id'] ?? null;
 $meus_pedidos = [];
 
-// 3. Buscar os pedidos se o usuário estiver logado
 if ($id_usuario_logado) {
     try {
-        $pedidoObj = new Pedidos();
+        $pedidoObj = new Pedido();
         $meus_pedidos = $pedidoObj->buscarPorUsuario($id_usuario_logado);
     } catch (Exception $e) {
-        // Tratar erro de conexão ou consulta, se necessário
         error_log($e->getMessage());
     }
 }
-
 ?>
 <style>
     /* Estilos existentes para o menu lateral (list-group) */

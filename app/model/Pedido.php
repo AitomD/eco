@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '/../core/Database.php';
 
-class Pedido
-{
+class Pedido {
     private $pdo;
 
     public function __construct()
@@ -88,11 +87,11 @@ class Pedido
                     p.total_final,
                     l.nome as nome_loja,
                     u.nome as nome_usuario,
-                    c.codigo as codigo_cupom -- <<< ADICIONADO PARA PEGAR O CÓDIGO DO CUPOM
+                    c.codigo as codigo_cupom
                 FROM pedido p
                 LEFT JOIN loja l ON l.id_loja = p.id_loja
                 LEFT JOIN user u ON u.id_user = p.id_user
-                LEFT JOIN cupom c ON c.id_cupom = p.id_cupom -- <<< ADICIONADO JOIN DO CUPOM
+                LEFT JOIN cupons c ON c.id_cupom = p.id_cupom
                 WHERE p.id_pedido = ?
             ");
             
@@ -312,4 +311,3 @@ class Pedido
         }
     }
 }
-?>
