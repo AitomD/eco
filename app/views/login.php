@@ -134,8 +134,16 @@
                     // Redirecionar imediatamente sem mensagem
                     window.location.href = data.redirect || 'index.php?url=home';
                 } else {
-                    // Apenas mostrar erro nos campos, sem modal
-                    console.log('Erro no login:', data.message);
+                    // Mostrar erro de credenciais inválidas
+                    if (data.message && data.message.includes('Email ou senha incorretos')) {
+                        document.getElementById('password').classList.add('is-invalid');
+                        document.getElementById('password-error').textContent = 'Email ou senha incorretos';
+                        document.getElementById('email').classList.add('is-invalid');
+                        document.getElementById('email-error').textContent = '';
+                    } else {
+                        // Outros tipos de erro
+                        console.log('Erro no login:', data.message);
+                    }
                 }
             })
             .catch(error => {
@@ -144,7 +152,7 @@
             });
         });
 
-        // Efeito de focus nos inputs
+        // Efeito de focus nos inputs e limpeza de erros
         const inputs = document.querySelectorAll('.form-control');
         inputs.forEach(input => {
             input.addEventListener('focus', function() {
@@ -154,6 +162,15 @@
 
             input.addEventListener('blur', function() {
                 this.parentElement.style.transform = 'translateY(0)';
+            });
+
+            // Limpar erros quando o usuário começar a digitar
+            input.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+                const errorElement = document.getElementById(this.id + '-error');
+                if (errorElement) {
+                    errorElement.textContent = '';
+                }
             });
         });
 
