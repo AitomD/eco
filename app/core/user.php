@@ -57,7 +57,7 @@ class Auth {
                     header('Content-Type: application/json');
                     echo json_encode(['success' => true]);
                     exit;
-                    break;
+                
                 default:
                     http_response_code(400);
                     echo json_encode(['success' => false, 'message' => 'Ação não identificada']);
@@ -403,4 +403,4 @@ class Auth {
 if (basename($_SERVER['SCRIPT_NAME']) === 'user.php') {
     Auth::handleRequest();
 }
-?>
+

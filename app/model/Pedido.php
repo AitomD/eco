@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '/../core/Database.php';
 
-class Pedido
-{
+class Pedido {
     private $pdo;
 
     public function __construct()
@@ -13,7 +12,8 @@ class Pedido
     /**
      * Criar um novo pedido
      * @param array $dadosPedido Array com os dados do pedido
-     * @return int|false ID do pedido criado ou false em caso de erro
+     * @return int ID do pedido criado
+     * @throws Exception Se ocorrer um erro de banco de dados
      */
     public function criarPedido($dadosPedido)
     {
@@ -59,8 +59,10 @@ class Pedido
 
         } catch (PDOException $e) {
             $this->pdo->rollback();
-            error_log("Erro ao criar pedido: " . $e->getMessage());
-            return false;
+            error_log("Erro de PDO ao criar pedido: " . $e->getMessage());
+            
+            throw new Exception("Erro de banco de dados: " . $e->getMessage());
+            // =================================================================
         }
     }
 
@@ -84,10 +86,12 @@ class Pedido
                     p.desconto,
                     p.total_final,
                     l.nome as nome_loja,
-                    u.nome as nome_usuario
+                    u.nome as nome_usuario,
+                    c.codigo as codigo_cupom
                 FROM pedido p
                 LEFT JOIN loja l ON l.id_loja = p.id_loja
                 LEFT JOIN user u ON u.id_user = p.id_user
+                LEFT JOIN cupons c ON c.id_cupom = p.id_cupom
                 WHERE p.id_pedido = ?
             ");
             
@@ -115,12 +119,13 @@ class Pedido
                     pp.quantidade,
                     pp.preco_unitario,
                     pr.nome as nome_produto,
-                    pr.cor,
+                    pi.cor, 
                     pr.id_loja,
                     l.nome as nome_loja,
                     (pp.quantidade * pp.preco_unitario) as subtotal
                 FROM pedido_produto pp
                 INNER JOIN produto pr ON pr.id_produto = pp.id_produto
+                LEFT JOIN produto_info pi ON pr.id_info = pi.id_info 
                 LEFT JOIN loja l ON l.id_loja = pr.id_loja
                 WHERE pp.id_pedido = ?
                 ORDER BY pp.id_pedido_produto
@@ -134,7 +139,6 @@ class Pedido
             return [];
         }
     }
-
     /**
      * Buscar todos os pedidos de um usuário
      * @param int $idUser
@@ -158,7 +162,17 @@ class Pedido
                 LEFT JOIN loja l ON l.id_loja = p.id_loja
                 LEFT JOIN pedido_produto pp ON pp.id_pedido = p.id_pedido
                 WHERE p.id_user = ?
-                GROUP BY p.id_pedido
+                
+                GROUP BY 
+                    p.id_pedido, 
+                    p.id_loja, 
+                    p.data_pedido, 
+                    p.status, 
+                    p.total, 
+                    p.desconto, 
+                    p.total_final, 
+                    l.nome
+                    
                 ORDER BY p.data_pedido DESC
             ");
             
@@ -179,7 +193,7 @@ class Pedido
      */
     public function atualizarStatus($idPedido, $novoStatus)
     {
-        $statusValidos = ['pendente', 'confirmado', 'enviado', 'entregue'];
+        $statusValidos = ['pendente', 'confirmado', 'enviado', 'entregue', 'cancelado'];
         if (!in_array($novoStatus, $statusValidos)) {
             return false;
         }
@@ -200,7 +214,7 @@ class Pedido
     }
 
     /**
-     * Buscar loja predominante nos itens do carrinho
+     * Buscar loja predominante (com maior subtotal) nos itens do carrinho.
      * @param array $itensCarrinho
      * @return int|null ID da loja predominante
      */
@@ -211,33 +225,29 @@ class Pedido
         }
 
         try {
-            // Criar uma lista de IDs dos produtos
-            $produtoIds = array_keys($itensCarrinho);
-            $placeholders = str_repeat('?,', count($produtoIds) - 1) . '?';
+            $produtosValidados = $this->validarProdutosCarrinho($itensCarrinho);
 
-            $stmt = $this->pdo->prepare("
-                SELECT 
-                    pr.id_loja,
-                    COUNT(*) as quantidade_produtos,
-                    SUM(pr.preco * ?) as valor_total
-                FROM produto pr 
-                WHERE pr.id_produto IN ($placeholders)
-                GROUP BY pr.id_loja
-                ORDER BY valor_total DESC, quantidade_produtos DESC
-                LIMIT 1
-            ");
+            if (empty($produtosValidados)) {
+                return null;
+            }
 
-            // Calcular quantidade total para peso
-            $quantidadeTotal = array_sum(array_column($itensCarrinho, 'quantidade'));
-            $params = [$quantidadeTotal];
-            $params = array_merge($params, $produtoIds);
+            $subtotalPorLoja = [];
+            foreach ($produtosValidados as $produto) {
+                $idLoja = $produto['id_loja'];
+                if (!isset($subtotalPorLoja[$idLoja])) {
+                    $subtotalPorLoja[$idLoja] = 0;
+                }
+                $subtotalPorLoja[$idLoja] += $produto['subtotal'];
+            }
 
-            $stmt->execute($params);
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (empty($subtotalPorLoja)) {
+                return null;
+            }
 
-            return $resultado ? (int)$resultado['id_loja'] : null;
+            arsort($subtotalPorLoja);
+            return key($subtotalPorLoja);
 
-        } catch (PDOException $e) {
+        } catch (Exception $e) { 
             error_log("Erro ao determinar loja do pedido: " . $e->getMessage());
             return null;
         }
@@ -276,15 +286,19 @@ class Pedido
             $produtosValidados = [];
             foreach ($produtosBanco as $produto) {
                 $idProduto = $produto['id_produto'];
+                
                 if (isset($itensCarrinho[$idProduto])) {
+                    $quantidade = (int)$itensCarrinho[$idProduto]['quantidade'];
+                    $preco = (float)$produto['preco'];
+                    
                     $produtosValidados[] = [
                         'id_produto' => $idProduto,
                         'nome' => $produto['nome'],
-                        'preco_unitario' => $produto['preco'],
-                        'quantidade' => $itensCarrinho[$idProduto]['quantidade'],
+                        'preco_unitario' => $preco,
+                        'quantidade' => $quantidade,
                         'id_loja' => $produto['id_loja'],
                         'nome_loja' => $produto['nome_loja'],
-                        'subtotal' => $produto['preco'] * $itensCarrinho[$idProduto]['quantidade']
+                        'subtotal' => $preco * $quantidade 
                     ];
                 }
             }
@@ -297,4 +311,3 @@ class Pedido
         }
     }
 }
-?>

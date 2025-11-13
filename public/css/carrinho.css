@@ -78,7 +78,6 @@
 
 .badge {
     background-color: var(--pmain) !important;
-    border-radius: 50px;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
 }
@@ -102,7 +101,7 @@
 .btn-success:hover {
     background: linear-gradient(45deg, #218838, #1ea569);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3) !important;
 }
 
 .carrinho-vazio {
@@ -257,3 +256,4 @@
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(97, 0, 148, 0.2);
 }
+

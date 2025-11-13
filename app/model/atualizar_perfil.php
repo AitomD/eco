@@ -109,4 +109,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Retorna a resposta em JSON para o JavaScript
 header('Content-Type: application/json');
 echo json_encode($response);
-?>
+exit;
