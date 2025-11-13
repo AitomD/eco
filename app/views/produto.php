@@ -4,7 +4,7 @@
 
   <div style="height: 50px;"></div>
 
-    <div class="container-fluid text-center cont-produto">
+  <div class="container-fluid text-center cont-produto">
     <div class="row">
       <!-- Coluna lateral -->
       <div class="col-sm-2 text-start cont-filtro">
@@ -47,14 +47,14 @@
 
       </div>
 
-        <!-- Coluna de produtos -->
-        <div class="col-sm-10 ">
-            <div id="produtos">
-                <!-- Produtos aparecem aqui via JS -->
-            </div>
+      <!-- Coluna de produtos -->
+      <div class="col-sm-10 ">
+        <div id="produtos">
+          <!-- Produtos aparecem aqui via JS -->
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <div style="height: 50px;"></div>
@@ -95,19 +95,16 @@
   <img src="${p.imagem}" class="card-img-top object-fit-fill" alt="${p.nome}" >
   <div class="card-body">
     <h5 class="card-title">${p.nome}</h5>
-    <p class="card-text">Marca: ${p.marca}</p>
-    <p class="card-text">Categoria: ${p.categoria}</p>
     <p class="card-text card-price">R$ ${p.preco}</p>
-    <p class="card-text">Estoque: ${p.quantidade_disponivel}</p>
     <div class="d-flex justify-content-between mt-3">
-      <button class="btn btn-primary btn-sm btn-add-cart" 
+      <button class="btn text-light btn-sm mx-3 w-100  btn-add-cart" 
               data-id="${p.id_produto}" 
               data-nome="${p.nome}" 
               data-preco="${p.preco}" 
               data-imagem="${p.imagem}">
         <i class="bi bi-cart2"></i> Carrinho
       </button>
-      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn btn-outline-secondary btn-sm btn-detalhes">
+      <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn  w-100 btn-sm btn-detalhes">
         <i class="fa-solid fa-clipboard"></i> Ficha Técnica
       </a>
     </div>

@@ -1,15 +1,8 @@
- .success-container {
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(25, 135, 84, 0.1));
-    }
 
     .success-card {
         background: white;
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+           box-shadow: 0 10px 40px rgba(40, 167, 70, 0.4);
         overflow: hidden;
         max-width: 1000px;
         width: 100%;
