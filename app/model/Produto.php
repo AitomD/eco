@@ -40,7 +40,6 @@ LEFT JOIN marca m ON pi.id_marca = m.id_marca
 LEFT JOIN categoria c ON pi.id_categoria = c.id_categoria
 WHERE 1=1";
 
-
         $params = [];
 
         if ($id_categoria) {
