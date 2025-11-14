@@ -22,6 +22,15 @@ CuponsCarrinhoController::processarAcao();
 // Processar requisiÃ§Ãµes AJAX de cupons (isso deve ter um 'exit' dentro dele)
 CuponsCarrinhoController::aplicarCupomAjax();
 
+// Tratamento simples para AJAX de adicionar cupom vindo do modal
+// Se a requisição enviar 'ajax_add_cupom', encaminhar para o handler e encerrar
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax_add_cupom'])) {
+    // Carrega o arquivo que responde em JSON
+    require_once __DIR__ . '/../app/controller/salvar_cupom.php';
+    // O arquivo 'salvar_cupom.php' envia JSON e deve dar exit ao terminar
+    exit;
+}
+
 
 /*
  * ======================================================================
@@ -31,9 +40,22 @@ CuponsCarrinhoController::aplicarCupomAjax();
 
 // Lista de pÃ¡ginas permitidas (whitelist)
 $paginasPermitidas = [
-    'home', 'login', 'cadastro', 'produto', 'cupons', 'carrinho', '404',
-    'itemCompra', 'paginaRetirada', 'metodopagamento', 'pedido-sucesso',
-    'paginaCompra', 'meuperfil', 'venda', 'adicionaproduto', 'meusprodutos'
+    'home',
+    'login',
+    'cadastro',
+    'produto',
+    'cupons',
+    'carrinho',
+    '404',
+    'itemCompra',
+    'paginaRetirada',
+    'metodopagamento',
+    'pedido-sucesso',
+    'paginaCompra',
+    'meuperfil',
+    'venda',
+    'adicionaproduto',
+    'meusprodutos'
 ];
 
 // Obter a pÃ¡gina da URL, com 'home' como padrÃ£o
@@ -59,12 +81,12 @@ if ($isLoggedIn) {
 // --- Lógica para 'metodopagamento' (POST) ---
 if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finalizar_compra'])) {
     require_once __DIR__ . '/../app/controller/PedidoController.php';
-    
+
     $resultado = PedidoController::processarFinalizacaoCompra();
     // Registro de depuraÃ§Ã£o: salvar resultado no log do PHP e na sessÃ£o para anÃ¡lise
     error_log('[DEBUG] Resultado finalizar compra: ' . print_r($resultado, true));
     $_SESSION['pedido_finalizacao_result'] = $resultado;
-    
+
     if ($resultado['sucesso']) {
         // Sucesso: tentar redirecionar para pÃ¡gina de sucesso com o ID
         $redirectUrl = 'index.php?url=pedido-sucesso&id=' . $resultado['id_pedido'];
@@ -112,7 +134,7 @@ $pedido = null;
 $produtos = null;
 
 if ($pagina === 'pedido-sucesso') {
-    
+
     // 1. Verificar se o usuÃ¡rio estÃ¡ logado
     if (!$isLoggedIn) {
         header('Location: index.php?url=login');
@@ -130,7 +152,7 @@ if ($pagina === 'pedido-sucesso') {
     // 3. Buscar detalhes do pedido
     require_once __DIR__ . '/../app/controller/PedidoController.php';
     $detalhesPedido = PedidoController::buscarDetalhesPedido($idPedido, $_SESSION['user_id']);
-    
+
     // 4. Extrair variÃ¡veis para a view
     if ($detalhesPedido && is_array($detalhesPedido)) {
         $pedido = $detalhesPedido['pedido'];
@@ -157,7 +179,7 @@ $viewFile = __DIR__ . "/../app/views/{$pagina}.php";
 // Verificar se o arquivo da view existe e Ã© permitido
 if (!in_array($pagina, $paginasPermitidas) || !file_exists($viewFile)) {
     // Se a pÃ¡gina nÃ£o for permitida ou nÃ£o existir, forÃ§ar a pÃ¡gina de 404
-    $pagina = '404'; 
+    $pagina = '404';
     $viewFile = __DIR__ . "/../app/views/404.php";
 }
 
@@ -205,7 +227,8 @@ $cartCount = CarrinhoController::contarItens();
 
 </head>
 
-<body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?> data-is-logged-in="<?= $isLoggedIn ? 'true' : 'false' ?>">
+<body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?>
+    data-is-logged-in="<?= $isLoggedIn ? 'true' : 'false' ?>">
 
     <?php if (!$isAuthPage): ?>
         <nav class="navbar navbar-expand-lg position-relative z-3 " style="background-color: #09090A;">
@@ -245,10 +268,12 @@ $cartCount = CarrinhoController::contarItens();
                         <!-- UsuÃ¡rio logado -->
                         <div class="d-flex align-items-center">
                             <!-- Carrinho de compras -->
-                            <a href="index.php?url=carrinho" class="text-light fs-4 me-3 position-relative" title="Carrinho de compras">
+                            <a href="index.php?url=carrinho" class="text-light fs-4 me-3 position-relative"
+                                title="Carrinho de compras">
                                 <i class="bi bi-cart2 mx-2"></i>
                                 <?php if ($cartCount > 0): ?>
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                        style="font-size: 0.7rem;">
                                         <?= $cartCount > 99 ? '99+' : $cartCount ?>
                                     </span>
                                 <?php endif; ?>
@@ -256,14 +281,17 @@ $cartCount = CarrinhoController::contarItens();
 
                             <!-- Dropdown do usuÃ¡rio -->
                             <div class="dropdown">
-                                <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center"
-                                    href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center" href="#"
+                                    role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
-                                    <span class="d-none d-md-inline text-light">Olá, <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="d-none d-md-inline text-light">Olá,
+                                        <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end" style="background-color: #09090A; border: 1px solid #3F0071;">
+                                <ul class="dropdown-menu dropdown-menu-end"
+                                    style="background-color: #09090A; border: 1px solid #3F0071;">
                                     <li>
-                                        <a class="dropdown-item text-light" href="index.php?url=meuperfil" style="border-bottom: 1px solid #3F0071;">
+                                        <a class="dropdown-item text-light" href="index.php?url=meuperfil"
+                                            style="border-bottom: 1px solid #3F0071;">
                                             <i class="bi bi-person me-2"></i>Meu Perfil
                                         </a>
                                     </li>
@@ -280,10 +308,12 @@ $cartCount = CarrinhoController::contarItens();
                         <!-- Usuário nÃ£o logado -->
                         <div class="d-flex align-items-center">
                             <!-- Carrinho de compras -->
-                            <a href="index.php?url=carrinho" class="text-light fs-4 me-4 position-relative" title="Carrinho de compras">
+                            <a href="index.php?url=carrinho" class="text-light fs-4 me-4 position-relative"
+                                title="Carrinho de compras">
                                 <i class="bi bi-cart2"></i>
                                 <?php if ($cartCount > 0): ?>
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                        style="font-size: 0.7rem;">
                                         <?= $cartCount > 99 ? '99+' : $cartCount ?>
                                     </span>
                                 <?php endif; ?>
@@ -319,8 +349,10 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Fernando Consolin Rosa</span>
                                         <div class="social-links">
-                                            <a href="#" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="https://github.com/FernandoConsolinRosa11" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="#" target="_blank" class="text-muted me-2"><i
+                                                    class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/FernandoConsolinRosa11" target="_blank"
+                                                class="text-muted"><i class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -328,8 +360,10 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Aitom Henrique Donatoni</span>
                                         <div class="social-links">
-                                            <a href="https://www.instagram.com/aitomdonatoni?igsh=aXlsYTAyd2phajIy" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="https://github.com/AitomD" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://www.instagram.com/aitomdonatoni?igsh=aXlsYTAyd2phajIy"
+                                                target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/AitomD" target="_blank" class="text-muted"><i
+                                                    class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -337,8 +371,10 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Hiago Nascimento</span>
                                         <div class="social-links">
-                                            <a href="https://www.instagram.com/haiagos_48?igsh=MXRidG14aHJxYnU3cQ==" target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
-                                            <a href="https://github.com/haiagos48" target="_blank" class="text-muted"><i class="bi bi-github"></i></a>
+                                            <a href="https://www.instagram.com/haiagos_48?igsh=MXRidG14aHJxYnU3cQ=="
+                                                target="_blank" class="text-muted me-2"><i class="bi bi-instagram"></i></a>
+                                            <a href="https://github.com/haiagos48" target="_blank" class="text-muted"><i
+                                                    class="bi bi-github"></i></a>
                                         </div>
                                     </div>
                                 </li>
@@ -383,25 +419,25 @@ $cartCount = CarrinhoController::contarItens();
 
     <!-- Script para efeito do Ã­cone do usuÃ¡rio -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const userDropdown = document.getElementById('userDropdown');
             const userIcon = document.querySelector('#userDropdown .bi-person-circle');
 
             if (userDropdown && userIcon) {
                 // Detectar quando o dropdown Ã© mostrado
-                userDropdown.addEventListener('show.bs.dropdown', function() {
+                userDropdown.addEventListener('show.bs.dropdown', function () {
                     userIcon.style.color = '#610094';
                     userIcon.style.transform = 'scale(1.1)';
                 });
 
                 // Detectar quando o dropdown Ã© escondido
-                userDropdown.addEventListener('hide.bs.dropdown', function() {
+                userDropdown.addEventListener('hide.bs.dropdown', function () {
                     userIcon.style.color = '';
                     userIcon.style.transform = '';
                 });
 
                 // Efeito adicional no clique
-                userDropdown.addEventListener('click', function() {
+                userDropdown.addEventListener('click', function () {
                     userIcon.style.color = '#3F0071';
 
                     // Voltar Ã  cor normal apÃ³s um tempo se o dropdown nÃ£o abrir
@@ -468,14 +504,26 @@ $cartCount = CarrinhoController::contarItens();
             }
         </style>
     <?php endif; ?>
-    <script src="js/cupomalerta.js"></script>
+
+    <!-- JS -->
+
     <script src="js/carrinho.js"></script>
+
+
     <?php if ($pagina === 'paginaRetirada'): ?>
         <script src="js/modalEndereco.js"></script>
     <?php endif; ?>
+
     <?php if ($pagina === 'itemCompra'): ?>
         <script src="js/trocarImg.js"></script>
     <?php endif; ?>
+
+    <?php if ($pagina === 'cupons'): ?>
+        <script src="js/addCupom.js"></script>
+        <script src="js/aplicarCupom.js"></script>
+        <script src="js/cupomalerta.js"></script>
+    <?php endif; ?>
+
     </body>
 
 </html>
