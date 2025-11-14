@@ -55,7 +55,8 @@ $paginasPermitidas = [
     'meuperfil',
     'venda',
     'adicionaproduto',
-    'meusprodutos'
+    'meusprodutos',
+    'termosECondicoes'
 ];
 
 // Obter a pÃ¡gina da URL, com 'home' como padrÃ£o
@@ -385,8 +386,8 @@ $cartCount = CarrinhoController::contarItens();
                         <div class="footer-column">
                             <h4 class="text-light mb-3">Outros</h4>
                             <ul class="dev-list">
-                                <li><a href="#" class="text-muted">Termos e Condições</a></li>
-                                <li><a href="#" class="text-muted">Polí­tica de Privacidade</a></li>
+                                <li><a class="text-muted" id="btnAbrirModal">Termos e Condições</a></li>
+                                <li><a  class="text-muted"  id="btnAbrirPrivacidade">Polí­tica de Privacidade</a></li>
                             </ul>
                         </div>
                     </div>
@@ -399,6 +400,10 @@ $cartCount = CarrinhoController::contarItens();
                 </div>
             </div>
         </footer>
+        <?php
+            include '../app/views/termosECondicoes.php';
+            include '../app/views/politicadeprivacidade.php';
+        ?>
     <?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
@@ -413,9 +418,25 @@ $cartCount = CarrinhoController::contarItens();
     <script src="../public/js/activebtn.js"></script>
     <script src="../public/js/cupomalerta.js"></script>
     <script src="../public/js/burger.js"></script>
-    </body>
     <script src="js/dropinteracao.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/carrinho.js"></script>
+    <script src="js/termosecondicoes.js"></script>
+    <script src="js/politicadeprivacidade.js"></script>
+
+    <?php if ($pagina === 'paginaRetirada'): ?>
+        <script src="js/modalEndereco.js"></script>
+    <?php endif; ?>
+
+    <?php if ($pagina === 'itemCompra'): ?>
+        <script src="js/trocarImg.js"></script>
+    <?php endif; ?>
+
+    <?php if ($pagina === 'cupons'): ?>
+        <script src="js/addCupom.js"></script>
+        <script src="js/aplicarCupom.js"></script>
+        <script src="js/cupomalerta.js"></script>
+    <?php endif; ?>
 
     <!-- Script para efeito do Ã­cone do usuÃ¡rio -->
     <script>
@@ -503,25 +524,6 @@ $cartCount = CarrinhoController::contarItens();
                 transition: all 0.3s ease;
             }
         </style>
-    <?php endif; ?>
-
-    <!-- JS -->
-
-    <script src="js/carrinho.js"></script>
-
-
-    <?php if ($pagina === 'paginaRetirada'): ?>
-        <script src="js/modalEndereco.js"></script>
-    <?php endif; ?>
-
-    <?php if ($pagina === 'itemCompra'): ?>
-        <script src="js/trocarImg.js"></script>
-    <?php endif; ?>
-
-    <?php if ($pagina === 'cupons'): ?>
-        <script src="js/addCupom.js"></script>
-        <script src="js/aplicarCupom.js"></script>
-        <script src="js/cupomalerta.js"></script>
     <?php endif; ?>
 
     </body>

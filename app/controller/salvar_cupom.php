@@ -48,7 +48,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
     // Verificar se código já existe (unicidade)
-    $check = $pdo->prepare('SELECT id FROM cupons WHERE codigo = :codigo LIMIT 1');
+    $check = $pdo->prepare('SELECT id_cupom FROM cupons WHERE codigo = :codigo LIMIT 1');
     $check->execute([':codigo' => $codigo]);
     if ($check->fetch(PDO::FETCH_ASSOC)) {
         echo json_encode(['success' => false, 'message' => 'Código já existe.']);
@@ -56,9 +56,9 @@ try {
     }
 
     $sql = "INSERT INTO cupons
-                (codigo, descricao, tipo_desconto, valor_desconto, uso_total, uso_user, data_inicio, data_fim, ativo, criado_em)
+                (codigo, descricao, tipo_desconto, valor_desconto, uso_total, uso_user, data_inicio, data_fim, ativo)
             VALUES
-                (:codigo, :descricao, :tipo_desconto, :valor_desconto, :uso_total, :uso_user, :data_inicio, :data_fim, :ativo, NOW())";
+                (:codigo, :descricao, :tipo_desconto, :valor_desconto, :uso_total, :uso_user, :data_inicio, :data_fim, :ativo)";
 
     $stmt = $pdo->prepare($sql);
 

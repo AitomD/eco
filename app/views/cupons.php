@@ -84,14 +84,8 @@ if (!empty($userId)) {
 
         <?php if (empty($cupons) && !$isDesenvolvedor): ?>
             <div class="col-12">
-                <div class="alert alert-warning">
-                    <strong>Nenhum cupom disponível no momento.</strong>
-                    <br>Verifique se:
-                    <ul>
-                        <li>O banco de dados está conectado</li>
-                        <li>A tabela 'cupons' existe</li>
-                        <li>Existem cupons ativos na tabela</li>
-                    </ul>
+                <div class="alert alert-danger">
+                    <p class="text-center me-auto"><strong>Nenhum cupom disponível no momento.</strong></p>
                 </div>
             </div>
         <?php endif; ?>
@@ -140,7 +134,7 @@ if (!empty($userId)) {
                             <select class="form-select" id="tipo_desconto" name="tipo_desconto" required>
                                 <option value="" selected disabled>Selecione...</option>
                                 <option value="porcentagem">Porcentagem</option>
-                                <option value="fixo">Valor Fixo</option>
+                                <option value="valor">Valor Fixo</option>
                             </select>
                         </div>
                     </div>

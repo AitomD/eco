@@ -109,8 +109,8 @@ if (!isset($pedido) || !isset($produtos)) {
                     <a href="index.php?url=meuperfil" class="btn btn-product w-50 mb-3">
                         <i class="bi bi-list-ul me-2"></i>Ver Meus Pedidos
                     </a>
-                    <a href="index.php?url=produto" class="btn btn-product w-50 mb-3">
-                        <i class="bi bi-house me-2"></i>Voltar à Loja
+                    <a href="index.php?url=home" class="btn btn-product w-50 mb-3">
+                        <i class="bi bi-house me-2"></i>Voltar à Home
                     </a>
                 </div>
             </div>
