@@ -237,7 +237,7 @@ $cartCount = CarrinhoController::contarItens();
 
                 <!-- LOGO Ã€ ESQUERDA -->
                 <a class="navbar-brand " href="index.php?url=home">
-                    <img src="img/logoMain.png" alt="logo">
+                    <img src="img/logo.png" alt="logo">
                 </a>
 
                 <!-- BOTÃƒO TOGGLER -->
