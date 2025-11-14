@@ -12,7 +12,7 @@ class Admin
 
     public function getIdAdminByUser($idUser)
     {
-        $sql = "SELECT id_admin FROM admin WHERE id_user = :id_user LIMIT 1";
+        $sql = "SELECT id_admin,cargo FROM admin WHERE id_user = :id_user LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id_user', $idUser, PDO::PARAM_INT);
         $stmt->execute();
@@ -22,6 +22,7 @@ class Admin
         if ($admin) {
             return $admin['id_admin'];
         }
+
 
         return null;
     }

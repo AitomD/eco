@@ -7,6 +7,7 @@ $cupons = CuponsCarrinhoController::getCuponsDisponiveis();
 
 <div class="text-start bg-light w-100 py-2">
     <h3 class="fw-semibold mb-1 text-center" style="color: var(--black);">Meus Cupons</h3>
+
 </div>
 
 <main class="container py-4 h-auto ">
