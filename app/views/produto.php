@@ -91,8 +91,9 @@
           const card = document.createElement('div');
           card.classList.add('card', 'm-6', 'col-sm-3'); // 4 cards por linha
           card.dataset.id = p.id_produto;
+          const imagemSrc = p.imagem || '../public/img/no-image.png'; // Imagem padrão se não houver
           card.innerHTML = `
-  <img src="${p.imagem}" class="card-img-top object-fit-fill" alt="${p.nome}" >
+  <img src="${imagemSrc}" class="card-img-top object-fit-fill" alt="${p.nome}" >
   <div class="card-body">
     <h5 class="card-title">${p.nome}</h5>
     <p class="card-text card-price">R$ ${p.preco}</p>
@@ -101,7 +102,7 @@
               data-id="${p.id_produto}" 
               data-nome="${p.nome}" 
               data-preco="${p.preco}" 
-              data-imagem="${p.imagem}">
+              data-imagem="${imagemSrc}">
         <i class="bi bi-cart2"></i> Carrinho
       </button>
       <a href="index.php?url=itemCompra&id=${p.id_produto}" class="btn  w-100 btn-sm btn-detalhes">
