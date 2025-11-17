@@ -432,6 +432,10 @@ $cartCount = CarrinhoController::contarItens();
         <script src="js/trocarImg.js"></script>
     <?php endif; ?>
 
+    <?php if ($pagina === 'home'): ?>
+        <script src="js/cardsRedirect.js"></script>
+    <?php endif; ?>
+
     <?php if ($pagina === 'cupons'): ?>
         <script src="js/addCupom.js"></script>
         <script src="js/aplicarCupom.js"></script>

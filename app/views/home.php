@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <main>
 
   <!-- Banner principal -->
@@ -55,16 +51,18 @@
 
         </div>
       </div>
-      <div class="col">
-        <div class="card text-bg-dark">
-          <img src="../public/img/card2.png" class="card-img" alt="oferta">
-          <div class="card-img-overlay">
-            <p class="card-text"></p>
-            <p class="card-text"><small></small></p>
-          </div>
 
+
+        <div class="col">
+          <div class="card text-bg-dark">
+            <img src="../public/img/card2.png" class="card-img" alt="oferta">
+            <div class="card-img-overlay">
+              <p class="card-text"></p>
+              <p class="card-text"><small></small></p>
+            </div>
         </div>
       </div>
+
       <div class="col">
         <div class="card text-bg-dark">
           <img src="../public/img/card3.png" class="card-img" alt="...">

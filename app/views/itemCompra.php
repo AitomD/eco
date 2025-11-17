@@ -24,6 +24,7 @@ try {
             p.preco,
             pi.descricao,
             pi.ram,
+            pi.cor,
             pi.armazenamento,
             pi.processador,
             pi.placa_mae,
@@ -31,17 +32,17 @@ try {
             pi.fonte,
             m.nome AS marca,
             c.nome AS categoria,
-            
+
             -- Imagem principal (primeira imagem da ordem)
             (SELECT i.url 
              FROM imagem i 
              WHERE i.id_info = pi.id_info 
              ORDER BY i.ordem ASC 
              LIMIT 1) AS imagem_principal,
-            
+
             -- Todas as imagens relacionadas
             i.url AS imagem,
-            
+
             -- Quantidade disponível (último total do estoque)
             (SELECT 
                 CASE 
@@ -53,7 +54,7 @@ try {
             ) AS quantidade_disponivel
 
         FROM produto p
-        JOIN produto_info pi ON p.id_info = pi.id_info
+        LEFT JOIN produto_info pi ON p.id_info = pi.id_info
         LEFT JOIN imagem i ON pi.id_info = i.id_info
         LEFT JOIN marca m ON pi.id_marca = m.id_marca
         LEFT JOIN categoria c ON pi.id_categoria = c.id_categoria
@@ -84,29 +85,37 @@ try {
 } catch (PDOException $e) {
     die("Erro ao buscar o produto: " . $e->getMessage());
 }
+
+// Obter informações da loja (endereço) associada ao produto
+require_once __DIR__ . '/../model/Loja.php';
+try {
+    $lojaModel = new Loja();
+    $loja_endereco = $lojaModel->buscarPorProdutoId($id_produto);
+} catch (Exception $e) {
+    error_log('Erro ao obter informações da loja: ' . $e->getMessage());
+    $loja_endereco = null;
+}
+
 ?>
 
 <main class="container py-4">
     <section class="row g-4 bg-white mt-2 py-4">
-        
+
         <!-- GALERIA DE IMAGENS -->
         <div class="col-md-4">
             <div class="galeria-imagens bg-white border rounded p-3 h-100">
                 <div class="miniaturas mb-3 d-flex gap-2 flex-wrap">
                     <?php foreach ($imagens as $index => $img): ?>
-                        <img src="<?= htmlspecialchars($img) ?>" 
-                             alt="<?= htmlspecialchars($produto['nome']) ?>" 
-                             class="img-thumbnail miniatura-img <?= $index === 0 ? 'active' : '' ?>" 
-                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
-                             onclick="trocarImagemPrincipal('<?= htmlspecialchars($img) ?>', this)">
+                        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>"
+                            class="img-thumbnail miniatura-img <?= $index === 0 ? 'active' : '' ?>"
+                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                            onclick="trocarImagemPrincipal('<?= htmlspecialchars($img) ?>', this)">
                     <?php endforeach; ?>
                 </div>
 
                 <div class="imagem-principal text-center">
-                    <img id="imagem-principal" 
-                         src="<?= htmlspecialchars($produto['imagem_principal']) ?>" 
-                         alt="<?= htmlspecialchars($produto['nome']) ?>" 
-                         class="img-fluid rounded">
+                    <img id="imagem-principal" src="<?= htmlspecialchars($produto['imagem_principal']) ?>"
+                        alt="<?= htmlspecialchars($produto['nome']) ?>" class="img-fluid rounded">
                 </div>
             </div>
         </div>
@@ -114,9 +123,10 @@ try {
         <!-- INFORMAÇÕES DO PRODUTO -->
         <div class="col-md-5">
             <div class="info-produto bg-white border rounded p-4 h-100">
-                <p class="text-muted small mb-2">Novo | +1000 vendidos</p>
                 <h1 class="h3 fw-bold" style="color:var(--black);"><?= htmlspecialchars($produto['nome']) ?></h1>
-                <p class="text-muted small">Marca: <?= htmlspecialchars($produto['marca']) ?> | Categoria: <?= htmlspecialchars($produto['categoria']) ?></p>
+                <p class="text-muted small">Marca: <?= htmlspecialchars($produto['marca']) ?> | Categoria:
+                    <?= htmlspecialchars($produto['categoria']) ?>
+                </p>
 
                 <div class="avaliacoes d-flex align-items-center small text-muted my-3">
                     <?php if ($mediaAvaliacoes && $mediaAvaliacoes['total'] > 0): ?>
@@ -138,18 +148,16 @@ try {
                     </p>
                 </div>
 
-                <div class="caracteristicas-produto mb-4">
-                    <?php if (!empty($produto['cor'])): ?>
-                        <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
-                    <?php endif; ?>
-                    <?php if (!empty($produto['armazenamento'])): ?>
-                        <p><strong>Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
-                    <?php endif; ?>
-                </div>
 
                 <div class="sobre-o-produto border-top pt-3">
-                    <h3 class="h5">O que você precisa saber sobre este produto</h3>
+                    <h5 class="fw-bold">O que você precisa saber sobre este produto</h5>
                     <ul class="list-unstyled mt-2 text-muted">
+                        <?php if (!empty($produto['cor'])): ?>
+                            <li>• Cor: <?= htmlspecialchars($produto['cor']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['armazenamento'])): ?>
+                            <li>• Armazenamento: <?= htmlspecialchars($produto['armazenamento']) ?></li>
+                        <?php endif; ?>
                         <?php if (!empty($produto['processador'])): ?>
                             <li>• Processador: <?= htmlspecialchars($produto['processador']) ?></li>
                         <?php endif; ?>
@@ -159,12 +167,16 @@ try {
                         <?php if (!empty($produto['placa_video'])): ?>
                             <li>• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
                         <?php endif; ?>
+                        <?php if (!empty($produto['placa_mae'])): ?>
+                            <li>• Placa Mãe: <?= htmlspecialchars($produto['placa_mae']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['fonte'])): ?>
+                            <li>• Fonte: <?= htmlspecialchars($produto['fonte']) ?></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
         </div>
-</div>
-       
 
         <!-- COMPRA E VENDEDOR -->
         <div class="col-md-3">
@@ -175,18 +187,66 @@ try {
                         Quantidade: <?= htmlspecialchars($produto['quantidade_disponivel']) ?> unidade(s)
                     </p>
                     <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn">Comprar agora</button>
-                        <button class="cart-button text-center">Adicionar ao carrinho</button>
+
+                        <?php if ($produto['quantidade_disponivel'] <= 0): ?>
+
+                            <p class="fs-5 fw-bold text-danger">Produto fora de estoque</p>
+
+                        <?php else: ?>
+
+                            <button class="btn btn-product btn-add-cart btn-sm fs-6 fw-bold w-100"
+                                data-id="<?= htmlspecialchars($produto['id_produto']) ?>"
+                                data-nome="<?= htmlspecialchars($produto['nome']) ?>"
+                                data-preco="<?= htmlspecialchars($produto['preco']) ?>"
+                                data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
+                                Comprar Agora
+                            </button>
+
+                        <?php endif; ?>
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
                     </p>
                 </div>
-
                 <div class="card-vendedor border rounded p-3 bg-white">
                     <h3 class="h6 fw-semibold">Informações sobre o vendedor</h3>
-                    <p class="small my-1">Localização: São Paulo</p>
-                    <p class="small text-muted">MercadoLíder | +5mil Vendas</p> 
+                    <?php if ($loja_endereco): ?>
+
+                        <p class="small my-1 ">
+                            <span class="fs-6" style="  color: var(--black);">Loja:
+                                <?php echo htmlspecialchars($produto['nome_loja']); ?> </span>
+                        </p>
+
+                        <p class="small my-1">
+
+                            <?php if (!empty($loja_endereco['endereco'])): ?>
+                                <span class="fs-6" style="  color: var(--black);">Endereço:
+                                    <?php echo htmlspecialchars($loja_endereco['endereco']); ?></span>
+                            <?php endif; ?>
+
+                            <!-- Exibe cidade e estado -->
+                            <span class="fs-6" style="  color: var(--black);">
+                                Localização:
+                                <?php
+                                if (!empty($loja_endereco['cidade']) && !empty($loja_endereco['estado'])) {
+                                    echo htmlspecialchars($loja_endereco['cidade']) . ' - ' . htmlspecialchars($loja_endereco['estado']);
+                                } elseif (!empty($loja_endereco['cidade'])) {
+                                    echo htmlspecialchars($loja_endereco['cidade']);
+                                } else {
+                                    echo "Não informada";
+                                }
+                                ?>
+                            </span>
+                        </p>
+
+                    <?php else: ?>
+
+                        <p class="small my-1 fw-bold">Vendedor não identificado.</p>
+                        <p class="small my-1">Localização: Não informada</p>
+
+                    <?php endif; ?>
+
+
                 </div>
             </div>
         </div>
@@ -203,7 +263,7 @@ try {
         <div class="col-12">
             <div class="avaliacoes-completas bg-white border rounded p-4 mt-2">
                 <h2 class="h4 mb-4">Avaliações dos Clientes</h2>
-                
+
                 <?php if ($mediaAvaliacoes && $mediaAvaliacoes['total'] > 0): ?>
                     <!-- Resumo das Avaliações -->
                     <div class="resumo-avaliacoes mb-4 p-3 bg-light rounded">
@@ -222,10 +282,10 @@ try {
                                         </div>
                                         <div class="col-8">
                                             <div class="progress">
-                                                <?php 
-                                                $porcentagem = $mediaAvaliacoes['total'] > 0 
-                                                    ? ($mediaAvaliacoes['distribuicao'][$i] / $mediaAvaliacoes['total']) * 100 
-                                                    : 0; 
+                                                <?php
+                                                $porcentagem = $mediaAvaliacoes['total'] > 0
+                                                    ? ($mediaAvaliacoes['distribuicao'][$i] / $mediaAvaliacoes['total']) * 100
+                                                    : 0;
                                                 ?>
                                                 <div class="progress-bar" style="width: <?= $porcentagem ?>%"></div>
                                             </div>
@@ -257,7 +317,7 @@ try {
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                        
+
                         <?php if ($mediaAvaliacoes['total'] > 5): ?>
                             <div class="text-center mt-3">
                                 <a href="todasAvaliacoes.php?id=<?= $id_produto ?>" class="btn btn-outline-primary btn-sm">
@@ -266,7 +326,7 @@ try {
                             </div>
                         <?php endif; ?>
                     <?php endif; ?>
-                    
+
                 <?php else: ?>
                     <!-- Sem Avaliações -->
                     <div class="text-center py-5">
@@ -275,7 +335,7 @@ try {
                         <p class="text-muted">Seja o primeiro a avaliar e ajude outros clientes!</p>
                     </div>
                 <?php endif; ?>
-                
+
                 <!-- Formulário para Adicionar Avaliação (apenas se usuário estiver logado) -->
                 <?php if (usuarioLogado()): ?>
                     <div class="adicionar-avaliacao mt-4 p-3 bg-light rounded">
@@ -283,18 +343,20 @@ try {
                         <form id="form-avaliacao" method="POST" action="../app/controller/AvaliacaoController.php">
                             <input type="hidden" name="id_produto" value="<?= $id_produto ?>">
                             <input type="hidden" name="action" value="adicionar">
-                            
+
                             <div class="mb-3">
                                 <label class="form-label">Sua nota:</label>
                                 <div class="rating-stars">
                                     <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <i class="bi bi-star star-rating text-warning" data-nota="<?= $i ?>" style="font-size: 1.5rem; cursor: pointer; margin-right: 3px;"></i>
+                                        <i class="bi bi-star star-rating text-warning" data-nota="<?= $i ?>"
+                                            style="font-size: 1.5rem; cursor: pointer; margin-right: 3px;"></i>
                                     <?php endfor; ?>
                                 </div>
                                 <input type="hidden" name="nota" id="nota-selecionada" required>
                             </div>
-                            
-                            <button type="submit" class="btn btn-primary" id="btn-enviar-avaliacao" disabled>Enviar Avaliação</button>
+
+                            <button type="submit" class="btn btn-primary" id="btn-enviar-avaliacao" disabled>Enviar
+                                Avaliação</button>
                         </form>
                     </div>
                 <?php else: ?>
@@ -309,7 +371,7 @@ try {
 </main>
 
 <!-- Exibir mensagens de sucesso/erro -->
-<?php 
+<?php
 $mensagemSucesso = obterMensagemSucesso();
 $mensagemErro = obterMensagemErro();
 ?>
@@ -345,194 +407,194 @@ $mensagemErro = obterMensagemErro();
 <?php endif; ?>
 
 <style>
-.miniatura-img {
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
+    .miniatura-img {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
 
-.miniatura-img:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-}
+    .miniatura-img:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 
-.miniatura-img.active {
-    border: 2px solid var(--pmain, #007bff);
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
+    .miniatura-img.active {
+        border: 2px solid var(--pmain, #007bff);
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
 
-#imagem-principal {
-    transition: opacity 0.3s ease;
-}
+    #imagem-principal {
+        transition: opacity 0.3s ease;
+    }
 
-/* Estilos para avaliações */
-.estrelas {
-    color: #ffc107;
-}
+    /* Estilos para avaliações */
+    .estrelas {
+        color: #ffc107;
+    }
 
-.rating-stars {
-    display: inline-flex;
-    align-items: center;
-}
+    .rating-stars {
+        display: inline-flex;
+        align-items: center;
+    }
 
-.rating-stars .star-rating {
-    color: #ddd;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
+    .rating-stars .star-rating {
+        color: #ddd;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
 
-.rating-stars .star-rating:hover {
-    transform: scale(1.1);
-}
+    .rating-stars .star-rating:hover {
+        transform: scale(1.1);
+    }
 
-.rating-stars .star-rating.filled {
-    color: #ffc107;
-}
+    .rating-stars .star-rating.filled {
+        color: #ffc107;
+    }
 
-.rating-stars .star-rating.hover {
-    color: #ffc107;
-}
+    .rating-stars .star-rating.hover {
+        color: #ffc107;
+    }
 
-.progress {
-    height: 8px;
-}
+    .progress {
+        height: 8px;
+    }
 
-.avaliacao-item:last-child {
-    border-bottom: none !important;
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-}
+    .avaliacao-item:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
 
-#btn-enviar-avaliacao:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
+    #btn-enviar-avaliacao:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
 </style>
 
 <script>
-function trocarImagemPrincipal(novaImagem, elemento) {
-    // Atualiza a imagem principal
-    const imagemPrincipal = document.getElementById('imagem-principal');
-    
-    // Efeito de fade
-    imagemPrincipal.style.opacity = '0.5';
-    
-    setTimeout(() => {
-        imagemPrincipal.src = novaImagem;
-        imagemPrincipal.style.opacity = '1';
-    }, 150);
-    
-    // Remove a classe 'active' de todas as miniaturas
-    document.querySelectorAll('.miniatura-img').forEach(img => {
-        img.classList.remove('active');
-    });
-    
-    // Adiciona a classe 'active' na miniatura clicada
-    elemento.classList.add('active');
-}
+    function trocarImagemPrincipal(novaImagem, elemento) {
+        // Atualiza a imagem principal
+        const imagemPrincipal = document.getElementById('imagem-principal');
 
-// Sistema de avaliação com estrelas
-document.addEventListener('DOMContentLoaded', function() {
-    const stars = document.querySelectorAll('.star-rating');
-    const notaInput = document.getElementById('nota-selecionada');
-    const btnEnviar = document.getElementById('btn-enviar-avaliacao');
-    let notaSelecionada = 0;
-    
-    if (stars.length > 0) {
-        stars.forEach((star, index) => {
-            const nota = parseInt(star.dataset.nota);
-            
-            // Evento de click para selecionar nota
-            star.addEventListener('click', function() {
-                notaSelecionada = nota;
-                notaInput.value = nota;
-                
-                // Atualizar visual das estrelas selecionadas
-                atualizarEstrelas(nota);
-                
-                // Habilitar botão de envio
-                if (btnEnviar) {
-                    btnEnviar.disabled = false;
-                }
-            });
-            
-            // Evento de hover
-            star.addEventListener('mouseenter', function() {
-                // Mostrar preview da nota no hover
-                stars.forEach((s, i) => {
-                    s.classList.remove('hover');
-                    if (i < nota) {
-                        s.classList.add('hover');
+        // Efeito de fade
+        imagemPrincipal.style.opacity = '0.5';
+
+        setTimeout(() => {
+            imagemPrincipal.src = novaImagem;
+            imagemPrincipal.style.opacity = '1';
+        }, 150);
+
+        // Remove a classe 'active' de todas as miniaturas
+        document.querySelectorAll('.miniatura-img').forEach(img => {
+            img.classList.remove('active');
+        });
+
+        // Adiciona a classe 'active' na miniatura clicada
+        elemento.classList.add('active');
+    }
+
+    // Sistema de avaliação com estrelas
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.star-rating');
+        const notaInput = document.getElementById('nota-selecionada');
+        const btnEnviar = document.getElementById('btn-enviar-avaliacao');
+        let notaSelecionada = 0;
+
+        if (stars.length > 0) {
+            stars.forEach((star, index) => {
+                const nota = parseInt(star.dataset.nota);
+
+                // Evento de click para selecionar nota
+                star.addEventListener('click', function () {
+                    notaSelecionada = nota;
+                    notaInput.value = nota;
+
+                    // Atualizar visual das estrelas selecionadas
+                    atualizarEstrelas(nota);
+
+                    // Habilitar botão de envio
+                    if (btnEnviar) {
+                        btnEnviar.disabled = false;
                     }
                 });
+
+                // Evento de hover
+                star.addEventListener('mouseenter', function () {
+                    // Mostrar preview da nota no hover
+                    stars.forEach((s, i) => {
+                        s.classList.remove('hover');
+                        if (i < nota) {
+                            s.classList.add('hover');
+                        }
+                    });
+                });
             });
-        });
-        
-        // Restaurar estado visual ao sair do container
-        const ratingContainer = document.querySelector('.rating-stars');
-        if (ratingContainer) {
-            ratingContainer.addEventListener('mouseleave', function() {
-                // Remover hover e mostrar seleção atual
-                stars.forEach(s => s.classList.remove('hover'));
-                if (notaSelecionada > 0) {
-                    atualizarEstrelas(notaSelecionada);
+
+            // Restaurar estado visual ao sair do container
+            const ratingContainer = document.querySelector('.rating-stars');
+            if (ratingContainer) {
+                ratingContainer.addEventListener('mouseleave', function () {
+                    // Remover hover e mostrar seleção atual
+                    stars.forEach(s => s.classList.remove('hover'));
+                    if (notaSelecionada > 0) {
+                        atualizarEstrelas(notaSelecionada);
+                    }
+                });
+            }
+        }
+
+        function atualizarEstrelas(nota) {
+            stars.forEach((s, i) => {
+                s.classList.remove('filled');
+                if (i < nota) {
+                    s.classList.remove('bi-star');
+                    s.classList.add('bi-star-fill', 'filled');
+                } else {
+                    s.classList.remove('bi-star-fill');
+                    s.classList.add('bi-star');
                 }
             });
         }
-    }
-    
-    function atualizarEstrelas(nota) {
-        stars.forEach((s, i) => {
-            s.classList.remove('filled');
-            if (i < nota) {
-                s.classList.remove('bi-star');
-                s.classList.add('bi-star-fill', 'filled');
-            } else {
-                s.classList.remove('bi-star-fill');
-                s.classList.add('bi-star');
-            }
-        });
-    }
-});
-
-// Submissão do formulário de avaliação com AJAX
-document.getElementById('form-avaliacao')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const nota = document.getElementById('nota-selecionada').value;
-    
-    if (!nota || nota < 1 || nota > 5) {
-        alert('Por favor, selecione uma nota de 1 a 5 estrelas.');
-        return;
-    }
-    
-    // Criar FormData
-    const formData = new FormData(this);
-    
-    // Desabilitar botão temporariamente
-    const btnEnviar = document.getElementById('btn-enviar-avaliacao');
-    btnEnviar.disabled = true;
-    btnEnviar.textContent = 'Enviando...';
-    
-    // Enviar via AJAX
-    fetch('../app/controller/AvaliacaoController.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            // Recarregar a página para mostrar a nova avaliação
-            window.location.reload();
-        } else {
-            alert('Erro ao enviar avaliação. Tente novamente.');
-            btnEnviar.disabled = false;
-            btnEnviar.textContent = 'Enviar Avaliação';
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao enviar avaliação. Tente novamente.');
-        btnEnviar.disabled = false;
-        btnEnviar.textContent = 'Enviar Avaliação';
     });
-});
+
+    // Submissão do formulário de avaliação com AJAX
+    document.getElementById('form-avaliacao')?.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const nota = document.getElementById('nota-selecionada').value;
+
+        if (!nota || nota < 1 || nota > 5) {
+            alert('Por favor, selecione uma nota de 1 a 5 estrelas.');
+            return;
+        }
+
+        // Criar FormData
+        const formData = new FormData(this);
+
+        // Desabilitar botão temporariamente
+        const btnEnviar = document.getElementById('btn-enviar-avaliacao');
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Enviando...';
+
+        // Enviar via AJAX
+        fetch('../app/controller/AvaliacaoController.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Recarregar a página para mostrar a nova avaliação
+                    window.location.reload();
+                } else {
+                    alert('Erro ao enviar avaliação. Tente novamente.');
+                    btnEnviar.disabled = false;
+                    btnEnviar.textContent = 'Enviar Avaliação';
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao enviar avaliação. Tente novamente.');
+                btnEnviar.disabled = false;
+                btnEnviar.textContent = 'Enviar Avaliação';
+            });
+    });
 </script>
