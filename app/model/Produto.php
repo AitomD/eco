@@ -10,6 +10,9 @@ class Produto
         $this->pdo = Database::conectar();
     }
 
+    // -------------------------
+    // MÉTODO EXISTENTE (mantido)
+    // -------------------------
     public function filtrar($id_categoria = null, $id_marca = null)
     {
         $sql = "SELECT 
@@ -71,5 +74,25 @@ WHERE 1=1";
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function buscarPorLoja($idLoja)
+{
+    $sql = "SELECT 
+                p.id_produto,
+                p.nome,
+                p.preco,
+                pi.cor,
+                p.data_att
+            FROM produto p
+            LEFT JOIN produto_info pi ON pi.id_info = p.id_info
+            WHERE p.id_loja = :idLoja
+            ORDER BY p.data_att DESC";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(':idLoja', $idLoja, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-?>
+
+}

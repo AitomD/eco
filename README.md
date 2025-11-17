@@ -23,7 +23,6 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
 - ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 - ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=bootstrap&logoColor=white)
 - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-- ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=flat&logo=tailwind-css&logoColor=white)
 - ![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=flat&logo=jquery&logoColor=white)
 
 
@@ -35,7 +34,7 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
 
  #### URL de acesso ao site 
 ```
-  http://localhost/E-comerce/public/#  
+  http://localhost/eco/public/#  
 
 ```
 
@@ -48,5 +47,5 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
 - [**Aitom Henrique Donatoni**](https://github.com/AitomD)  
 - [**Hiago Nascimento**](https://github.com/haiagos48)
 ---  
-<img width="1024" height="623" alt="image" src="https://github.com/user-attachments/assets/71475396-b103-4e72-a216-8216bc05550e" />
+
 

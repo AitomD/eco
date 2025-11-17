@@ -41,7 +41,7 @@ if (isset($_SESSION['erro_compra'])) {
 
     <body>
 
-        <!-- STEP INDICATOR -->
+         <!-- STEP INDICATOR -->
         <div class="container py-4 mt-3">
             <div class="step-indicator bg-dark p-4 rounded shadow-lg">
 
@@ -72,47 +72,6 @@ if (isset($_SESSION['erro_compra'])) {
 
             </div>
         </div>
-    </div>
-
-    <main class="container py-4 mt-3 bg-white my-3">
-        <?php if ($erroCompra): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                <?= htmlspecialchars($erroCompra) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>1 
-        <?php endif; ?>
-        
-        <form id="form-pagamento" method="POST" action="">
-            <input type="hidden" name="finalizar_compra" value="1">
-            <div class="row g-4">
-    <main class="container py-4 mt-3 bg-white my-3">
-        <div class="row g-4">
-            <div class="col-lg-7">
-                <div class="bg-white rounded shadow p-4">
-                    <h5 class="fw-bold mb-4 text-ml-dark">Escolha a forma de pagamento</h5>
-                    
-                    <!-- PIX -->
-                    <label for="pix" class="payment-option">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex">
-                                <input class="form-check-input me-3" type="radio" name="payment-option" id="pix" checked>
-                                <div>
-                                    <span class="fw-bold text-ml-dark d-block">PIX</span>
-                                    <span class="text-muted" style="font-size: 0.9em;">Aprovação imediata</span>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <span class="fw-bold text-success">À vista</span>
-                                <div class="text-muted" style="font-size: 0.9em;">5% de desconto</div>
-                            </div>
-                        </div>
-                        <div id="pix-info" class="pix-info">
-                            <i class="bi bi-qr-code" style="font-size: 2rem; color: #007bff;"></i>
-                            <p class="mt-2 mb-1"><strong>Pagamento via PIX</strong></p>
-                            <p class="text-muted small">Após confirmar o pedido, você receberá o código PIX para pagamento.</p>
-                        </div>
-                    </label>
 
         <main class="container py-4 mt-3 bg-dark my-3">
             <?php if ($erroCompra): ?>
