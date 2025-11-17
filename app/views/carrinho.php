@@ -257,12 +257,20 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                             <?php foreach (array_slice($cuponsDisponiveis, 0, 3) as $cupom): ?>
                                                 <div class="border border-secondary rounded p-2 mb-2 cupom-disponivel"
                                                     data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>">
-                                                    <div class="d-flex justify-content-between align-items-start">
-                                                        <div class="flex-grow-1 me-2">
+                                                    <div class="d-block align-items-center ">
+                                                        <div class="my-3">
                                                             <small
                                                                 class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
                                                             <small
-                                                                class="text-light"><?= htmlspecialchars($cupom['descricao']) ?></small>
+                                                                class="text-light">Desconto de  
+                                                                <?php if($cupom['tipo_desconto'] === 'porcentagem') : ?>
+                                                                    <?= htmlspecialchars($cupom['valor_desconto']) ?>
+                                                                    <span>%</span>
+                                                                <?php else : ?>
+                                                                    <span>R$</span>
+                                                                    <?= htmlspecialchars($cupom['valor_desconto']) ?>
+                                                                <?php endif; ?>
+                                                            </small>
                                                             <button
                                                                 class="btn w-100 btn-sm mt-2 mx-auto text-white aplicar-cupom-disponivel py-2">
                                                                 Usar
