@@ -16,31 +16,50 @@ if (!$id_produto) {
 try {
     $pdo = Database::conectar();
 
-    // Consulta SQL completa
+    // Consulta SQL completa para produtos normais E celulares
     $sql = "
         SELECT 
             p.id_produto,
             p.nome,
             p.preco,
-            pi.descricao,
-            pi.ram,
-            pi.armazenamento,
-            pi.processador,
+            COALESCE(pi.descricao, CONCAT('Smartphone ', cel.armazenamento, ' / ', cel.ram, ' RAM')) AS descricao,
+            COALESCE(pi.ram, cel.ram) AS ram,
+            COALESCE(pi.armazenamento, cel.armazenamento) AS armazenamento,
+            COALESCE(pi.processador, cel.processador) AS processador,
             pi.placa_mae,
             pi.placa_video,
             pi.fonte,
+            COALESCE(pi.cor, cel.cor) AS cor,
+            cel.tamanho_tela,
+            cel.camera_traseira,
+            cel.camera_frontal,
+            cel.bateria,
             m.nome AS marca,
             c.nome AS categoria,
             
-            -- Imagem principal (primeira imagem da ordem)
-            (SELECT i.url 
-             FROM imagem i 
-             WHERE i.id_info = pi.id_info 
-             ORDER BY i.ordem ASC 
-             LIMIT 1) AS imagem_principal,
+            -- Imagem principal (primeira imagem da ordem) - funciona para ambos
+            CASE 
+                WHEN p.id_info IS NOT NULL THEN 
+                    (SELECT i.url 
+                     FROM imagem i 
+                     WHERE i.id_info = pi.id_info 
+                     ORDER BY i.ordem ASC 
+                     LIMIT 1)
+                WHEN p.id_celular IS NOT NULL THEN
+                    (SELECT i.url 
+                     FROM imagem i 
+                     WHERE i.id_celular = p.id_celular 
+                     ORDER BY i.ordem ASC 
+                     LIMIT 1)
+                ELSE NULL
+            END AS imagem_principal,
             
             -- Todas as imagens relacionadas
-            i.url AS imagem,
+            CASE 
+                WHEN p.id_info IS NOT NULL THEN i.url
+                WHEN p.id_celular IS NOT NULL THEN ic.url
+                ELSE NULL
+            END AS imagem,
             
             -- Quantidade disponível (último total do estoque)
             (SELECT 
@@ -53,10 +72,12 @@ try {
             ) AS quantidade_disponivel
 
         FROM produto p
-        JOIN produto_info pi ON p.id_info = pi.id_info
+        LEFT JOIN produto_info pi ON p.id_info = pi.id_info
+        LEFT JOIN celular cel ON p.id_celular = cel.id_celular
         LEFT JOIN imagem i ON pi.id_info = i.id_info
-        LEFT JOIN marca m ON pi.id_marca = m.id_marca
-        LEFT JOIN categoria c ON pi.id_categoria = c.id_categoria
+        LEFT JOIN imagem ic ON cel.id_celular = ic.id_celular
+        LEFT JOIN marca m ON COALESCE(pi.id_marca, cel.id_marca) = m.id_marca
+        LEFT JOIN categoria c ON COALESCE(pi.id_categoria, cel.id_categoria) = c.id_categoria
         WHERE p.id_produto = :id_produto
     ";
 
@@ -73,8 +94,15 @@ try {
     // Dados do produto (iguais em todas as linhas)
     $produto = $resultados[0];
 
-    // Todas as imagens em um array
-    $imagens = array_column($resultados, 'imagem');
+    // Todas as imagens em um array - filtrar apenas imagens válidas
+    $imagens = array_filter(array_column($resultados, 'imagem'), function($img) {
+        return !empty($img);
+    });
+
+    // Se não há imagens, usar a imagem principal
+    if (empty($imagens) && !empty($produto['imagem_principal'])) {
+        $imagens = [$produto['imagem_principal']];
+    }
 
     // Buscar avaliações do produto
     $avaliacaoObj = new Avaliacao();
@@ -145,6 +173,9 @@ try {
                     <?php if (!empty($produto['armazenamento'])): ?>
                         <p><strong>Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
                     <?php endif; ?>
+                    <?php if (!empty($produto['ram'])): ?>
+                        <p><strong>RAM:</strong> <?= htmlspecialchars($produto['ram']) ?></p>
+                    <?php endif; ?>
                 </div>
 
                 <div class="sobre-o-produto border-top pt-3">
@@ -156,8 +187,23 @@ try {
                         <?php if (!empty($produto['ram'])): ?>
                             <li>• Memória RAM: <?= htmlspecialchars($produto['ram']) ?></li>
                         <?php endif; ?>
+                        <?php if (!empty($produto['armazenamento'])): ?>
+                            <li>• Armazenamento: <?= htmlspecialchars($produto['armazenamento']) ?></li>
+                        <?php endif; ?>
                         <?php if (!empty($produto['placa_video'])): ?>
                             <li>• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['tamanho_tela'])): ?>
+                            <li>• Tela: <?= htmlspecialchars($produto['tamanho_tela']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['camera_traseira'])): ?>
+                            <li>• Câmera Traseira: <?= htmlspecialchars($produto['camera_traseira']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['camera_frontal'])): ?>
+                            <li>• Câmera Frontal: <?= htmlspecialchars($produto['camera_frontal']) ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($produto['bateria'])): ?>
+                            <li>• Bateria: <?= htmlspecialchars($produto['bateria']) ?></li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -175,8 +221,20 @@ try {
                         Quantidade: <?= htmlspecialchars($produto['quantidade_disponivel']) ?> unidade(s)
                     </p>
                     <div class="d-grid gap-2 mt-3">
-                        <button class="purple-btn">Comprar agora</button>
-                        <button class="cart-button text-center">Adicionar ao carrinho</button>
+                        <button class="purple-btn btn-comprar-agora" 
+                                data-id="<?= $produto['id_produto'] ?>"
+                                data-nome="<?= htmlspecialchars($produto['nome']) ?>"
+                                data-preco="<?= $produto['preco'] ?>"
+                                data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
+                            Comprar agora
+                        </button>
+                        <button class="cart-button text-center btn-add-cart" 
+                                data-id="<?= $produto['id_produto'] ?>"
+                                data-nome="<?= htmlspecialchars($produto['nome']) ?>"
+                                data-preco="<?= $produto['preco'] ?>"
+                                data-imagem="<?= htmlspecialchars($produto['imagem_principal']) ?>">
+                            Adicionar ao carrinho
+                        </button>
                     </div>
                     <p class="small text-muted mt-3">
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
@@ -536,3 +594,6 @@ document.getElementById('form-avaliacao')?.addEventListener('submit', function(e
     });
 });
 </script>
+
+<!-- Script do carrinho -->
+<script src="../public/js/carrinho.js"></script>

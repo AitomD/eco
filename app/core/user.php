@@ -52,6 +52,9 @@ class Auth {
                 case 'register':
                     $auth->processRegister();
                     break;
+                case 'check_email':
+                    $auth->checkEmailExists();
+                    break;
                 case 'logout':
                     $auth->logout();
                     header('Content-Type: application/json');
@@ -169,6 +172,41 @@ class Auth {
         } catch (PDOException $e) {
             error_log("Erro ao verificar email: " . $e->getMessage());
             return true;
+        }
+    }
+
+    // ================================
+    // VERIFICAÇÃO DE EMAIL EXISTENTE
+    // ================================
+    
+    public function checkEmailExists() {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método não permitido']);
+            return;
+        }
+        
+        try {
+            $email = trim($_POST['email'] ?? '');
+            
+            if (empty($email)) {
+                echo json_encode(['exists' => false]);
+                return;
+            }
+            
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo json_encode(['exists' => false]);
+                return;
+            }
+            
+            $exists = $this->emailExists($email);
+            echo json_encode(['exists' => $exists]);
+            
+        } catch (Exception $e) {
+            error_log("Erro ao verificar email: " . $e->getMessage());
+            echo json_encode(['exists' => false]);
         }
     }
 
