@@ -65,6 +65,7 @@ class Loja
                 SELECT 
                     l.id_loja,
                     l.nome AS nome_loja,
+                    l.cnpj,
                     e.endereco,
                     e.cidade,
                     e.estado
