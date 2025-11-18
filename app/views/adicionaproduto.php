@@ -1,202 +1,287 @@
 <div class="container-fluid d-flex justify-content-center align-items-center">
-    <div class="container text-center" style="max-width: 400px;">
+
+    <!-- ETAPA 1 -->
+    <div id="etapa1" class="container text-center" style="max-width: 400px;">
         <h4 class="mb-4">Adicionar Produto</h4>
 
-        <!-- ETAPA 1 -->
-        <form id="form-etapa1">
+        <form id="form-etapa1" novalidate>
             <input type="text" name="nome" class="form-control mb-3" placeholder="Nome do produto" required>
-            <input type="text" name="cor" class="form-control mb-3" placeholder="Cor" required>
-
-            <!-- Campo de quantidade -->
-            <input type="number" name="quantidade" class="form-control mb-3" placeholder="Quantidade" required>
-
-            <!-- Dropdown de tipo (entrada / saída) -->
-            <select name="tipo" class="form-select mb-3" required>
-                <option value="">Selecione o tipo</option>
-                <option value="entrada">Entrada</option>
-                <option value="saida">Saída</option>
-            </select>
-
             <input type="number" name="preco" class="form-control mb-3" placeholder="Preço (R$)" required>
 
-
-            <select class="form-select mb-3" name="categoria" required>
-                <option selected disabled>Selecione uma categoria</option>
+            <select class="form-select mb-3" name="categoria" id="categoria" required>
+                <option disabled selected>Selecione uma categoria</option>
                 <option value="1">Computador</option>
                 <option value="2">Notebook</option>
-                <option value="4">Celular</option>
+                <option value="3">Celular</option>
             </select>
-
-            <select class="form-select mb-3" name="marca" required>
-                <option selected disabled>Selecione uma marca</option>
-                <option value="1">Acer</option>
-                <option value="2">Asus</option>
-                <option value="3">Dell</option>
-                <option value="4">Lenovo</option>
-                <option value="5">HP</option>
-                <option value="6">Apple</option>
-                <option value="7">Motorola</option>
-                <option value="8">Oppo</option>
-                <option value="9">Samsung</option>
-                <option value="10">Xiaomi</option>
-                <option value="15">AMD</option>
-                <option value="16">Intel</option>
-            </select>
-
-            <button type="button" id="btn-proximo1" class="btn btn-primary w-100">Próximo</button>
         </form>
 
-        <!-- ETAPA 2 -->
-        <form id="form-etapa2" class="d-none">
-            <h5 class="mb-3">Especificações do Produto</h5>
-            <input type="text" name="processador" class="form-control mb-3" placeholder="Processador">
-            <input type="text" name="memoria" class="form-control mb-3" placeholder="Memória RAM">
-            <input type="text" name="armazenamento" class="form-control mb-3" placeholder="Armazenamento">
-            <input type="text" name="placa_video" class="form-control mb-3" placeholder="Placa de Vídeo">
-            <input type="text" name="placa_mae" class="form-control mb-3" placeholder="Placa mãe">
-            <input type="text" name="fonte" class="form-control mb-3" placeholder="Fonte">
+        <button class="btn btn-primary w-100" id="btn-avancar-etapa1" type="button">Próximo</button>
+    </div>
 
-            <button type="button" id="btn-voltar1" class="btn btn-secondary w-100 mb-2">Voltar</button>
-            <button type="button" id="btn-proximo2" class="btn btn-primary w-100">Próximo</button>
+    <!-- ETAPA 2A – Para categoria 1 ou 2 -->
+    <div id="etapa2A" class="container text-center d-none" style="max-width: 400px;">
+        <h4 class="mb-4">Informações do Produto</h4>
+
+        <form id="form-etapa2A" novalidate>
+            <input type="text" class="form-control mb-3" name="descricao" placeholder="Descrição" required>
+            <input type="text" class="form-control mb-3" name="ram" placeholder="RAM" required>
+            <input type="text" class="form-control mb-3" name="armazenamento" placeholder="Armazenamento" required>
+            <input type="text" class="form-control mb-3" name="processador" placeholder="Processador" required>
+            <input type="text" class="form-control mb-3" name="placa_mae" placeholder="Placa-mãe" required>
+            <input type="text" class="form-control mb-3" name="placa_video" placeholder="Placa de vídeo" required>
+            <input type="text" class="form-control mb-3" name="fonte" placeholder="Fonte" required>
+            <input type="text" class="form-control mb-3" name="cor" placeholder="Cor" required>
         </form>
 
-        <!-- ETAPA 3 -->
-        <form id="form-etapa3" class="d-none">
-            <h5 class="mb-3">Imagens do Produto</h5>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary" id="btn-voltar-A" type="button">Voltar</button>
+            <button class="btn btn-primary" id="btn-avancar-etapa3A" type="button">Próximo</button>
+        </div>
+    </div>
 
-            <div id="imagens-container">
-                <input type="text" name="url_imagem[]" class="form-control mb-3" placeholder="URL da imagem 1" required>
+    <!-- ETAPA 2B – Para categoria 3 -->
+    <div id="etapa2B" class="container text-center d-none" style="max-width: 400px;">
+        <h4 class="mb-4">Informações do Produto</h4>
+
+        <form id="form-etapa2B" novalidate>
+            <input type="text" class="form-control mb-3" name="armazenamento" placeholder="Armazenamento" required>
+            <input type="text" class="form-control mb-3" name="ram" placeholder="RAM" required>
+            <input type="text" class="form-control mb-3" name="cor" placeholder="Cor" required>
+            <input type="text" class="form-control mb-3" name="tamanho_tela" placeholder="Tamanho da tela" required>
+            <input type="text" class="form-control mb-3" name="processador" placeholder="Processador" required>
+            <input type="text" class="form-control mb-3" name="camera_traseira" placeholder="Câmera traseira" required>
+            <input type="text" class="form-control mb-3" name="camera_frontal" placeholder="Câmera frontal" required>
+            <input type="text" class="form-control mb-3" name="bateria" placeholder="Bateria (mAh)" required>
+        </form>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary" id="btn-voltar-B" type="button">Voltar</button>
+            <button class="btn btn-primary" id="btn-avancar-etapa3B" type="button">Próximo</button>
+        </div>
+    </div>
+
+    <!-- ETAPA 3 – Links de Imagens -->
+<!-- ETAPA 3 – Links de Imagens -->
+<div id="etapa3" class="container text-center d-none" style="max-width: 400px;">
+    <h4 class="mb-4">Imagens do Produto</h4>
+
+    <form id="form-etapa3" novalidate>
+
+        <div id="container-imagens">
+
+            <!-- Campo inicial -->
+            <div class="input-img mb-3">
+                <input type="url" class="form-control" name="img[]" placeholder="URL da imagem" required>
             </div>
 
-            <button type="button" id="btn-add-imagem" class="btn btn-outline-primary w-100 mb-3">+ Adicionar imagem</button>
+        </div>
 
-            <button type="button" id="btn-voltar2" class="btn btn-secondary w-100 mb-2">Voltar</button>
-            <button type="submit" class="btn btn-success w-100">Finalizar Cadastro</button>
-        </form>
+        <button type="button" id="btn-add-img" class="btn btn-outline-primary w-100 mb-3">
+            + Adicionar outra imagem
+        </button>
+
+    </form>
+
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary" id="btn-voltar-etapa2" type="button">Voltar</button>
+        <button class="btn btn-success" id="btn-finalizar" type="button">Finalizar</button>
     </div>
 </div>
 
+
+</div>
+
 <script>
-    const form1 = document.getElementById('form-etapa1');
-    const form2 = document.getElementById('form-etapa2');
-    const form3 = document.getElementById('form-etapa3');
+const etapa1 = document.getElementById("etapa1");
+const etapa2A = document.getElementById("etapa2A");
+const etapa2B = document.getElementById("etapa2B");
 
-    const btnProximo1 = document.getElementById('btn-proximo1');
-    const btnProximo2 = document.getElementById('btn-proximo2');
-    const btnVoltar1 = document.getElementById('btn-voltar1');
-    const btnVoltar2 = document.getElementById('btn-voltar2');
-    const btnAddImagem = document.getElementById('btn-add-imagem');
-    const imagensContainer = document.getElementById('imagens-container');
+const btnAvancarEtapa1 = document.getElementById("btn-avancar-etapa1");
 
-    let contadorImagens = 1;
-    const limiteImagens = 3;
+const categoriaSelect = document.getElementById("categoria");
 
-    // Objetivo: armazenar temporariamente todos os dados
-    let dadosProduto = {};
+function validarFormulario(form) {
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return false;
+    }
+    return true;
+}
 
-    // Avançar Etapa 1 → 2
-    btnProximo1.addEventListener('click', () => {
-        if (form1.checkValidity()) {
-            dadosProduto.nome = form1.nome.value.trim();
-            dadosProduto.cor = form1.cor.value.trim();
-            dadosProduto.quantidade = parseInt(form1.quantidade.value);
-            dadosProduto.preco = parseFloat(form1.preco.value);
-            dadosProduto.categoria = parseInt(form1.categoria.value);
-            dadosProduto.marca = parseInt(form1.marca.value);
-            dadosProduto.tipo = form1.tipo.value;
+// ETAPA 1 → ETAPA 2A ou 2B
+btnAvancarEtapa1.addEventListener("click", () => {
+    const form1 = document.getElementById("form-etapa1");
+    if (!validarFormulario(form1)) return;
 
-            form1.classList.add('d-none');
-            form2.classList.remove('d-none');
-        } else {
-            form1.reportValidity();
-        }
+    const categoria = categoriaSelect.value;
+
+    etapa1.classList.add("d-none");
+
+    if (categoria === "1" || categoria === "2") {
+        etapa2A.classList.remove("d-none");
+    } else if (categoria === "3") {
+        etapa2B.classList.remove("d-none");
+    }
+});
+
+// VOLTAR
+document.getElementById("btn-voltar-A").addEventListener("click", () => {
+    etapa2A.classList.add("d-none");
+    etapa1.classList.remove("d-none");
+});
+
+document.getElementById("btn-voltar-B").addEventListener("click", () => {
+    etapa2B.classList.add("d-none");
+    etapa1.classList.remove("d-none");
+});
+
+// ETAPA 2A → ETAPA 3
+document.getElementById("btn-avancar-etapa3A").addEventListener("click", () => {
+    const formA = document.getElementById("form-etapa2A");
+    if (!validarFormulario(formA)) return;
+
+    etapa2A.classList.add("d-none");
+    etapa3.classList.remove("d-none");
+});
+
+// ETAPA 2B → ETAPA 3
+document.getElementById("btn-avancar-etapa3B").addEventListener("click", () => {
+    const formB = document.getElementById("form-etapa2B");
+    if (!validarFormulario(formB)) return;
+
+    etapa2B.classList.add("d-none");
+    etapa3.classList.remove("d-none");
+});
+
+// VOLTAR PARA ETAPA 2
+document.getElementById("btn-voltar-etapa2").addEventListener("click", () => {
+
+    const categoria = categoriaSelect.value;
+
+    etapa3.classList.add("d-none");
+
+    if (categoria === "1" || categoria === "2") {
+        etapa2A.classList.remove("d-none");
+    } else {
+        etapa2B.classList.remove("d-none");
+    }
+});
+
+document.getElementById("btn-finalizar").addEventListener("click", () => {
+    const form3 = document.getElementById("form-etapa3");
+    if (!validarFormulario(form3)) return;
+
+    const categoria = categoriaSelect.value;
+
+    // Coletar URLs
+    const imagens = [
+        { url: form3.img1.value, ordem: 1 },
+        { url: form3.img2.value, ordem: 2 },
+        { url: form3.img3.value, ordem: 3 }
+    ];
+
+    let payload = {
+        etapa1: Object.fromEntries(new FormData(document.getElementById("form-etapa1"))),
+        etapa2: {},
+        imagens: []
+    };
+
+    // Dados específicos da etapa 2
+    if (categoria === "1" || categoria === "2") {
+        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2A")));
+        payload.tipo = "pc";
+    } else {
+        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2B")));
+        payload.tipo = "celular";
+    }
+
+    // Montar imagens conforme especificação
+    payload.imagens = imagens.map(img => {
+        return {
+            url: img.url,
+            ordem: img.ordem,
+            id_info: (categoria === "1" || categoria === "2") ? "PREENCHER NO PHP" : null,
+            id_celular: (categoria === "3") ? "PREENCHER NO PHP" : null
+        };
     });
 
-    // Avançar Etapa 2 → 3
-    btnProximo2.addEventListener('click', () => {
-        dadosProduto.processador = form2.processador.value.trim();
-        dadosProduto.memoria = form2.memoria.value.trim();
-        dadosProduto.armazenamento = form2.armazenamento.value.trim();
-        dadosProduto.placa_video = form2.placa_video.value.trim();
-        dadosProduto.placa_mae = form2.placa_mae.value.trim();
-        dadosProduto.fonte = form2.fonte.value.trim();
+    console.log("OBJETO FINAL PARA ENVIAR AO PHP:");
+    console.log(payload);
 
-        form2.classList.add('d-none');
-        form3.classList.remove('d-none');
+    alert("Pronto! Os dados foram reunidos e estão no console do navegador.");
+});
+
+const containerImagens = document.getElementById("container-imagens");
+const btnAddImg = document.getElementById("btn-add-img");
+
+btnAddImg.addEventListener("click", () => {
+
+    const quantidadeAtual = containerImagens.querySelectorAll(".input-img").length;
+    if (quantidadeAtual >= 3) {
+        alert("Máximo de 3 imagens permitido.");
+        return;
+    }
+
+    const div = document.createElement("div");
+    div.classList.add("input-img", "mb-3");
+
+    div.innerHTML = `
+        <div class="input-group">
+            <input type="url" class="form-control" name="img[]" placeholder="URL da imagem" required>
+            <button class="btn btn-danger btn-remover-img" type="button">X</button>
+        </div>
+    `;
+
+    containerImagens.appendChild(div);
+
+    // Evento de remover
+    div.querySelector(".btn-remover-img").addEventListener("click", () => {
+        div.remove();
     });
 
-    // Voltar Etapa 2 → 1
-    btnVoltar1.addEventListener('click', () => {
-        form2.classList.add('d-none');
-        form1.classList.remove('d-none');
-    });
+});
 
-    // Voltar Etapa 3 → 2
-    btnVoltar2.addEventListener('click', () => {
-        form3.classList.add('d-none');
-        form2.classList.remove('d-none');
-    });
+document.getElementById("btn-finalizar").addEventListener("click", () => {
+    const form3 = document.getElementById("form-etapa3");
+    if (!validarFormulario(form3)) return;
 
-    // Adicionar campo de imagem (máximo 3)
-    btnAddImagem.addEventListener('click', () => {
-        if (contadorImagens < limiteImagens) {
-            contadorImagens++;
-            const novoCampo = document.createElement('input');
-            novoCampo.type = 'text';
-            novoCampo.name = 'url_imagem[]';
-            novoCampo.classList.add('form-control', 'mb-3');
-            novoCampo.placeholder = `URL da imagem ${contadorImagens}`;
-            imagensContainer.appendChild(novoCampo);
+    const categoria = categoriaSelect.value;
 
-            if (contadorImagens === limiteImagens) {
-                btnAddImagem.disabled = true;
-                btnAddImagem.textContent = "Limite de 3 imagens atingido";
-            }
-        }
-    });
+    // Coletar somente as imagens inseridas
+    const urls = [...document.querySelectorAll("input[name='img[]']")]
+                 .map((input, index) => ({
+                    url: input.value,
+                    ordem: index + 1
+                 }));
 
-    // Enviar todas as etapas via AJAX
-    form3.addEventListener('submit', (e) => {
-        e.preventDefault();
+    let payload = {
+        etapa1: Object.fromEntries(new FormData(document.getElementById("form-etapa1"))),
+        etapa2: {},
+        imagens: []
+    };
 
-        // Pega URLs de imagens
-        const urls = Array.from(document.querySelectorAll('input[name="url_imagem[]"]'))
-            .map(input => input.value.trim())
-            .filter(url => url !== '');
-        dadosProduto.url_imagem = urls;
+    // Dados específicos da etapa 2
+    if (categoria === "1" || categoria === "2") {
+        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2A")));
+        payload.tipo = "pc";
+    } else {
+        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2B")));
+        payload.tipo = "celular";
+    }
 
-        // Adiciona id_loja se tiver (ou outra lógica de sessão)
-        dadosProduto.id_loja = <?= $_SESSION['id_loja'] ?? 1 ?>;
+    // Montar imagens conforme especificação
+    payload.imagens = urls.map(img => ({
+        url: img.url,
+        ordem: img.ordem,
+        id_info: (categoria === "1" || categoria === "2") ? "PREENCHER NO PHP" : null,
+        id_celular: (categoria === "3") ? "PREENCHER NO PHP" : null
+    }));
 
-        // Envia via fetch
-        fetch('../app/controller/NovoProdutoController.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dadosProduto)
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(data.mensagem);
-                    // opcional: resetar formulário ou voltar para etapa 1
-                    form1.reset();
-                    form2.reset();
-                    form3.reset();
-                    form3.classList.add('d-none');
-                    form1.classList.remove('d-none');
-                    contadorImagens = 1;
-                    imagensContainer.innerHTML = `<input type="text" name="url_imagem[]" class="form-control mb-3" placeholder="URL da imagem 1" required>`;
-                    btnAddImagem.disabled = false;
-                    btnAddImagem.textContent = '+ Adicionar imagem';
-                } else {
-                    alert(data.mensagem);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Erro ao enviar os dados.');
-            });
-    });
+    console.log("OBJETO FINAL PARA O PHP:");
+    console.log(payload);
+
+    alert("Imagens e dados reunidos! Veja no console.");
+});
+
 </script>

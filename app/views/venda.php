@@ -38,7 +38,7 @@ foreach ($vendas as $v) {
     <?php if ($loja): ?>
         <h3>Dados da loja</h3>
         <h5 class="card-title">
-            Loja: <span class="text-primary"><?= htmlspecialchars($loja['nome']) ?></span>
+            Loja: <span class="text-primary"><?= htmlspecialchars($loja['nome_loja']) ?></span>
         </h5>
         <p class="card-text">
             CNPJ: <span class="text-secondary"><?= htmlspecialchars($loja['cnpj']) ?></span>
