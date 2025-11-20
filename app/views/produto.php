@@ -65,6 +65,10 @@
       let filtroCategoria = null;
       let filtroMarca = null;
 
+      // Verificar se vem categoria pela URL (redirecionamento dos cards)
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoriaURL = urlParams.get('categoria');
+
       // Função para buscar produtos via AJAX
       function buscarProdutos(categoria = null, marca = null) {
         let url = `../app/controller/FiltroController.php?`;
@@ -117,8 +121,20 @@
         container.appendChild(row);
       }
 
-      // Inicializa a tela com todos os produtos
-      buscarProdutos();
+      // Inicializa a tela com todos os produtos ou com filtro da URL
+      if (categoriaURL) {
+        filtroCategoria = categoriaURL;
+        buscarProdutos(filtroCategoria);
+        
+        // Marcar o botão de categoria como ativo
+        const botaoCategoria = document.querySelector(`.link-produto[data-categoria="${categoriaURL}"]`);
+        if (botaoCategoria) {
+          botoes.forEach(b => b.classList.remove('ativo'));
+          botaoCategoria.classList.add('ativo');
+        }
+      } else {
+        buscarProdutos();
+      }
 
       // Configura eventos dos botões de filtro
       botoes.forEach(botao => {

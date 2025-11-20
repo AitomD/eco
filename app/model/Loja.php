@@ -23,20 +23,24 @@ class Loja
     public function buscarPorProdutoId($idProduto)
     {
         try {
+            // Seleciona informações da loja/endereço vinculada ao produto.
+            // Não referenciar colunas que possam estar em outra tabela (ex: cor em produto_info).
             $sql = "
-                SELECT 
+                SELECT
                     p.id_produto,
                     p.nome AS nome_produto,
-                    p.cor,
                     p.preco,
                     l.id_loja,
                     l.nome AS nome_loja,
                     e.endereco,
+                    e.complemento,
+                    e.bairro,
+                    e.cep,
                     e.cidade,
                     e.estado
                 FROM produto AS p
-                INNER JOIN loja AS l ON p.id_loja = l.id_loja
-                INNER JOIN endereco AS e ON l.id_endereco = e.id_endereco
+                LEFT JOIN loja AS l ON p.id_loja = l.id_loja
+                LEFT JOIN endereco AS e ON l.id_endereco = e.id_endereco
                 WHERE p.id_produto = ?
                 LIMIT 1
             ";
@@ -67,10 +71,13 @@ class Loja
                     l.nome AS nome_loja,
                     l.cnpj,
                     e.endereco,
+                    e.complemento,
+                    e.bairro,
+                    e.cep,
                     e.cidade,
                     e.estado
                 FROM loja AS l
-                INNER JOIN endereco AS e ON l.id_endereco = e.id_endereco
+                LEFT JOIN endereco AS e ON l.id_endereco = e.id_endereco
                 WHERE l.id_admin = ?
             ";
 
