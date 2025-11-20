@@ -95,7 +95,7 @@ try {
     $produto = $resultados[0];
 
     // Todas as imagens em um array - filtrar apenas imagens válidas
-    $imagens = array_filter(array_column($resultados, 'imagem'), function($img) {
+    $imagens = array_filter(array_column($resultados, 'imagem'), function ($img) {
         return !empty($img);
     });
 
@@ -194,58 +194,45 @@ try {
                     </p>
                 </div>
 
-                <div class="caracteristicas-produto mb-4">
+
+                <ul class="list-unstyled mt-2 text-muted">
                     <?php if (!empty($produto['cor'])): ?>
-                        <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
+                        <li>• Cor: <?= htmlspecialchars($produto['cor']) ?></li>
                     <?php endif; ?>
                     <?php if (!empty($produto['armazenamento'])): ?>
-                        <p><strong>Armazenamento:</strong> <?= htmlspecialchars($produto['armazenamento']) ?></p>
+                        <li>• Armazenamento: <?= htmlspecialchars($produto['armazenamento']) ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($produto['processador'])): ?>
+                        <li>• Processador: <?= htmlspecialchars($produto['processador']) ?></li>
                     <?php endif; ?>
                     <?php if (!empty($produto['ram'])): ?>
-                        <p><strong>RAM:</strong> <?= htmlspecialchars($produto['ram']) ?></p>
+                        <li>• Memória RAM: <?= htmlspecialchars($produto['ram']) ?></li>
                     <?php endif; ?>
-                </div>
 
-                <div class="sobre-o-produto border-top pt-3">
-                    <h5 class="fw-bold">O que você precisa saber sobre este produto</h5>
-                    <ul class="list-unstyled mt-2 text-muted">
-                        <?php if (!empty($produto['cor'])): ?>
-                            <li>• Cor: <?= htmlspecialchars($produto['cor']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['armazenamento'])): ?>
-                            <li>• Armazenamento: <?= htmlspecialchars($produto['armazenamento']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['processador'])): ?>
-                            <li>• Processador: <?= htmlspecialchars($produto['processador']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['ram'])): ?>
-                            <li>• Memória RAM: <?= htmlspecialchars($produto['ram']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['armazenamento'])): ?>
-                            <li>• Armazenamento: <?= htmlspecialchars($produto['armazenamento']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['placa_video'])): ?>
-                            <li>• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['placa_mae'])): ?>
-                            <li>• Placa Mãe: <?= htmlspecialchars($produto['placa_mae']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['fonte'])): ?>
-                            <li>• Fonte: <?= htmlspecialchars($produto['fonte']) ?></li>
-                        <?php if (!empty($produto['tamanho_tela'])): ?>
-                            <li>• Tela: <?= htmlspecialchars($produto['tamanho_tela']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['camera_traseira'])): ?>
-                            <li>• Câmera Traseira: <?= htmlspecialchars($produto['camera_traseira']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['camera_frontal'])): ?>
-                            <li>• Câmera Frontal: <?= htmlspecialchars($produto['camera_frontal']) ?></li>
-                        <?php endif; ?>
-                        <?php if (!empty($produto['bateria'])): ?>
-                            <li>• Bateria: <?= htmlspecialchars($produto['bateria']) ?></li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
+                    <?php if (!empty($produto['placa_video'])): ?>
+                        <li>• Placa de Vídeo: <?= htmlspecialchars($produto['placa_video']) ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($produto['placa_mae'])): ?>
+                        <li>• Placa Mãe: <?= htmlspecialchars($produto['placa_mae']) ?></li>
+                    <?php endif; ?>
+
+                    <?php if (!empty($produto['fonte'])): ?>
+                        <li>• Fonte: <?= htmlspecialchars($produto['fonte']) ?></li>
+                    <?php endif; ?>
+
+                    <?php if (!empty($produto['tamanho_tela'])): ?>
+                        <li>• Tela: <?= htmlspecialchars($produto['tamanho_tela']) ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($produto['camera_traseira'])): ?>
+                        <li>• Câmera Traseira: <?= htmlspecialchars($produto['camera_traseira']) ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($produto['camera_frontal'])): ?>
+                        <li>• Câmera Frontal: <?= htmlspecialchars($produto['camera_frontal']) ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($produto['bateria'])): ?>
+                        <li>• Bateria: <?= htmlspecialchars($produto['bateria']) ?></li>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
 
@@ -288,9 +275,9 @@ try {
                         <div class="d-flex flex-column gap-2">
 
                             <div class="mb-1">
-                               <small class="text-muted text-uppercase fw-bold text-center d-block" style="font-size: 0.7rem;">Loja</small>
+                                <small class="text-muted text-uppercase fw-bold text-center d-block" style="font-size: 0.7rem;">Loja</small>
                                 <div class="d-flex align-items-center mt-1">
-                                   
+
                                     <span class="fs-6 fw-bold text-dark text-truncate text-center m-auto">
                                         <?php echo htmlspecialchars($loja['nome_loja']); ?>
                                     </span>
@@ -338,7 +325,7 @@ try {
                         </div>
                     <?php endif; ?>
                 </div>
-                
+
             </div>
         </div>
 
@@ -649,46 +636,46 @@ $mensagemErro = obterMensagemErro();
 
     // Submissão do formulário de avaliação com AJAX
     document.getElementById('form-avaliacao')?.addEventListener('submit', function(e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        const nota = document.getElementById('nota-selecionada').value;
+    const nota = document.getElementById('nota-selecionada').value;
 
-        if (!nota || nota < 1 || nota > 5) {
-            alert('Por favor, selecione uma nota de 1 a 5 estrelas.');
-            return;
-        }
+    if (!nota || nota < 1 || nota > 5) {
+        alert('Por favor, selecione uma nota de 1 a 5 estrelas.');
+        return;
+    }
 
-        // Criar FormData
-        const formData = new FormData(this);
+    // Criar FormData
+    const formData = new FormData(this);
 
-        // Desabilitar botão temporariamente
-        const btnEnviar = document.getElementById('btn-enviar-avaliacao');
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = 'Enviando...';
+    // Desabilitar botão temporariamente
+    const btnEnviar = document.getElementById('btn-enviar-avaliacao');
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = 'Enviando...';
 
-        // Enviar via AJAX
-        fetch('../app/controller/AvaliacaoController.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Recarregar a página para mostrar a nova avaliação
-                    window.location.reload();
-                } else {
-                    alert('Erro ao enviar avaliação. Tente novamente.');
-                    btnEnviar.disabled = false;
-                    btnEnviar.textContent = 'Enviar Avaliação';
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
+    // Enviar via AJAX
+    fetch('../app/controller/AvaliacaoController.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Recarregar a página para mostrar a nova avaliação
+                window.location.reload();
+            } else {
                 alert('Erro ao enviar avaliação. Tente novamente.');
                 btnEnviar.disabled = false;
                 btnEnviar.textContent = 'Enviar Avaliação';
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar avaliação. Tente novamente.');
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = 'Enviar Avaliação';
+        });
     });
-});
+
 </script>
 
 <!-- Script do carrinho -->
