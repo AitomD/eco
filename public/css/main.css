@@ -252,11 +252,32 @@ main {
   font-size: 1rem;
 }
 
+.product-card .card-title a:hover {
+  color: #610094 !important;
+  transition: color 0.3s ease;
+}
+
+.product-card a {
+  text-decoration: none !important;
+}
+
 .card-price {
   color: #610094;
   font-weight: bold;
   font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-stock {
+  color: #ffffff;
+  font-size: 0.85rem;
   margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.card-stock .text-danger {
+  color: #ff6b6b !important;
+  font-weight: bold;
 }
 
 .btn-product {
