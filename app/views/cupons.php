@@ -19,15 +19,19 @@ if (!empty($userId)) {
     }
 }
 ?>
-
 <style>
     @import url(main.css);
 
-    /* Card Estilo Ticket Moderno */
+    /* Fallback de variáveis */
+    :root {
+        --pmain-fallback: #0d6efd; 
+    }
+
+    /* --- Card Estilo Ticket --- */
     .coupon-card {
-        background: #fff;
+        background: #fff; /* Fundo Branco Puro */
         border: 1px solid #e9ecef;
-        border-left: 5px solid var(--pmain);
+        border-left: 5px solid var(--pmain, var(--pmain-fallback));
         border-radius: 12px;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         height: 100%;
@@ -35,105 +39,184 @@ if (!empty($userId)) {
         flex-direction: column;
         position: relative;
         overflow: hidden;
+        /* Removida qualquer opacidade padrão */
+        opacity: 1 !important; 
     }
 
     .coupon-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
     }
 
     .coupon-header {
-        background-color: rgba(13, 110, 253, 0.05);
-        padding: 1.25rem;
+        /* Fundo extremamente claro para destacar o topo, mas sem escurecer */
+        background-color: #f8f9fa; 
+        padding: 1.5rem 1rem;
         text-align: center;
-        border-bottom: 1px dashed #dee2e6;
+        border-bottom: 2px dashed #dee2e6;
+        position: relative;
     }
 
+    /* Detalhe das bolinhas (picote) */
+    .coupon-header::before, .coupon-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        width: 20px;
+        height: 20px;
+        background-color: #f8f9fa; /* Deve bater com o fundo da página mãe */
+        border-radius: 50%;
+        z-index: 2;
+    }
+    .coupon-header::before { left: -10px; }
+    .coupon-header::after { right: -10px; }
+
     .discount-badge {
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 800;
-        color: var(--primary-color);
+        color: var(--pmain, var(--pmain-fallback));
+        line-height: 1;
+    }
+    
+    .discount-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6c757d;
+        font-weight: 600;
     }
 
     .coupon-body {
-        padding: 1.25rem;
+        padding: 1.5rem;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        background: #fff;
     }
 
-    .coupon-code {
-        background: #f1f3f5;
-        border: 1px dashed #adb5bd;
-        padding: 0.5rem;
-        border-radius: 6px;
-        font-family: monospace;
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: #495057;
-        letter-spacing: 1px;
+    /* Área do Código */
+    .code-container {
+        background: #ffffff;
+        border: 2px dashed var(--pmain, var(--pmain-fallback));
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin: 1rem 0;
         text-align: center;
-        margin-bottom: 1rem;
         cursor: pointer;
+        transition: background 0.2s;
     }
 
-    /* Card de Adicionar (Admin) */
+    .code-container:hover {
+        background: #f8f9fa;
+    }
+
+    .coupon-code-text {
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #343a40;
+    }
+
+    .copy-hint {
+        font-size: 0.7rem;
+        color: var(--pmain, var(--pmain-fallback));
+        display: block;
+        margin-top: 2px;
+    }
+
+    .coupon-dates {
+        font-size: 0.8rem;
+        color: #6c757d;
+        border-top: 1px solid #f1f3f5;
+        padding-top: 0.75rem;
+        margin-top: auto;
+    }
+    
+    /* Card Admin */
     .add-coupon-card {
         height: 100%;
-        min-height: 280px;
+        min-height: 300px;
         border: 2px dashed #dee2e6;
-        background-color: #fcfcfc;
+        background-color: rgba(255, 255, 255, 0.5);
         border-radius: 12px;
-        transition: all 0.2s ease;
-        color: #6c757d;
+        transition: all 0.3s ease;
+        color: #adb5bd;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
     }
-
     .add-coupon-card:hover {
-        border-color: var(--pmain);
-        color: var(--pmain);
-        background-color: rgba(13, 110, 253, 0.03);
-    }
-
-    /* Ajustes Gerais */
-    .text-small-meta {
-        font-size: 0.85rem;
-        color: #6c757d;
+        border-color: var(--pmain, var(--pmain-fallback));
+        color: var(--pmain, var(--pmain-fallback));
+        background-color: #fff;
     }
 </style>
 
 <div class="container pt-5 pb-3">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-bottom pb-3">
         <div>
-            <h2 class="fw-bold mb-0 text-light"><i class="bi bi-ticket-perforated me-2"></i>Meus Cupons</h2>
-            <p class=" mb-0 mt-1 text-light">Gerencie e aplique descontos exclusivos.</p>
+            <h2 class="fw-bold mb-0 text-light"><i class="bi bi-ticket-perforated-fill me-2"></i>Meus Cupons</h2>
+            <p class="mb-0 mt-1 text-white-50">Gerencie e aplique descontos exclusivos na sua compra.</p>
         </div>
     </div>
 </div>
 
 <main class="container py-4 h-auto">
-
     <div class="row g-4">
 
         <?php if (!empty($cupons)): ?>
             <?php foreach ($cupons as $cupom): ?>
-                <div class="col-md-6 col-lg-4" style="max-width:300px;">
+                <?php 
+                    // --- TRATAMENTO DE DADOS (Preparo para o HTML) ---
+                    
+                    // 1. Formatar Valor do Desconto
+                    $valorFormatado = '';
+                    if ($cupom['tipo_desconto'] == 'porcentagem') {
+                        $valorFormatado = number_format($cupom['valor_desconto'], 0) . '%';
+                        $tipoLabel = 'DE DESCONTO';
+                    } else {
+                        $valorFormatado = 'R$ ' . number_format($cupom['valor_desconto'], 2, ',', '.');
+                        $tipoLabel = 'DE CRÉDITO';
+                    }
 
-                    <div class="coupon-card shadow-sm h-100 d-flex flex-column">
+                    // 2. Formatar Datas
+                    $dataInicio = date('d/m/Y', strtotime($cupom['data_inicio']));
+                    $dataFim    = date('d/m/Y', strtotime($cupom['data_fim']));
+                    
+                    
+                ?>
 
+                <div class="col-md-6 col-lg-4 <?= $classeOpacidade ?>">
+                    <div class="coupon-card">
+                        
                         <div class="coupon-header">
+                            <div class="discount-badge"><?= $valorFormatado ?></div>
+                            <div class="discount-label"><?= $tipoLabel ?></div>
                         </div>
 
-                        <div class="coupon-body flex-grow-1 overflow-y-auto" style="max-height: 200px;">
-                            <div class="text-center mb-3">
+                        <div class="coupon-body">
+                            <p class="text-center text-secondary mb-2 small">
                                 <?= htmlspecialchars($cupom['descricao']) ?>
+                            </p>
+
+                            <div class="code-container" onclick="copiarCodigo('<?= $cupom['codigo'] ?>')">
+                                <div class="coupon-code-text">
+                                    <i class="bi bi-scissors me-1 small opacity-50"></i>
+                                    <?= strtoupper(htmlspecialchars($cupom['codigo'])) ?>
+                                </div>
+                                <small class="copy-hint">Clique para copiar</small>
                             </div>
 
-                            <div class="d-flex ...">
+                            <div class="coupon-dates d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-calendar-check me-1"></i> Validade:
+                                </div>
+                                <div class="fw-bold text-dark">
+                                    Até <?= $dataFim ?>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="mt-auto border-top pt-2">
                         </div>
 
                     </div>
@@ -143,17 +226,15 @@ if (!empty($userId)) {
 
         <?php if ($isDesenvolvedor): ?>
             <div class="col-md-6 col-lg-4">
-                <div class="add-coupon-card d-flex flex-column justify-content-center align-items-center p-4"
-                    id="btn-abrir-modal-cupom" style="cursor: pointer;" data-bs-toggle="modal"
-                    data-bs-target="#modalAdicionarCupom">
-                    <div class="mb-3 p-3 rounded-circle bg-light shadow-sm">
-                        <i class="bi bi-plus-lg fs-3"></i>
-                    </div>
-                    <h6 class="fw-bold mb-1">Criar Novo Cupom</h6>
-                    <small class="text-center text-muted px-3">Adicione um novo código promocional ao sistema.</small>
+                <div class="add-coupon-card" data-bs-toggle="modal" data-bs-target="#modalAdicionarCupom">
+                    <i class="bi bi-plus-circle display-4 mb-3"></i>
+                    <h5 class="fw-bold">Criar Novo Cupom</h5>
+                    <p class="small px-4 text-center">Clique para configurar um novo código promocional.</p>
                 </div>
             </div>
         <?php endif; ?>
+        
+    </div>
 
         <?php if (empty($cupons) && !$isDesenvolvedor): ?>
             <div class="col-12">

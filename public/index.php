@@ -225,7 +225,6 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/carrinhoStep.css">
     <link rel="stylesheet" href="css/carrinhoCards.css">
     <link rel="stylesheet" href="css/pedido-sucesso.css">
-    <link rel="stylesheet" href="css/.css">
 
 </head>
 

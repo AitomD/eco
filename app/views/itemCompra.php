@@ -208,47 +208,70 @@ try {
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
                     </p>
                 </div>
-                <div class="card-vendedor border rounded p-3 bg-white">
-                    <h3 class="h6 fw-semibold">Informações sobre o vendedor</h3>
-                    <?php if ($loja_endereco): ?>
+                <div class="card-vendedor border rounded p-3 bg-white shadow-sm">
+                    <h3 class="h6 fw-bold mb-3 border-bottom pb-2">
+                        Informações sobre o vendedor
+                    </h3>
 
-                        <p class="small my-1 ">
-                            <span class="fs-6" style="  color: var(--black);">Loja:
-                                <?php echo htmlspecialchars($produto['nome_loja']); ?> </span>
-                        </p>
+                    <?php if (!empty($loja)): ?>
 
-                        <p class="small my-1">
+                        <div class="vstack gap-2">
+                            <div>
+                                <small class="text-muted d-block">Loja:</small>
+                                <span class="fs-6 fw-semibold" style="color: var(--black);">
+                                    <?php echo htmlspecialchars($loja['nome_loja']); ?>
+                                </span>
+                            </div>
 
-                            <?php if (!empty($loja_endereco['endereco'])): ?>
-                                <span class="fs-6" style="  color: var(--black);">Endereço:
-                                    <?php echo htmlspecialchars($loja_endereco['endereco']); ?></span>
+                            <?php if (!empty($loja['endereco'])): ?>
+                                <div>
+                                    <small class="text-muted d-block">Endereço:</small>
+                                    <span class="fs-6" style="color: var(--black);">
+                                        <?php
+                                        echo htmlspecialchars($loja['endereco']);
+
+                                        // Adiciona complemento se existir
+                                        if (!empty($loja['complemento'])) {
+                                            echo ' - ' . htmlspecialchars($loja['complemento']);
+                                        }
+
+                                        // Adiciona bairro se existir
+                                        if (!empty($loja['bairro'])) {
+                                            echo ', ' . htmlspecialchars($loja['bairro']);
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
                             <?php endif; ?>
 
-                            <!-- Exibe cidade e estado -->
-                            <span class="fs-6" style="  color: var(--black);">
-                                Localização:
-                                <?php
-                                if (!empty($loja_endereco['cidade']) && !empty($loja_endereco['estado'])) {
-                                    echo htmlspecialchars($loja_endereco['cidade']) . ' - ' . htmlspecialchars($loja_endereco['estado']);
-                                } elseif (!empty($loja_endereco['cidade'])) {
-                                    echo htmlspecialchars($loja_endereco['cidade']);
-                                } else {
-                                    echo "Não informada";
-                                }
-                                ?>
-                            </span>
-                        </p>
+                            <div>
+                                <small class="text-muted d-block">Localização:</small>
+                                <span class="fs-6" style="color: var(--black);">
+                                    <?php
+                                    if (!empty($loja['cidade']) && !empty($loja['estado'])) {
+                                        echo htmlspecialchars($loja['cidade']) . ' - ' . htmlspecialchars($loja['estado']);
+                                    } elseif (!empty($loja['cidade'])) {
+                                        echo htmlspecialchars($loja['cidade']);
+                                    } else {
+                                        echo "Não informada";
+                                    }
+                                    ?>
+                                </span>
+                            </div>
+
+                        </div>
 
                     <?php else: ?>
 
-                        <p class="small my-1 fw-bold">Vendedor não identificado.</p>
-                        <p class="small my-1">Localização: Não informada</p>
+                        <div class="alert alert-light text-center border" role="alert">
+                            <p class="small my-1 mb-0">Vendedor não identificado.</p>
+                        </div>
 
                     <?php endif; ?>
-
-
                 </div>
+
             </div>
+        </div>
         </div>
 
         <!-- DESCRIÇÃO COMPLETA -->
