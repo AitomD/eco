@@ -350,7 +350,7 @@ $cartCount = CarrinhoController::contarItens();
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <span class="text-light flex-grow-1">Fernando Consolin Rosa</span>
                                         <div class="social-links">
-                                            <a href="#" target="_blank" class="text-muted me-2"><i
+                                            <a href="https://www.instagram.com/ferconsolin_rosa/?next=%2F" target="_blank" class="text-muted me-2"><i
                                                     class="bi bi-instagram"></i></a>
                                             <a href="https://github.com/FernandoConsolinRosa11" target="_blank"
                                                 class="text-muted"><i class="bi bi-github"></i></a>
