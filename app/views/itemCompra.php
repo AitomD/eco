@@ -88,16 +88,35 @@ try {
 
 // Obter informações da loja (endereço) associada ao produto
 require_once __DIR__ . '/../model/Loja.php';
+
+$loja = null;
 try {
     $lojaModel = new Loja();
-    $loja_endereco = $lojaModel->buscarPorProdutoId($id_produto);
+    // Verificar explicitamente se o produto tem um id_loja vinculado
+    $pdo_check = Database::conectar();
+    $stmtCheck = $pdo_check->prepare("SELECT id_loja FROM produto WHERE id_produto = :id LIMIT 1");
+    $stmtCheck->execute([':id' => $id_produto]);
+    $produto_vinculo = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if ($produto_vinculo && !empty($produto_vinculo['id_loja'])) {
+        // Há vínculo — obter dados completos via método do model
+        $loja = $lojaModel->buscarPorProdutoId($id_produto);
+        if (!$loja) {
+            error_log("Loja não encontrada via buscarPorProdutoId para produto {$id_produto} (id_loja={$produto_vinculo['id_loja']})");
+        } elseif (empty($loja['endereco'])) {
+            error_log("Loja encontrada para produto {$id_produto} mas sem endereco cadastrado (id_loja={$produto_vinculo['id_loja']})");
+        }
+    } else {
+        // Sem vínculo de loja no produto
+        error_log("Produto {$id_produto} não possui id_loja vinculado na tabela produto.");
+        $loja = null;
+    }
 } catch (Exception $e) {
     error_log('Erro ao obter informações da loja: ' . $e->getMessage());
-    $loja_endereco = null;
+    $loja = null;
 }
 
 ?>
-
 <main class="container py-4">
     <section class="row g-4 bg-white mt-2 py-4">
 
@@ -208,70 +227,67 @@ try {
                         Compra Garantida — receba o produto que está esperando ou devolvemos o dinheiro.
                     </p>
                 </div>
-                <div class="card-vendedor border rounded p-3 bg-white shadow-sm">
-                    <h3 class="h6 fw-bold mb-3 border-bottom pb-2">
+                <div class=" border rounded p-3 bg-white shadow-sm h-100">
+                    <h3 class="h6 fw-bold mb-3 border-bottom pb-2 text-dark text-center">
                         Informações sobre o vendedor
                     </h3>
 
                     <?php if (!empty($loja)): ?>
+                        <div class="d-flex flex-column gap-2">
 
-                        <div class="vstack gap-2">
-                            <div>
-                                <small class="text-muted d-block">Loja:</small>
-                                <span class="fs-6 fw-semibold" style="color: var(--black);">
-                                    <?php echo htmlspecialchars($loja['nome_loja']); ?>
-                                </span>
+                            <div class="mb-1">
+                               <small class="text-muted text-uppercase fw-bold text-center d-block" style="font-size: 0.7rem;">Loja</small>
+                                <div class="d-flex align-items-center mt-1">
+                                   
+                                    <span class="fs-6 fw-bold text-dark text-truncate text-center m-auto">
+                                        <?php echo htmlspecialchars($loja['nome_loja']); ?>
+                                    </span>
+                                </div>
                             </div>
 
                             <?php if (!empty($loja['endereco'])): ?>
-                                <div>
-                                    <small class="text-muted d-block">Endereço:</small>
-                                    <span class="fs-6" style="color: var(--black);">
+                                <div class="border-top pt-2">
+                                    <small class="text-muted text-uppercase fw-bold mb-1 d-block text-center" style="font-size: 0.7rem;">Endereço</small>
+                                    <div class="text-dark small lh-sm">
                                         <?php
-                                        echo htmlspecialchars($loja['endereco']);
-
-                                        // Adiciona complemento se existir
+                                        $endereco_completo = htmlspecialchars($loja['endereco']);
                                         if (!empty($loja['complemento'])) {
-                                            echo ' - ' . htmlspecialchars($loja['complemento']);
+                                            $endereco_completo .= ' - ' . htmlspecialchars($loja['complemento']);
                                         }
-
-                                        // Adiciona bairro se existir
                                         if (!empty($loja['bairro'])) {
-                                            echo ', ' . htmlspecialchars($loja['bairro']);
+                                            $endereco_completo .= ', ' . htmlspecialchars($loja['bairro']);
                                         }
+                                        echo $endereco_completo;
                                         ?>
-                                    </span>
+                                    </div>
                                 </div>
                             <?php endif; ?>
 
-                            <div>
-                                <small class="text-muted d-block">Localização:</small>
-                                <span class="fs-6" style="color: var(--black);">
+                            <div class="border-top pt-2">
+                                <small class="text-muted text-uppercase fw-bold mb-1 d-block text-center" style="font-size: 0.7rem;">Localização</small>
+                                <div class="text-dark small fw-medium text-center">
                                     <?php
                                     if (!empty($loja['cidade']) && !empty($loja['estado'])) {
-                                        echo htmlspecialchars($loja['cidade']) . ' - ' . htmlspecialchars($loja['estado']);
+                                        echo htmlspecialchars($loja['cidade']) . ' / ' . htmlspecialchars($loja['estado']);
                                     } elseif (!empty($loja['cidade'])) {
                                         echo htmlspecialchars($loja['cidade']);
                                     } else {
-                                        echo "Não informada";
+                                        echo '<span class="text-muted fst-italic">Não informada</span>';
                                     }
                                     ?>
-                                </span>
+                                </div>
                             </div>
 
                         </div>
 
                     <?php else: ?>
-
-                        <div class="alert alert-light text-center border" role="alert">
-                            <p class="small my-1 mb-0">Vendedor não identificado.</p>
+                        <div class="alert alert-light text-center border py-3 m-0">
+                            <small class="text-muted">Vendedor não identificado.</small>
                         </div>
-
                     <?php endif; ?>
                 </div>
-
+                
             </div>
-        </div>
         </div>
 
         <!-- DESCRIÇÃO COMPLETA -->
@@ -516,7 +532,7 @@ $mensagemErro = obterMensagemErro();
     }
 
     // Sistema de avaliação com estrelas
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const stars = document.querySelectorAll('.star-rating');
         const notaInput = document.getElementById('nota-selecionada');
         const btnEnviar = document.getElementById('btn-enviar-avaliacao');
@@ -527,7 +543,7 @@ $mensagemErro = obterMensagemErro();
                 const nota = parseInt(star.dataset.nota);
 
                 // Evento de click para selecionar nota
-                star.addEventListener('click', function () {
+                star.addEventListener('click', function() {
                     notaSelecionada = nota;
                     notaInput.value = nota;
 
@@ -541,7 +557,7 @@ $mensagemErro = obterMensagemErro();
                 });
 
                 // Evento de hover
-                star.addEventListener('mouseenter', function () {
+                star.addEventListener('mouseenter', function() {
                     // Mostrar preview da nota no hover
                     stars.forEach((s, i) => {
                         s.classList.remove('hover');
@@ -555,7 +571,7 @@ $mensagemErro = obterMensagemErro();
             // Restaurar estado visual ao sair do container
             const ratingContainer = document.querySelector('.rating-stars');
             if (ratingContainer) {
-                ratingContainer.addEventListener('mouseleave', function () {
+                ratingContainer.addEventListener('mouseleave', function() {
                     // Remover hover e mostrar seleção atual
                     stars.forEach(s => s.classList.remove('hover'));
                     if (notaSelecionada > 0) {
@@ -580,7 +596,7 @@ $mensagemErro = obterMensagemErro();
     });
 
     // Submissão do formulário de avaliação com AJAX
-    document.getElementById('form-avaliacao')?.addEventListener('submit', function (e) {
+    document.getElementById('form-avaliacao')?.addEventListener('submit', function(e) {
         e.preventDefault();
 
         const nota = document.getElementById('nota-selecionada').value;
@@ -600,9 +616,9 @@ $mensagemErro = obterMensagemErro();
 
         // Enviar via AJAX
         fetch('../app/controller/AvaliacaoController.php', {
-            method: 'POST',
-            body: formData
-        })
+                method: 'POST',
+                body: formData
+            })
             .then(response => {
                 if (response.ok) {
                     // Recarregar a página para mostrar a nova avaliação

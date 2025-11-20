@@ -23,11 +23,12 @@ class Loja
     public function buscarPorProdutoId($idProduto)
     {
         try {
+            // Seleciona informações da loja/endereço vinculada ao produto.
+            // Não referenciar colunas que possam estar em outra tabela (ex: cor em produto_info).
             $sql = "
-                SELECT 
+                SELECT
                     p.id_produto,
                     p.nome AS nome_produto,
-                    p.cor,
                     p.preco,
                     l.id_loja,
                     l.nome AS nome_loja,
