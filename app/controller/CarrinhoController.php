@@ -115,7 +115,15 @@ class CarrinhoController
                     $preco = $_POST['preco'] ?? 0;
                     $imagem = $_POST['imagem'] ?? '';
                     $quantidade = $_POST['quantidade'] ?? 1;
+                    $comprarAgora = $_POST['comprar_agora'] ?? false;
+                    
                     self::adicionarAoCarrinho($id, $nome, $preco, $imagem, $quantidade);
+                    
+                    // Se for compra direta, redirecionar para checkout
+                    if ($comprarAgora === 'true') {
+                        header('Location: index.php?url=metodopagamento');
+                        exit;
+                    }
                     break;
 
                 case 'remover':

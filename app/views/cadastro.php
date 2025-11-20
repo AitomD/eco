@@ -35,14 +35,14 @@
                         <label for="firstName" class="form-label">Nome</label>
                         <input type="text" class="form-control" id="firstName" name="firstName"
                             placeholder="Seu nome" required>
-                        <div class="invalid-feedback">Nome é obrigatório</div>
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="col-md-6 mb-2">
                         <label for="lastName" class="form-label">Sobrenome</label>
                         <input type="text" class="form-control" id="lastName" name="lastName"
                             placeholder="Seu sobrenome" required>
-                        <div class="invalid-feedback">Sobrenome é obrigatório</div>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
 
@@ -51,13 +51,13 @@
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email"
                             placeholder="seu@email.com" required>
-                        <div class="invalid-feedback">Email válido é obrigatório</div>
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="col-md-6 mb-2">
                         <label for="birthDate" class="form-label">Data de Nascimento</label>
                         <input type="date" class="form-control" id="birthDate" name="birthDate" required>
-                        <div class="invalid-feedback">Data de nascimento é obrigatória</div>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
 
@@ -66,21 +66,21 @@
                         <label for="password" class="form-label">Senha</label>
                         <input type="password" class="form-control" id="password" name="password"
                             placeholder="Crie uma senha forte" required>
-                        <div class="invalid-feedback">Senha deve ter pelo menos 8 caracteres</div>
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="col-md-6 mb-2">
                         <label for="confirmPassword" class="form-label">Confirmar Senha</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
                             placeholder="Digite a senha novamente" required>
-                        <div class="invalid-feedback">As senhas não coincidem</div>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
 
                 <div class="mb-2">
                     <div class="password-strength">
                         <div class="strength-bar" id="strengthBar"></div>
-                        <div class="strength-text" id="strengthText">Digite uma senha</div>
+                        <div class="strength-text" id="strengthText"></div>
                     </div>
                 </div>
 
@@ -100,22 +100,22 @@
                     <div class="col-md-4 mb-2">
                         <label for="cep" class="form-label">CEP</label>
                         <input type="text" class="form-control" id="cep" name="cep"
-                            placeholder="00000-000" maxlength="9">
-                        <div class="invalid-feedback">CEP inválido</div>
+                            placeholder="00000-000" maxlength="9" required>
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="col-md-6 mb-2">
                         <label for="endereco" class="form-label">Endereço</label>
                         <input type="text" class="form-control" id="endereco" name="endereco"
-                            placeholder="Rua, Avenida, etc.">
-                        <div class="invalid-feedback">Endereço é obrigatório</div>
+                            placeholder="Rua, Avenida, etc." required>
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="col-md-2 mb-2">
                         <label for="numero" class="form-label">Número</label>
                         <input type="text" class="form-control" id="numero" name="numero"
                             placeholder="123" required>
-                        <div class="invalid-feedback">Número é obrigatório</div>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
 
@@ -129,22 +129,22 @@
                     <div class="col-md-4 mb-2">
                         <label for="bairro" class="form-label">Bairro</label>
                         <input type="text" class="form-control" id="bairro" name="bairro"
-                            placeholder="Seu bairro">
-                        <div class="invalid-feedback">Bairro é obrigatório</div>
+                            placeholder="Seu bairro" required>
+                        <div class="invalid-feedback"></div>
                     </div>
 
                     <div class="col-md-4 mb-2">
                         <label for="cidade" class="form-label">Cidade</label>
                         <input type="text" class="form-control" id="cidade" name="cidade"
-                            placeholder="Sua cidade">
-                        <div class="invalid-feedback">Cidade é obrigatória</div>
+                            placeholder="Sua cidade" required>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-2">
                         <label for="estado" class="form-label">Estado</label>
-                        <select class="form-control" id="estado" name="estado">
+                        <select class="form-control" id="estado" name="estado" required>
                             <option value="">Selecione o estado</option>
                             <option value="AC">Acre</option>
                             <option value="AL">Alagoas</option>
@@ -174,7 +174,7 @@
                             <option value="SE">Sergipe</option>
                             <option value="TO">Tocantins</option>
                         </select>
-                        <div class="invalid-feedback">Estado é obrigatório</div>
+                        <div class="invalid-feedback"></div>
                     </div>
                 </div>
 
@@ -182,9 +182,9 @@
                     <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
                     <label class="form-check-label" for="terms" style="color: #B0B0B0; font-size: 0.85rem;">
                         Eu aceito os <a href="#" style="color: #610094;">Termos de Uso</a> e
-                        <a href="#" style="color: #610094;">Política de Privacidade</a>
+                        <a href="#" style="color: #610094;"></a>
                     </label>
-                    <div class="invalid-feedback">Você deve aceitar os termos para continuar</div>
+                    <div class="invalid-feedback"></div>
                 </div>
 
                 <div class="mb-2 form-check">
@@ -223,6 +223,48 @@
             </p>
         </div>
     </div>
+    
+    <style>
+        /* Animação de shake para campos com erro */
+        @keyframes shake {
+            0%, 20%, 40%, 60%, 80% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            15%, 35%, 55%, 75% {
+                transform: translateX(5px);
+            }
+        }
+        
+        /* Melhorar aparência das mensagens de erro */
+        .invalid-feedback {
+            display: block !important;
+            font-size: 0.875rem;
+            color: #dc3545;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+        
+        /* Destacar campos com erro */
+        .form-control.is-invalid,
+        .form-check-input.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+        
+        /* Melhorar aparência dos campos válidos */
+        .form-control.is-valid {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        /* Animação suave para transições */
+        .form-control, .form-check-input {
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+    </style>
     
     <script>
         // Elementos do formulário
@@ -281,10 +323,17 @@
                     showStep(currentStep + 1);
                 }
             } else {
-                // Focar no primeiro campo inválido
+                // Focar no primeiro campo inválido e fazer scroll
                 const firstInvalid = document.querySelector(`#step-${currentStep} .is-invalid`);
                 if (firstInvalid) {
                     firstInvalid.focus();
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Adicionar animação de shake no campo inválido
+                    firstInvalid.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        firstInvalid.style.animation = '';
+                    }, 500);
                 }
             }
         });
@@ -360,15 +409,29 @@
             }
         });
 
+        // Função para obter mensagens específicas de campos obrigatórios
+        function getRequiredFieldMessage(fieldId) {
+            const messages = {
+                'firstName': 'Por favor, digite seu nome',
+                'lastName': 'Por favor, digite seu sobrenome',
+                'email': 'Por favor, digite seu email',
+                'birthDate': 'Por favor, informe sua data de nascimento',
+                'password': 'Por favor, crie uma senha',
+                'confirmPassword': 'Por favor, confirme sua senha',
+                'cep': 'Por favor, informe seu CEP',
+                'endereco': 'Por favor, informe seu endereço',
+                'numero': 'Por favor, informe o número',
+                'bairro': 'Por favor, informe seu bairro',
+                'cidade': 'Por favor, informe sua cidade',
+                'estado': 'Por favor, selecione seu estado',
+                'terms': 'Você deve aceitar os termos de uso'
+            };
+            return messages[fieldId] || 'Este campo é obrigatório';
+        }
+
         // Validar confirmação de senha
         confirmPassword.addEventListener('input', function() {
-            if (password.value !== this.value) {
-                this.classList.add('is-invalid');
-                this.classList.remove('is-valid');
-            } else {
-                this.classList.remove('is-invalid');
-                this.classList.add('is-valid');
-            }
+            validateField(this);
         });
 
         // Validação em tempo real
@@ -376,6 +439,11 @@
         inputs.forEach(input => {
             input.addEventListener('blur', function() {
                 validateField(this);
+                
+                // Verificação especial para email duplicado
+                if (this.id === 'email' && this.value.trim() && !this.classList.contains('is-invalid')) {
+                    checkEmailExists(this);
+                }
             });
 
             input.addEventListener('input', function() {
@@ -385,19 +453,103 @@
             });
         });
 
+        // Função para verificar se email já existe
+        function checkEmailExists(emailField) {
+            const email = emailField.value.trim();
+            
+            if (!email || !emailField.classList.contains('is-valid')) {
+                return;
+            }
+            
+            // Mostrar indicador de verificação
+            const feedback = emailField.nextElementSibling;
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                feedback.textContent = 'Verificando disponibilidade...';
+                feedback.style.color = '#6c757d';
+                feedback.style.display = 'block';
+            }
+            
+            // Fazer requisição para verificar email
+            fetch('../app/core/user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=check_email&email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    emailField.classList.add('is-invalid');
+                    emailField.classList.remove('is-valid');
+                    
+                    if (feedback && feedback.classList.contains('invalid-feedback')) {
+                        feedback.textContent = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
+                        feedback.style.color = '#dc3545';
+                    }
+                } else {
+                    emailField.classList.remove('is-invalid');
+                    emailField.classList.add('is-valid');
+                    
+                    if (feedback && feedback.classList.contains('invalid-feedback')) {
+                        feedback.style.display = 'none';
+                    }
+                }
+            })
+            .catch(error => {
+                console.log('Erro ao verificar email:', error);
+                // Em caso de erro, não marcar como inválido
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.style.display = 'none';
+                }
+            });
+        }
+
         function validateField(field) {
             const value = field.value.trim();
             let isValid = true;
+            let errorMessage = '';
 
             if (field.required && !value) {
                 isValid = false;
+                errorMessage = getRequiredFieldMessage(field.id);
             } else if (field.type === 'email' && value) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                isValid = emailRegex.test(value);
+                if (!emailRegex.test(value)) {
+                    isValid = false;
+                    errorMessage = 'Por favor, digite um email válido';
+                }
             } else if (field.id === 'password' && value) {
-                isValid = value.length >= 8;
+                if (value.length < 8) {
+                    isValid = false;
+                    errorMessage = 'A senha deve ter pelo menos 8 caracteres';
+                }
             } else if (field.id === 'confirmPassword' && value) {
-                isValid = value === password.value;
+                if (value !== password.value) {
+                    isValid = false;
+                    errorMessage = 'As senhas não coincidem';
+                }
+            } else if (field.id === 'cep' && value) {
+                const cepRegex = /^\d{5}-\d{3}$/;
+                if (!cepRegex.test(value)) {
+                    isValid = false;
+                    errorMessage = 'CEP deve estar no formato 00000-000';
+                }
+            } else if (field.id === 'birthDate' && value) {
+                const birthDate = new Date(value);
+                const today = new Date();
+                const age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (age < 16 || (age === 16 && monthDiff < 0)) {
+                    isValid = false;
+                    errorMessage = 'Você deve ter pelo menos 16 anos';
+                }
+            }
+
+            const feedback = field.nextElementSibling;
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                feedback.textContent = errorMessage;
             }
 
             if (isValid) {
@@ -417,8 +569,9 @@
 
             let isFormValid = true;
 
-            // Validar todos os campos
-            inputs.forEach(input => {
+            // Validar todos os campos de ambas as etapas
+            const allRequiredInputs = form.querySelectorAll('input[required], select[required]');
+            allRequiredInputs.forEach(input => {
                 if (!validateField(input)) {
                     isFormValid = false;
                 }
@@ -428,6 +581,10 @@
             const terms = document.getElementById('terms');
             if (!terms.checked) {
                 terms.classList.add('is-invalid');
+                const feedback = terms.parentElement.querySelector('.invalid-feedback');
+                if (feedback) {
+                    feedback.textContent = 'Você deve aceitar os termos de uso para continuar';
+                }
                 isFormValid = false;
             } else {
                 terms.classList.remove('is-invalid');
@@ -440,9 +597,12 @@
             const monthDiff = today.getMonth() - birthDate.getMonth();
 
             if (age < 16 || (age === 16 && monthDiff < 0)) {
-                document.getElementById('birthDate').classList.add('is-invalid');
-                const feedback = document.getElementById('birthDate').nextElementSibling;
-                feedback.textContent = 'Você deve ter pelo menos 16 anos';
+                const birthDateField = document.getElementById('birthDate');
+                birthDateField.classList.add('is-invalid');
+                const feedback = birthDateField.nextElementSibling;
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.textContent = 'Você deve ter pelo menos 16 anos';
+                }
                 isFormValid = false;
             }
 
@@ -471,8 +631,46 @@
                         // Redirecionar imediatamente sem mensagem
                         window.location.href = data.redirect || 'index.php?url=home';
                     } else {
-                        // Apenas logar erro no console, sem mostrar mensagem
-                        console.log('Erro no cadastro:', data.message);
+                        // Verificar se o erro é de email duplicado
+                        if (data.message && data.message.toLowerCase().includes('email já está cadastrado')) {
+                            // Marcar o campo email como inválido
+                            const emailField = document.getElementById('email');
+                            emailField.classList.add('is-invalid');
+                            emailField.classList.remove('is-valid');
+                            
+                            // Mostrar mensagem de erro específica
+                            const feedback = emailField.nextElementSibling;
+                            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                                feedback.textContent = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
+                            }
+                            
+                            // Voltar para a primeira etapa se não estiver nela
+                            if (currentStep !== 1) {
+                                showStep(1);
+                                setTimeout(() => {
+                                    emailField.focus();
+                                    emailField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    
+                                    // Animação de shake
+                                    emailField.style.animation = 'shake 0.5s';
+                                    setTimeout(() => {
+                                        emailField.style.animation = '';
+                                    }, 500);
+                                }, 300);
+                            } else {
+                                emailField.focus();
+                                emailField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                
+                                // Animação de shake
+                                emailField.style.animation = 'shake 0.5s';
+                                setTimeout(() => {
+                                    emailField.style.animation = '';
+                                }, 500);
+                            }
+                        } else {
+                            // Outros erros - apenas logar no console
+                            console.log('Erro no cadastro:', data.message);
+                        }
                     }
                 })
                 .catch(error => {
@@ -484,10 +682,41 @@
                     btnLoading.classList.add('d-none');
                 });
             } else {
-                // Focar no primeiro campo inválido
+                // Focar no primeiro campo inválido e mostrar onde está o erro
                 const firstInvalid = form.querySelector('.is-invalid');
                 if (firstInvalid) {
-                    firstInvalid.focus();
+                    // Determinar em qual etapa está o erro
+                    const stepWithError = firstInvalid.closest('.form-step');
+                    if (stepWithError) {
+                        const stepNumber = parseInt(stepWithError.id.split('-')[1]);
+                        
+                        // Se o erro não está na etapa atual, navegar para a etapa com erro
+                        if (stepNumber !== currentStep) {
+                            showStep(stepNumber);
+                            
+                            // Aguardar um pouco para a transição da etapa completar
+                            setTimeout(() => {
+                                firstInvalid.focus();
+                                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                
+                                // Animação de shake
+                                firstInvalid.style.animation = 'shake 0.5s';
+                                setTimeout(() => {
+                                    firstInvalid.style.animation = '';
+                                }, 500);
+                            }, 300);
+                        } else {
+                            // Se o erro está na etapa atual, focar diretamente
+                            firstInvalid.focus();
+                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // Animação de shake
+                            firstInvalid.style.animation = 'shake 0.5s';
+                            setTimeout(() => {
+                                firstInvalid.style.animation = '';
+                            }, 500);
+                        }
+                    }
                 }
             }
         });

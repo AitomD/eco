@@ -47,6 +47,15 @@ class CarrinhoManager {
             }
         });
 
+        // Event delegation para botões "Comprar agora"
+        document.addEventListener('click', (e) => {
+            const button = e.target.closest('.btn-comprar-agora');
+            if (button) {
+                e.preventDefault();
+                this.handleBuyNow(button);
+            }
+        });
+
         // Prevenir submissão múltipla de formulários
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', function(e) {
@@ -178,6 +187,7 @@ class CarrinhoManager {
 
         // Feedback visual antes de enviar
         this.showAddToCartFeedback(button);
+        this.showNotification('Produto adicionado ao carrinho!', 'success');
 
         // Enviar formulário
         document.body.appendChild(form);
@@ -224,6 +234,82 @@ class CarrinhoManager {
             button.className = originalClass;
             button.disabled = false;
         }, 2000);
+    }
+
+    /**
+     * Lida com o botão "Comprar agora"
+     * Adiciona ao carrinho e redireciona para checkout
+     * @param {HTMLElement} button - Botão que foi clicado
+     */
+    handleBuyNow(button) {
+        // Prevenir cliques múltiplos
+        if (button.disabled) return;
+
+        // Extrair dados do produto
+        const id = button.dataset.id;
+        const nome = button.dataset.nome;
+        const preco = button.dataset.preco;
+        const imagem = button.dataset.imagem || '';
+
+        console.log('Dados do produto para compra:', { id, nome, preco, imagem });
+
+        // Validação
+        if (!id || !nome || !preco) {
+            console.error('Erro: Dados do produto incompletos para compra', {
+                id, nome, preco, button
+            });
+            this.showNotification('Erro ao processar compra. Dados incompletos.', 'error');
+            return;
+        }
+
+        // Validar preço
+        const precoNum = parseFloat(preco.toString().replace(',', '.'));
+        if (isNaN(precoNum) || precoNum <= 0) {
+            console.error('Erro: Preço inválido para compra', preco);
+            this.showNotification('Erro ao processar compra. Preço inválido.', 'error');
+            return;
+        }
+
+        // Feedback visual
+        const originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-clock"></i> Processando...';
+
+        // Dados para adicionar ao carrinho
+        const data = {
+            acao: 'adicionar',
+            id: id,
+            nome: nome,
+            preco: preco,
+            imagem: imagem,
+            quantidade: 1,
+            comprar_agora: 'true'
+        };
+
+        // Enviar para carrinho e depois redirecionar
+        this.sendToCartAndRedirect(data, button, originalText);
+    }
+
+    /**
+     * Envia para carrinho e redireciona para checkout
+     */
+    sendToCartAndRedirect(data, button, originalText) {
+        // Criar formulário para envio
+        const form = this.createForm(data);
+        
+        this.showNotification('Produto adicionado! Redirecionando...', 'success');
+        
+        // Enviar formulário
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    /**
+     * Restaura o botão ao estado original
+     */
+    resetButton(button, originalText) {
+        button.disabled = false;
+        button.innerHTML = originalText;
     }
 
 

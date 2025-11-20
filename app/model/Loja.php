@@ -50,7 +50,6 @@ class Loja
             $dados = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return $dados ?: null;
-
         } catch (PDOException $e) {
             error_log("Erro ao buscar loja e endereço pelo produto: " . $e->getMessage());
             return null;
@@ -70,6 +69,7 @@ class Loja
                 SELECT 
                     l.id_loja,
                     l.nome AS nome_loja,
+                    l.cnpj,
                     e.endereco,
                     e.complemento,
                     e.bairro,
@@ -83,9 +83,9 @@ class Loja
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$idAdmin]);
-            $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+            $dados = $stmt->fetch(PDO::FETCH_ASSOC);
             return $dados ?: null;
+
 
         } catch (PDOException $e) {
             error_log("Erro ao buscar lojas por admin: " . $e->getMessage());
