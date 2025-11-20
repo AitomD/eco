@@ -117,16 +117,74 @@ $produtos = $produtoModel->buscarPorLoja($idLoja);
 </div>
 
 <script>
-    document.querySelectorAll('button[data-bs-target="#modalInfoProduto"]').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const id = this.getAttribute('data-id');
+    const modalBody = document.querySelector('#modalInfoProduto .modal-body');
 
-        fetch('../app/controller/BuscaProdutoController.php?id=' + id)
-        .then(r => r.text())
-        .then(html => {
-            document.querySelector('#modalInfoProduto .modal-body').innerHTML = html;
+    // 1. ABRE O MODAL E CARREGA O FORMULÁRIO
+    document.querySelectorAll('button[data-bs-target="#modalInfoProduto"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            
+            modalBody.innerHTML = '<div class="text-center"><div class="spinner-border text-primary"></div><p>Carregando...</p></div>';
+
+            fetch('../app/controller/BuscaProdutoController.php?id=' + id)
+            .then(r => r.text())
+            .then(html => {
+                modalBody.innerHTML = html;
+            })
+            .catch(err => {
+                modalBody.innerHTML = '<p class="text-danger">Erro ao carregar informações.</p>';
+            });
         });
     });
-});
 
+    // 2. DELETAR PRODUTO (Botão da Tabela Principal)
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if(!confirm("Tem certeza que deseja excluir este produto permanentemente?")) return;
+
+            const id = this.getAttribute('data-id');
+            const formData = new FormData();
+            formData.append('id_produto', id);
+            formData.append('action', 'delete');
+
+            fetch('../app/controller/GerenciarProdutoController.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.sucesso) {
+                    alert("Produto deletado!");
+                    location.reload();
+                } else {
+                    alert("Erro: " + res.erro);
+                }
+            });
+        });
+    });
+
+    // 3. FUNÇÃO PARA SALVAR (Chamada pelo botão dentro do HTML carregado pelo PHP)
+    function salvarAlteracoes() {
+        const form = document.getElementById('form-editar-produto');
+        const formData = new FormData(form);
+        formData.append('action', 'update');
+
+        fetch('../app/controller/GerenciarProdutoController.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(res => {
+            if(res.sucesso) {
+                alert("Produto atualizado com sucesso!");
+                location.reload(); // Recarrega a página para ver as mudanças
+            } else {
+                alert("Erro ao atualizar: " + res.erro);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro na requisição.");
+        });
+    }
 </script>

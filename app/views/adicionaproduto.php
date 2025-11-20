@@ -24,6 +24,16 @@
         <h4 class="mb-4">Informações do Produto</h4>
 
         <form id="form-etapa2A" novalidate>
+            <select class="form-select mb-3" name="id_marca" id="id_marca_pc" required>
+                <option disabled selected>Selecione uma marca</option>
+                <option value="1">Acer</option>
+                <option value="2">Asus</option>
+                <option value="3">Dell</option>
+                <option value="4">Lenovo</option>
+                <option value="5">HP</option>
+                <option value="11">AMD</option>
+                <option value="12">Intel</option>
+            </select>
             <input type="text" class="form-control mb-3" name="descricao" placeholder="Descrição" required>
             <input type="text" class="form-control mb-3" name="ram" placeholder="RAM" required>
             <input type="text" class="form-control mb-3" name="armazenamento" placeholder="Armazenamento" required>
@@ -45,6 +55,14 @@
         <h4 class="mb-4">Informações do Produto</h4>
 
         <form id="form-etapa2B" novalidate>
+            <select class="form-select mb-3" name="id_marca" id="id_marca_celular" required>
+                <option disabled selected>Selecione uma marca</option>
+                <option value="6">Apple</option>
+                <option value="7">Motorola</option>
+                <option value="8">Oppo</option>
+                <option value="9">Samsung</option>
+                <option value="10">Xiaomi</option>
+            </select>
             <input type="text" class="form-control mb-3" name="armazenamento" placeholder="Armazenamento" required>
             <input type="text" class="form-control mb-3" name="ram" placeholder="RAM" required>
             <input type="text" class="form-control mb-3" name="cor" placeholder="Cor" required>
@@ -62,226 +80,201 @@
     </div>
 
     <!-- ETAPA 3 – Links de Imagens -->
-<!-- ETAPA 3 – Links de Imagens -->
-<div id="etapa3" class="container text-center d-none" style="max-width: 400px;">
-    <h4 class="mb-4">Imagens do Produto</h4>
+    <!-- ETAPA 3 – Links de Imagens -->
+    <div id="etapa3" class="container text-center d-none" style="max-width: 400px;">
+        <h4 class="mb-4">Imagens do Produto</h4>
 
-    <form id="form-etapa3" novalidate>
+        <form id="form-etapa3" novalidate>
 
-        <div id="container-imagens">
+            <div id="container-imagens">
 
-            <!-- Campo inicial -->
-            <div class="input-img mb-3">
-                <input type="url" class="form-control" name="img[]" placeholder="URL da imagem" required>
+                <!-- Campo inicial -->
+                <div class="input-img mb-3">
+                    <input type="url" class="form-control" name="img[]" placeholder="URL da imagem" required>
+                </div>
+
             </div>
 
+            <button type="button" id="btn-add-img" class="btn btn-outline-primary w-100 mb-3">
+                + Adicionar outra imagem
+            </button>
+
+        </form>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary" id="btn-voltar-etapa2" type="button">Voltar</button>
+            <button class="btn btn-success" id="btn-finalizar" type="button">Finalizar</button>
         </div>
-
-        <button type="button" id="btn-add-img" class="btn btn-outline-primary w-100 mb-3">
-            + Adicionar outra imagem
-        </button>
-
-    </form>
-
-    <div class="d-flex justify-content-between">
-        <button class="btn btn-secondary" id="btn-voltar-etapa2" type="button">Voltar</button>
-        <button class="btn btn-success" id="btn-finalizar" type="button">Finalizar</button>
     </div>
-</div>
 
 
 </div>
-
 <script>
-const etapa1 = document.getElementById("etapa1");
-const etapa2A = document.getElementById("etapa2A");
-const etapa2B = document.getElementById("etapa2B");
+    const etapa1 = document.getElementById("etapa1");
+    const etapa2A = document.getElementById("etapa2A");
+    const etapa2B = document.getElementById("etapa2B");
+    const etapa3 = document.getElementById("etapa3");
 
-const btnAvancarEtapa1 = document.getElementById("btn-avancar-etapa1");
+    const btnAvancarEtapa1 = document.getElementById("btn-avancar-etapa1");
+    const categoriaSelect = document.getElementById("categoria");
 
-const categoriaSelect = document.getElementById("categoria");
-
-function validarFormulario(form) {
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return false;
-    }
-    return true;
-}
-
-// ETAPA 1 → ETAPA 2A ou 2B
-btnAvancarEtapa1.addEventListener("click", () => {
-    const form1 = document.getElementById("form-etapa1");
-    if (!validarFormulario(form1)) return;
-
-    const categoria = categoriaSelect.value;
-
-    etapa1.classList.add("d-none");
-
-    if (categoria === "1" || categoria === "2") {
-        etapa2A.classList.remove("d-none");
-    } else if (categoria === "3") {
-        etapa2B.classList.remove("d-none");
-    }
-});
-
-// VOLTAR
-document.getElementById("btn-voltar-A").addEventListener("click", () => {
-    etapa2A.classList.add("d-none");
-    etapa1.classList.remove("d-none");
-});
-
-document.getElementById("btn-voltar-B").addEventListener("click", () => {
-    etapa2B.classList.add("d-none");
-    etapa1.classList.remove("d-none");
-});
-
-// ETAPA 2A → ETAPA 3
-document.getElementById("btn-avancar-etapa3A").addEventListener("click", () => {
-    const formA = document.getElementById("form-etapa2A");
-    if (!validarFormulario(formA)) return;
-
-    etapa2A.classList.add("d-none");
-    etapa3.classList.remove("d-none");
-});
-
-// ETAPA 2B → ETAPA 3
-document.getElementById("btn-avancar-etapa3B").addEventListener("click", () => {
-    const formB = document.getElementById("form-etapa2B");
-    if (!validarFormulario(formB)) return;
-
-    etapa2B.classList.add("d-none");
-    etapa3.classList.remove("d-none");
-});
-
-// VOLTAR PARA ETAPA 2
-document.getElementById("btn-voltar-etapa2").addEventListener("click", () => {
-
-    const categoria = categoriaSelect.value;
-
-    etapa3.classList.add("d-none");
-
-    if (categoria === "1" || categoria === "2") {
-        etapa2A.classList.remove("d-none");
-    } else {
-        etapa2B.classList.remove("d-none");
-    }
-});
-
-document.getElementById("btn-finalizar").addEventListener("click", () => {
-    const form3 = document.getElementById("form-etapa3");
-    if (!validarFormulario(form3)) return;
-
-    const categoria = categoriaSelect.value;
-
-    // Coletar URLs
-    const imagens = [
-        { url: form3.img1.value, ordem: 1 },
-        { url: form3.img2.value, ordem: 2 },
-        { url: form3.img3.value, ordem: 3 }
-    ];
-
-    let payload = {
-        etapa1: Object.fromEntries(new FormData(document.getElementById("form-etapa1"))),
-        etapa2: {},
-        imagens: []
-    };
-
-    // Dados específicos da etapa 2
-    if (categoria === "1" || categoria === "2") {
-        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2A")));
-        payload.tipo = "pc";
-    } else {
-        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2B")));
-        payload.tipo = "celular";
+    function validarFormulario(form) {
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return false;
+        }
+        return true;
     }
 
-    // Montar imagens conforme especificação
-    payload.imagens = imagens.map(img => {
-        return {
-            url: img.url,
-            ordem: img.ordem,
-            id_info: (categoria === "1" || categoria === "2") ? "PREENCHER NO PHP" : null,
-            id_celular: (categoria === "3") ? "PREENCHER NO PHP" : null
-        };
+    // === ETAPA 1 → ETAPA 2A ou 2B ===
+    btnAvancarEtapa1.addEventListener("click", () => {
+        const form1 = document.getElementById("form-etapa1");
+        if (!validarFormulario(form1)) return;
+
+        const categoria = categoriaSelect.value;
+        etapa1.classList.add("d-none");
+
+        if (categoria === "1" || categoria === "2") {
+            etapa2A.classList.remove("d-none");
+        } else {
+            etapa2B.classList.remove("d-none");
+        }
     });
 
-    console.log("OBJETO FINAL PARA ENVIAR AO PHP:");
-    console.log(payload);
+    // === VOLTAR ETAPA A ===
+    document.getElementById("btn-voltar-A").addEventListener("click", () => {
+        etapa2A.classList.add("d-none");
+        etapa1.classList.remove("d-none");
+    });
 
-    alert("Pronto! Os dados foram reunidos e estão no console do navegador.");
-});
+    // === VOLTAR ETAPA B ===
+    document.getElementById("btn-voltar-B").addEventListener("click", () => {
+        etapa2B.classList.add("d-none");
+        etapa1.classList.remove("d-none");
+    });
 
-const containerImagens = document.getElementById("container-imagens");
-const btnAddImg = document.getElementById("btn-add-img");
+    // === ETAPA 2A → ETAPA 3 ===
+    document.getElementById("btn-avancar-etapa3A").addEventListener("click", () => {
+        const formA = document.getElementById("form-etapa2A");
+        if (!validarFormulario(formA)) return;
 
-btnAddImg.addEventListener("click", () => {
+        etapa2A.classList.add("d-none");
+        etapa3.classList.remove("d-none");
+    });
 
-    const quantidadeAtual = containerImagens.querySelectorAll(".input-img").length;
-    if (quantidadeAtual >= 3) {
-        alert("Máximo de 3 imagens permitido.");
+    // === ETAPA 2B → ETAPA 3 ===
+    document.getElementById("btn-avancar-etapa3B").addEventListener("click", () => {
+        const formB = document.getElementById("form-etapa2B");
+        if (!validarFormulario(formB)) return;
+
+        etapa2B.classList.add("d-none");
+        etapa3.classList.remove("d-none");
+    });
+
+    // === VOLTAR ETAPA 3 → 2 ===
+    document.getElementById("btn-voltar-etapa2").addEventListener("click", () => {
+        const categoria = categoriaSelect.value;
+        etapa3.classList.add("d-none");
+
+        if (categoria === "1" || categoria === "2") {
+            etapa2A.classList.remove("d-none");
+        } else {
+            etapa2B.classList.remove("d-none");
+        }
+    });
+
+    // === BOTÃO ADICIONAR IMAGEM (máximo 3) ===
+    document.getElementById("btn-add-img").addEventListener("click", () => {
+        const container = document.getElementById("container-imagens");
+        const totalInputs = container.querySelectorAll(".input-img").length;
+
+        if (totalInputs >= 3) {
+            alert("Máximo de 3 imagens.");
+            return;
+        }
+
+        const novo = document.createElement("div");
+        novo.classList.add("input-img", "mb-3");
+
+        novo.innerHTML = `
+            <input type="url" class="form-control" name="img[]" placeholder="URL da imagem" required>
+        `;
+
+        container.appendChild(novo);
+    });
+
+    // === FINALIZAR / ENVIAR CONTROLLER ===
+   // === FINALIZAR / ENVIAR CONTROLLER ===
+document.getElementById("btn-finalizar").addEventListener("click", async () => {
+
+    const formData = new FormData();
+
+    // --- ETAPA 1 ---
+    const f1 = new FormData(document.getElementById("form-etapa1"));
+    f1.forEach((v, k) => formData.append(k, v));
+
+    const categoria = categoriaSelect.value;
+    formData.append("categoria", categoria);
+
+    // --- ETAPA 2 ---
+    const form2 = categoria === "3"
+        ? document.getElementById("form-etapa2B")
+        : document.getElementById("form-etapa2A");
+
+    const f2 = new FormData(form2);
+
+    // Marca
+    if (categoria === "3") {
+        formData.append("id_marca", document.getElementById("id_marca_celular").value);
+    } else {
+        formData.append("id_marca", document.getElementById("id_marca_pc").value);
+    }
+
+    // Adicionando os campos da etapa 2 (menos marca)
+    f2.forEach((v, k) => {
+        if (k !== "id_marca") formData.append(k, v);
+    });
+
+    // --- ETAPA 3 (URLs das imagens) ---
+    const imagens = document.querySelectorAll("input[name='img[]']");
+    let total = 0;
+
+    imagens.forEach(input => {
+        if (input.value.trim() !== "" && total < 3) {
+            formData.append("imagens[]", input.value.trim());
+            total++;
+        }
+    });
+
+    if (total === 0) {
+        alert("Insira ao menos 1 URL de imagem.");
         return;
     }
 
-    const div = document.createElement("div");
-    div.classList.add("input-img", "mb-3");
+    // --- FETCH CORRIGIDO ---
+    try {
+        const response = await fetch("../app/controller/NovoProdutoController.php", {
+            method: "POST",
+            body: formData
+        });
 
-    div.innerHTML = `
-        <div class="input-group">
-            <input type="url" class="form-control" name="img[]" placeholder="URL da imagem" required>
-            <button class="btn btn-danger btn-remover-img" type="button">X</button>
-        </div>
-    `;
+        const texto = await response.text();
+        console.log("RETORNO BRUTO DO PHP:", texto);
 
-    containerImagens.appendChild(div);
+        const data = JSON.parse(texto); // agora converte
 
-    // Evento de remover
-    div.querySelector(".btn-remover-img").addEventListener("click", () => {
-        div.remove();
-    });
+        console.log("JSON FINAL:", data);
 
-});
+        if (data.sucesso) {
+            alert("Produto cadastrado com sucesso!");
+        } else {
+            alert("Erro: " + data.erro);
+        }
 
-document.getElementById("btn-finalizar").addEventListener("click", () => {
-    const form3 = document.getElementById("form-etapa3");
-    if (!validarFormulario(form3)) return;
-
-    const categoria = categoriaSelect.value;
-
-    // Coletar somente as imagens inseridas
-    const urls = [...document.querySelectorAll("input[name='img[]']")]
-                 .map((input, index) => ({
-                    url: input.value,
-                    ordem: index + 1
-                 }));
-
-    let payload = {
-        etapa1: Object.fromEntries(new FormData(document.getElementById("form-etapa1"))),
-        etapa2: {},
-        imagens: []
-    };
-
-    // Dados específicos da etapa 2
-    if (categoria === "1" || categoria === "2") {
-        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2A")));
-        payload.tipo = "pc";
-    } else {
-        payload.etapa2 = Object.fromEntries(new FormData(document.getElementById("form-etapa2B")));
-        payload.tipo = "celular";
+    } catch (err) {
+        console.error("ERRO NO FETCH:", err);
+        alert("Erro no envio ao servidor.");
     }
-
-    // Montar imagens conforme especificação
-    payload.imagens = urls.map(img => ({
-        url: img.url,
-        ordem: img.ordem,
-        id_info: (categoria === "1" || categoria === "2") ? "PREENCHER NO PHP" : null,
-        id_celular: (categoria === "3") ? "PREENCHER NO PHP" : null
-    }));
-
-    console.log("OBJETO FINAL PARA O PHP:");
-    console.log(payload);
-
-    alert("Imagens e dados reunidos! Veja no console.");
 });
 
 </script>
