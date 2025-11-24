@@ -225,7 +225,9 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/carrinhoStep.css">
     <link rel="stylesheet" href="css/carrinhoCards.css">
     <link rel="stylesheet" href="css/pedido-sucesso.css">
-
+    <?php if($pagina ===  'home') :   ?>
+    <link rel="stylesheet" href="css/homeCards.css">
+    <?php endif; ?>
 </head>
 
 <body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?>

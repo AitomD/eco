@@ -24,12 +24,13 @@ if (!empty($userId)) {
 
     /* Fallback de variáveis */
     :root {
-        --pmain-fallback: #0d6efd; 
+        --pmain-fallback: #0d6efd;
     }
 
     /* --- Card Estilo Ticket --- */
     .coupon-card {
-        background: #fff; /* Fundo Branco Puro */
+        background: #fff;
+        /* Fundo Branco Puro */
         border: 1px solid #e9ecef;
         border-left: 5px solid var(--pmain, var(--pmain-fallback));
         border-radius: 12px;
@@ -40,7 +41,7 @@ if (!empty($userId)) {
         position: relative;
         overflow: hidden;
         /* Removida qualquer opacidade padrão */
-        opacity: 1 !important; 
+        opacity: 1 !important;
     }
 
     .coupon-card:hover {
@@ -50,7 +51,7 @@ if (!empty($userId)) {
 
     .coupon-header {
         /* Fundo extremamente claro para destacar o topo, mas sem escurecer */
-        background-color: #f8f9fa; 
+        background-color: #f8f9fa;
         padding: 1.5rem 1rem;
         text-align: center;
         border-bottom: 2px dashed #dee2e6;
@@ -58,18 +59,26 @@ if (!empty($userId)) {
     }
 
     /* Detalhe das bolinhas (picote) */
-    .coupon-header::before, .coupon-header::after {
+    .coupon-header::before,
+    .coupon-header::after {
         content: '';
         position: absolute;
         bottom: -10px;
         width: 20px;
         height: 20px;
-        background-color: #f8f9fa; /* Deve bater com o fundo da página mãe */
+        background-color: #f8f9fa;
+        /* Deve bater com o fundo da página mãe */
         border-radius: 50%;
         z-index: 2;
     }
-    .coupon-header::before { left: -10px; }
-    .coupon-header::after { right: -10px; }
+
+    .coupon-header::before {
+        left: -10px;
+    }
+
+    .coupon-header::after {
+        right: -10px;
+    }
 
     .discount-badge {
         font-size: 2rem;
@@ -77,7 +86,7 @@ if (!empty($userId)) {
         color: var(--pmain, var(--pmain-fallback));
         line-height: 1;
     }
-    
+
     .discount-label {
         font-size: 0.85rem;
         text-transform: uppercase;
@@ -131,7 +140,7 @@ if (!empty($userId)) {
         padding-top: 0.75rem;
         margin-top: auto;
     }
-    
+
     /* Card Admin */
     .add-coupon-card {
         height: 100%;
@@ -147,6 +156,7 @@ if (!empty($userId)) {
         justify-content: center;
         cursor: pointer;
     }
+
     .add-coupon-card:hover {
         border-color: var(--pmain, var(--pmain-fallback));
         color: var(--pmain, var(--pmain-fallback));
@@ -168,29 +178,29 @@ if (!empty($userId)) {
 
         <?php if (!empty($cupons)): ?>
             <?php foreach ($cupons as $cupom): ?>
-                <?php 
-                    // --- TRATAMENTO DE DADOS (Preparo para o HTML) ---
-                    
-                    // 1. Formatar Valor do Desconto
-                    $valorFormatado = '';
-                    if ($cupom['tipo_desconto'] == 'porcentagem') {
-                        $valorFormatado = number_format($cupom['valor_desconto'], 0) . '%';
-                        $tipoLabel = 'DE DESCONTO';
-                    } else {
-                        $valorFormatado = 'R$ ' . number_format($cupom['valor_desconto'], 2, ',', '.');
-                        $tipoLabel = 'DE CRÉDITO';
-                    }
+                <?php
+                // --- TRATAMENTO DE DADOS (Preparo para o HTML) ---
+        
+                // 1. Formatar Valor do Desconto
+                $valorFormatado = '';
+                if ($cupom['tipo_desconto'] == 'porcentagem') {
+                    $valorFormatado = number_format($cupom['valor_desconto'], 0) . '%';
+                    $tipoLabel = 'DE DESCONTO';
+                } else {
+                    $valorFormatado = 'R$ ' . number_format($cupom['valor_desconto'], 2, ',', '.');
+                    $tipoLabel = 'DE CRÉDITO';
+                }
 
-                    // 2. Formatar Datas
-                    $dataInicio = date('d/m/Y', strtotime($cupom['data_inicio']));
-                    $dataFim    = date('d/m/Y', strtotime($cupom['data_fim']));
-                    
-                    
+                // 2. Formatar Datas
+                $dataInicio = date('d/m/Y', strtotime($cupom['data_inicio']));
+                $dataFim = date('d/m/Y', strtotime($cupom['data_fim']));
+
+
                 ?>
 
                 <div class="col-md-6 col-lg-4 <?= $classeOpacidade ?>">
                     <div class="coupon-card">
-                        
+
                         <div class="coupon-header">
                             <div class="discount-badge"><?= $valorFormatado ?></div>
                             <div class="discount-label"><?= $tipoLabel ?></div>
@@ -201,12 +211,13 @@ if (!empty($userId)) {
                                 <?= htmlspecialchars($cupom['descricao']) ?>
                             </p>
 
-                            <div class="code-container" onclick="copiarCodigo('<?= $cupom['codigo'] ?>')">
-                                <div class="coupon-code-text">
+                            <div class="code-container " onclick="copiarCodigo('<?= $cupom['codigo'] ?>', this)"
+                                style="cursor: pointer;">
+                                <div class="coupon-code-text ">
                                     <i class="bi bi-scissors me-1 small opacity-50"></i>
                                     <?= strtoupper(htmlspecialchars($cupom['codigo'])) ?>
                                 </div>
-                                <small class="copy-hint">Clique para copiar</small>
+                                <small class="copy-hint" style="transition: all 0.3s;">Clique para copiar</small>
                             </div>
 
                             <div class="coupon-dates d-flex justify-content-between align-items-center">
@@ -233,31 +244,31 @@ if (!empty($userId)) {
                 </div>
             </div>
         <?php endif; ?>
-        
+
     </div>
 
-        <?php if (empty($cupons) && !$isDesenvolvedor): ?>
-            <div class="col-12">
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-ticket-perforated display-1 opacity-25"></i>
-                    <h4 class="mt-3 fw-normal">Nenhum cupom disponível</h4>
-                    <p>Fique atento, novas promoções podem surgir a qualquer momento!</p>
-                </div>
+    <?php if (empty($cupons) && !$isDesenvolvedor): ?>
+        <div class="col-12">
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-ticket-perforated display-1 opacity-25"></i>
+                <h4 class="mt-3 fw-normal">Nenhum cupom disponível</h4>
+                <p>Fique atento, novas promoções podem surgir a qualquer momento!</p>
             </div>
-        <?php endif; ?>
-
-        <div id="alert-info"
-            class="alert alert-info shadow-lg border-0 alert-dismissible fade show position-fixed bottom-0 end-0 m-4 d-none"
-            role="alert" style="z-index: 1055; max-width: 400px; border-left: 5px solid #0dcaf0;">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                <div>
-                    <strong>Atenção:</strong><br>
-                    Apenas 1 cupom por compra!
-                </div>
-            </div>
-            <button type="button" class="btn-close" onclick="fecharAlerta()" aria-label="Close"></button>
         </div>
+    <?php endif; ?>
+
+    <div id="alert-info"
+        class="alert alert-info shadow-lg border-0 alert-dismissible fade show position-fixed bottom-0 end-0 m-4 d-none"
+        role="alert" style="z-index: 1055; max-width: 400px; border-left: 5px solid #0dcaf0;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+            <div>
+                <strong>Atenção:</strong><br>
+                Apenas 1 cupom por compra!
+            </div>
+        </div>
+        <button type="button" class="btn-close" onclick="fecharAlerta()" aria-label="Close"></button>
+    </div>
 
     </div>
 </main>

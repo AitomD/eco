@@ -42,7 +42,6 @@ if (empty($itensCarrinho)) {
 }
 ?>
 
-<!-- Nota: Assumindo que seu <head> e <body> (abertura) estão em um 'header.php' -->
 
 <body>
     <div class="container py-4 mt-3">
