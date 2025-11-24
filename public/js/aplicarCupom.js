@@ -91,7 +91,7 @@
         // 3. Aplica Feedback Visual
         
         // A) Altera o texto de feedback
-        hintElement.innerText = "Copiado! 🎉";
+        hintElement.innerText = "Copiado!";
         hintElement.classList.add('text-success'); 
         
         // B) Altera a borda do contêiner principal (elemento)

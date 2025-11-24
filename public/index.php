@@ -283,7 +283,7 @@ $cartCount = CarrinhoController::contarItens();
                             </a>
 
                             <!-- Dropdown do usuÃ¡rio -->
-                            <div class="dropdown">
+                            <div class="dropdown mx-3">
                                 <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center" href="#"
                                     role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
@@ -300,7 +300,7 @@ $cartCount = CarrinhoController::contarItens();
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                        <a class="dropdown-item text-danger logout-trigger" href="#">
                                             <i class="bi bi-box-arrow-right me-2"></i>Sair
                                         </a>
                                     </li>
@@ -414,7 +414,7 @@ $cartCount = CarrinhoController::contarItens();
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        AOS.init(); // Inicializa as animaÃ§Ãµes
+        AOS.init(); 
     </script>
     <script src="../public/js/dropinteracao.js"></script>
     <script src="../public/js/activebtn.js"></script>

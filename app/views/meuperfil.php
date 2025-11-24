@@ -100,12 +100,15 @@ if ($id_usuario_logado) {
 
         <div class="col-lg-3">
             <div class="list-group shadow-sm rounded">
-                <a class="list-group-item list-group-item-action active-ml active" id="link-meus-dados" data-bs-toggle="list" href="#pane-meus-dados" role="tab" aria-controls="pane-meus-dados" aria-selected="true">
+                <a class="list-group-item list-group-item-action active-ml active" id="link-meus-dados"
+                    data-bs-toggle="list" href="#pane-meus-dados" role="tab" aria-controls="pane-meus-dados"
+                    aria-selected="true">
                     <i class="bi bi-person-fill fs-5 me-3"></i>
                     Meus Dados
                 </a>
 
-                <a class="list-group-item list-group-item-action" id="link-meus-pedidos" data-bs-toggle="list" href="#pane-meus-pedidos" role="tab" aria-controls="pane-meus-pedidos" aria-selected="false">
+                <a class="list-group-item list-group-item-action" id="link-meus-pedidos" data-bs-toggle="list"
+                    href="#pane-meus-pedidos" role="tab" aria-controls="pane-meus-pedidos" aria-selected="false">
                     <i class="bi bi-box-seam fs-5 me-3"></i>
                     Meus Pedidos
                 </a>
@@ -113,21 +116,24 @@ if ($id_usuario_logado) {
 
                 <!-- Paginas para o vendedor acessar -->
                 <?php if ($userData['is_admin'] == 1): ?>
-                    <a class="list-group-item list-group-item-action" id="link-minhas-vendas" data-bs-toggle="list" href="#pane-minhas-vendas" role="tab" aria-controls="pane-minhas-vendas" aria-selected="false">
+                    <a class="list-group-item list-group-item-action" id="link-minhas-vendas" data-bs-toggle="list"
+                        href="#pane-minhas-vendas" role="tab" aria-controls="pane-minhas-vendas" aria-selected="false">
                         <i class="bi bi-shop fs-5 me-3"></i>
                         Minhas Vendas
                     </a>
 
-                    <a class="list-group-item list-group-item-action" id="link-adiciona" data-bs-toggle="list" href="#pane-adiciona" role="tab" aria-controls="pane-adiciona" aria-selected="false">
+                    <a class="list-group-item list-group-item-action" id="link-adiciona" data-bs-toggle="list"
+                        href="#pane-adiciona" role="tab" aria-controls="pane-adiciona" aria-selected="false">
                         <i class="bi bi-cart-plus me-3"></i>
                         Adicionar Produto
                     </a>
-                    <a class="list-group-item list-group-item-action" id="link-meus-produtos" data-bs-toggle="list" href="#pane-meus-produtos" role="tab" aria-controls="pane-adiciona" aria-selected="false">
+                    <a class="list-group-item list-group-item-action" id="link-meus-produtos" data-bs-toggle="list"
+                        href="#pane-meus-produtos" role="tab" aria-controls="pane-adiciona" aria-selected="false">
                         <i class="bi bi-card-list me-3"></i>
                         Meus Produtos
                     </a>
-                    <?php endif; ?>
-                <a href="?url=logout" class="list-group-item list-group-item-action text-danger mt-3">
+                <?php endif; ?>
+                <a href="#" class="list-group-item list-group-item-action text-danger mt-3 logout-trigger" >
                     <i class="bi bi-box-arrow-right fs-5 me-3"></i>
                     Sair
                 </a>
@@ -148,7 +154,8 @@ if ($id_usuario_logado) {
 
                 <!--Paginas que o vendedor acessa -->
                 <?php if ($userData['is_admin'] == 1): ?>
-                    <div class="tab-pane fade" id="pane-minhas-vendas" role="tabpanel" aria-labelledby="link-minhas-vendas" tabindex="0">
+                    <div class="tab-pane fade" id="pane-minhas-vendas" role="tabpanel" aria-labelledby="link-minhas-vendas"
+                        tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
                             <?php require_once 'venda.php' ?>
                         </div>
@@ -156,14 +163,16 @@ if ($id_usuario_logado) {
                 <?php endif; ?>
 
                 <?php if ($userData['is_admin'] == 1): ?>
-                    <div class="tab-pane fade" id="pane-adiciona" role="tabpanel" aria-labelledby="link-adiciona" tabindex="0">
+                    <div class="tab-pane fade" id="pane-adiciona" role="tabpanel" aria-labelledby="link-adiciona"
+                        tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
                             <?php require_once 'adicionaproduto.php' ?>
                         </div>
                     </div>
                 <?php endif; ?>
                 <?php if ($userData['is_admin'] == 1): ?>
-                    <div class="tab-pane fade" id="pane-meus-produtos" role="tabpanel" aria-labelledby="link-meus-produtos" tabindex="0">
+                    <div class="tab-pane fade" id="pane-meus-produtos" role="tabpanel" aria-labelledby="link-meus-produtos"
+                        tabindex="0">
                         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
                             <?php require_once 'meusprodutos.php' ?>
                         </div>
@@ -180,8 +189,8 @@ if ($id_usuario_logado) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        $('#formAtualizarDados').on('submit', function(e) {
+    $(document).ready(function () {
+        $('#formAtualizarDados').on('submit', function (e) {
             e.preventDefault();
             var formData = $(this).serialize();
 
@@ -191,7 +200,7 @@ if ($id_usuario_logado) {
                 data: formData,
                 dataType: 'json',
 
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         alert('Dados atualizados com sucesso!');
                         $('#modalEditarDados').modal('hide');
@@ -200,7 +209,7 @@ if ($id_usuario_logado) {
                         alert('Erro: ' + response.message);
                     }
                 },
-                error: function() {
+                error: function () {
                     alert('Ocorreu um erro no servidor. Tente novamente.');
                 }
             });

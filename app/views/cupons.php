@@ -229,7 +229,19 @@ if (!empty($userId)) {
                                 </div>
                             </div>
                         </div>
-
+                        <?php if ($isDesenvolvedor): ?>
+                            <div class="coupon-footer text-center py-2 border-top bg-light">
+                                <i class="bi bi-pencil-square fs-5 btn-editar-cupom text-primary" style="cursor: pointer;"
+                                    data-bs-toggle="modal" data-bs-target="#modalGerenciarCupom" data-id="<?= $cupom['id_cupom'] ?>"
+                                    data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>"
+                                    data-descricao="<?= htmlspecialchars($cupom['descricao']) ?>"
+                                    data-tipo="<?= $cupom['tipo_desconto'] ?>" data-valor="<?= $cupom['valor_desconto'] ?>"
+                                    data-inicio="<?= date('Y-m-d\TH:i', strtotime($cupom['data_inicio'])) ?>"
+                                    data-fim="<?= date('Y-m-d\TH:i', strtotime($cupom['data_fim'])) ?>"
+                                    data-ativo="<?= $cupom['ativo'] ?? '1' ?>" title="Editar Cupom">
+                                </i>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -273,6 +285,7 @@ if (!empty($userId)) {
     </div>
 </main>
 
+<!-----MODAL DE ADIÇÃO DE CUPOM(SOMENTE ADMIN COM CARGO = 'Desenvolvedor')------>
 <div class="modal fade" id="modalAdicionarCupom" tabindex="-1" aria-labelledby="modalAdicionarCupomLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -358,3 +371,106 @@ if (!empty($userId)) {
         </div>
     </div>
 </div>
+
+<!---MODAL DE EDIÇÃO DE CUPOM JÁ EXISTENTE--->
+<div class="modal fade" id="modalGerenciarCupom" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Editar Cupom</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="rota_para_atualizar_cupom.php" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="id_cupom" id="modalId">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Código</label>
+                            <input type="text" class="form-control" name="codigo" id="modalCodigo" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo</label>
+                            <select class="form-select" name="tipo_desconto" id="modalTipo">
+                                <option value="porcentagem">Porcentagem</option>
+                                <option value="valor">Valor Fixo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Valor do Desconto</label>
+                            <input type="number" step="0.01" class="form-control" name="valor_desconto" id="modalValor"
+                                required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Descrição</label>
+                            <textarea class="form-control" name="descricao" id="modalDescricao" rows="2"></textarea>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label class="form-label">Data Início</label>
+                            <input type="datetime-local" class="form-control" name="data_inicio" id="modalInicio">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Data Fim</label>
+                            <input type="datetime-local" class="form-control" name="data_fim" id="modalFim">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Ativo?</label>
+                            <select class="form-select" name="ativo" id="modalAtivo">
+                                <option value="1">Sim</option>
+                                <option value="0">Não</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-danger" id="btnExcluir">
+                        <i class="bi bi-trash"></i> Excluir Cupom
+                    </button>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalGerenciar = document.getElementById('modalGerenciarCupom');
+
+        modalGerenciar.addEventListener('show.bs.modal', function (event) {
+            // Botão que acionou o modal
+            var button = event.relatedTarget;
+
+            // Extrair info dos atributos data-*
+            var id = button.getAttribute('data-id');
+            var codigo = button.getAttribute('data-codigo');
+            var valor = button.getAttribute('data-valor');
+
+            // Atualizar os inputs do modal
+            var modalIdInput = modalGerenciar.querySelector('#modalId');
+            var modalCodigoInput = modalGerenciar.querySelector('#modalCodigo');
+            var modalValorInput = modalGerenciar.querySelector('#modalValor');
+
+            modalIdInput.value = id;
+            modalCodigoInput.value = codigo;
+            modalValorInput.value = valor;
+
+            // Configurar a ação do botão Excluir
+            var btnExcluir = modalGerenciar.querySelector('#btnExcluir');
+            btnExcluir.onclick = function () {
+                if (confirm('Tem certeza que deseja excluir este item permanentemente?')) {
+                    // Redireciona para a rota de exclusão
+                    window.location.href = 'seu_script_de_delete.php?id=' + id;
+                }
+            };
+        });
+    });
+</script>
