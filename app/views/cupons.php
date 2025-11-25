@@ -233,11 +233,12 @@ if (!empty($userId)) {
                             <div class="coupon-footer text-center py-2 border-top bg-light">
                                 <i class="bi bi-pencil-square fs-5 btn-editar-cupom text-primary" style="cursor: pointer;"
                                     data-bs-toggle="modal" data-bs-target="#modalGerenciarCupom" data-id="<?= $cupom['id_cupom'] ?>"
-                                    data-codigo="<?= htmlspecialchars($cupom['codigo']) ?>"
-                                    data-descricao="<?= htmlspecialchars($cupom['descricao']) ?>"
-                                    data-tipo="<?= $cupom['tipo_desconto'] ?>" data-valor="<?= $cupom['valor_desconto'] ?>"
-                                    data-inicio="<?= date('Y-m-d\TH:i', strtotime($cupom['data_inicio'])) ?>"
-                                    data-fim="<?= date('Y-m-d\TH:i', strtotime($cupom['data_fim'])) ?>"
+                                    data-codigo="<?= htmlspecialchars($cupom['codigo'] ?? '') ?>"
+                                    data-descricao="<?= htmlspecialchars($cupom['descricao'] ?? '') ?>"
+                                    data-tipo="<?= $cupom['tipo_desconto'] ?? 'valor' ?>"
+                                    data-valor="<?= $cupom['valor_desconto'] ?? '0' ?>"
+                                    data-inicio="<?= isset($cupom['data_inicio']) ? date('Y-m-d\TH:i', strtotime($cupom['data_inicio'])) : '' ?>"
+                                    data-fim="<?= isset($cupom['data_fim']) ? date('Y-m-d\TH:i', strtotime($cupom['data_fim'])) : '' ?>"
                                     data-ativo="<?= $cupom['ativo'] ?? '1' ?>" title="Editar Cupom">
                                 </i>
                             </div>
