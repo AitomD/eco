@@ -44,10 +44,9 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
     
 ## 👤  Autores
 
-- [**Fernando Consolin Rosa**](https://github.com/FernandoConsolinRosa11)
-
-- [**Aitom Henrique Donatoni**](https://github.com/AitomD)  
-- [**Hiago Nascimento**](https://github.com/haiagos48)
+- [**👤 Fernando Consolin Rosa**](https://github.com/FernandoConsolinRosa11)
+- [**👤 Aitom Henrique Donatoni**](https://github.com/AitomD)
+- [**👤 Hiago Nascimento**](https://github.com/haiagos48)
 ---  
 
 
