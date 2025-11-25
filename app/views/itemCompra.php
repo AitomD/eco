@@ -440,7 +440,7 @@ try {
                 <?php else: ?>
                     <div class="text-center mt-4 p-3 bg-light rounded">
                         <p class="mb-2">Para avaliar este produto, você precisa estar logado.</p>
-                        <a href="login.php" class="btn btn-primary btn-sm">Fazer Login</a>
+                        <a href="index.php?url=login" class="btn btn-primary btn-sm">Fazer Login</a>
                     </div>
                 <?php endif; ?>
             </div>

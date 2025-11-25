@@ -49,7 +49,6 @@
         </div>
 
         <div class="login-links">
-            <p><a href="#" id="forgotPassword">Esqueceu sua senha?</a></p>
             <p style="color: #B0B0B0; margin-top: 1rem; font-size: 0.9rem;">
                 Não tem uma conta?
                 <a href="index.php?url=cadastro" style="color: #610094; font-weight: bold;">Cadastre-se</a>
@@ -174,9 +173,4 @@
             });
         });
 
-        // Funcionalidade "Esqueceu sua senha"
-        document.getElementById('forgotPassword').addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Funcionalidade de recuperação de senha será implementada em breve!');
-        });
     </script>

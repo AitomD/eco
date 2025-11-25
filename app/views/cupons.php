@@ -413,7 +413,7 @@ if (!empty($userId)) {
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label ">Ativo?</label>
+                            <label class="form-label ">Ativo ?</label>
                             <select class="form-select" name="ativo" id="modalAtivo" required>
                                 <option value="1">Sim</option>
                                 <option value="0">Não</option>
