@@ -246,7 +246,7 @@ try {
                     </p>
                     <div class="d-grid gap-2 mt-3">
 
-                        <?php if ($produto['quantidade_disponivel'] <= 0): ?>
+                        <?php if ($produto['quantidade_disponivel'] <= 0) : ?>
 
                             <p class="fs-5 fw-bold text-danger">Produto fora de estoque</p>
 

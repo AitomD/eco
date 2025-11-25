@@ -84,12 +84,10 @@ class AuthSystem {
                  clickedBtn.classList.remove('disabled');
                  clickedBtn.style.pointerEvents = 'auto';
             }
-            // Opcional: recarregar mesmo com erro
+
             window.location.reload();
         }
     }
-
-    // ... O RESTANTE DO CÓDIGO (setupLoginForm, processLogin, etc) PERMANECE IGUAL ...
     
     /**
      * Configurar formulário de login

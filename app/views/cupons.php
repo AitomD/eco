@@ -22,17 +22,11 @@ if (!empty($userId)) {
 <style>
     @import url(main.css);
 
-    /* Fallback de variáveis */
-    :root {
-        --pmain-fallback: #0d6efd;
-    }
-
     /* --- Card Estilo Ticket --- */
     .coupon-card {
         background: #fff;
-        /* Fundo Branco Puro */
         border: 1px solid #e9ecef;
-        border-left: 5px solid var(--pmain, var(--pmain-fallback));
+        border-left: 5px solid var(--pmain);
         border-radius: 12px;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         height: 100%;
@@ -67,7 +61,6 @@ if (!empty($userId)) {
         width: 20px;
         height: 20px;
         background-color: #f8f9fa;
-        /* Deve bater com o fundo da página mãe */
         border-radius: 50%;
         z-index: 2;
     }
@@ -83,7 +76,7 @@ if (!empty($userId)) {
     .discount-badge {
         font-size: 2rem;
         font-weight: 800;
-        color: var(--pmain, var(--pmain-fallback));
+        color: var(--pmain);
         line-height: 1;
     }
 
@@ -106,7 +99,7 @@ if (!empty($userId)) {
     /* Área do Código */
     .code-container {
         background: #ffffff;
-        border: 2px dashed var(--pmain, var(--pmain-fallback));
+        border: 2px dashed var(--pmain);
         border-radius: 8px;
         padding: 0.75rem;
         margin: 1rem 0;
@@ -128,7 +121,7 @@ if (!empty($userId)) {
 
     .copy-hint {
         font-size: 0.7rem;
-        color: var(--pmain, var(--pmain-fallback));
+        color: var(--pmain);
         display: block;
         margin-top: 2px;
     }
@@ -158,8 +151,8 @@ if (!empty($userId)) {
     }
 
     .add-coupon-card:hover {
-        border-color: var(--pmain, var(--pmain-fallback));
-        color: var(--pmain, var(--pmain-fallback));
+        border-color: var(--pmain);
+        color: var(--pmain);
         background-color: #fff;
     }
 </style>
@@ -231,8 +224,8 @@ if (!empty($userId)) {
                         </div>
                         <?php if ($isDesenvolvedor): ?>
                             <div class="coupon-footer text-center py-2 border-top bg-light">
-                                <i class="bi bi-pencil-square fs-5 btn-editar-cupom text-primary" style="cursor: pointer;"
-                                    data-bs-toggle="modal" data-bs-target="#modalGerenciarCupom" data-id="<?= $cupom['id_cupom'] ?>"
+                                <i class="bi bi-pencil-square fs-5 btn-editar-cupom text-dark" style="cursor: pointer;"
+                                    data-bs-toggle="modal" data-bs-target="#modalGerenciarCupom" data-id="<?= $cupom['id'] ?? $cupom['id_cupom'] ?>"
                                     data-codigo="<?= htmlspecialchars($cupom['codigo'] ?? '') ?>"
                                     data-descricao="<?= htmlspecialchars($cupom['descricao'] ?? '') ?>"
                                     data-tipo="<?= $cupom['tipo_desconto'] ?? 'valor' ?>"
@@ -382,45 +375,46 @@ if (!empty($userId)) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="rota_para_atualizar_cupom.php" method="POST">
+            <form id="formEditarCupom">
                 <div class="modal-body">
                     <input type="hidden" name="id_cupom" id="modalId">
+                    <input type="hidden" name="acao" value="atualizar">
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Código</label>
+                            <label class="form-label ">Código</label>
                             <input type="text" class="form-control" name="codigo" id="modalCodigo" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Tipo</label>
-                            <select class="form-select" name="tipo_desconto" id="modalTipo">
+                            <label class="form-label ">Tipo</label>
+                            <select class="form-select" name="tipo_desconto" id="modalTipo" required>
                                 <option value="porcentagem">Porcentagem</option>
                                 <option value="valor">Valor Fixo</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Valor do Desconto</label>
+                            <label class="form-label ">Valor</label>
                             <input type="number" step="0.01" class="form-control" name="valor_desconto" id="modalValor"
                                 required>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Descrição</label>
+                            <label class="form-label ">Descrição</label>
                             <textarea class="form-control" name="descricao" id="modalDescricao" rows="2"></textarea>
                         </div>
 
-                        <div class="col-md-5">
-                            <label class="form-label">Data Início</label>
+                        <div class="col-md-6">
+                            <label class="form-label ">Data Início</label>
                             <input type="datetime-local" class="form-control" name="data_inicio" id="modalInicio">
                         </div>
-                        <div class="col-md-5">
-                            <label class="form-label">Data Fim</label>
+                        <div class="col-md-6">
+                            <label class="form-label ">Data Fim</label>
                             <input type="datetime-local" class="form-control" name="data_fim" id="modalFim">
                         </div>
 
-                        <div class="col-md-2">
-                            <label class="form-label">Ativo?</label>
-                            <select class="form-select" name="ativo" id="modalAtivo">
+                        <div class="col-12">
+                            <label class="form-label ">Ativo?</label>
+                            <select class="form-select" name="ativo" id="modalAtivo" required>
                                 <option value="1">Sim</option>
                                 <option value="0">Não</option>
                             </select>
@@ -434,7 +428,9 @@ if (!empty($userId)) {
                     </button>
                     <div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i> Salvar Alterações
+                        </button>
                     </div>
                 </div>
             </form>
@@ -444,34 +440,115 @@ if (!empty($userId)) {
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var modalGerenciar = document.getElementById('modalGerenciarCupom');
+        const modalGerenciar = document.getElementById('modalGerenciarCupom');
+        const formEditar = document.getElementById('formEditarCupom');
+        const btnExcluir = document.getElementById('btnExcluir');
 
+        // Evento: Abrir modal com dados do cupom selecionado
         modalGerenciar.addEventListener('show.bs.modal', function (event) {
-            // Botão que acionou o modal
-            var button = event.relatedTarget;
+            const button = event.relatedTarget;
 
-            // Extrair info dos atributos data-*
-            var id = button.getAttribute('data-id');
-            var codigo = button.getAttribute('data-codigo');
-            var valor = button.getAttribute('data-valor');
+            // Extrair informações dos atributos data-*
+            const id = button.getAttribute('data-id');
+            const codigo = button.getAttribute('data-codigo');
+            const descricao = button.getAttribute('data-descricao');
+            const tipo = button.getAttribute('data-tipo');
+            const valor = button.getAttribute('data-valor');
+            const inicio = button.getAttribute('data-inicio');
+            const fim = button.getAttribute('data-fim');
+            const ativo = button.getAttribute('data-ativo');
 
-            // Atualizar os inputs do modal
-            var modalIdInput = modalGerenciar.querySelector('#modalId');
-            var modalCodigoInput = modalGerenciar.querySelector('#modalCodigo');
-            var modalValorInput = modalGerenciar.querySelector('#modalValor');
+            // Preencher campos do modal
+            document.getElementById('modalId').value = id;
+            document.getElementById('modalCodigo').value = codigo;
+            document.getElementById('modalDescricao').value = descricao;
+            document.getElementById('modalTipo').value = tipo;
+            document.getElementById('modalValor').value = valor;
+            document.getElementById('modalInicio').value = inicio;
+            document.getElementById('modalFim').value = fim;
+            document.getElementById('modalAtivo').value = ativo;
 
-            modalIdInput.value = id;
-            modalCodigoInput.value = codigo;
-            modalValorInput.value = valor;
-
-            // Configurar a ação do botão Excluir
-            var btnExcluir = modalGerenciar.querySelector('#btnExcluir');
+            // Configurar o botão Excluir
             btnExcluir.onclick = function () {
-                if (confirm('Tem certeza que deseja excluir este item permanentemente?')) {
-                    // Redireciona para a rota de exclusão
-                    window.location.href = 'seu_script_de_delete.php?id=' + id;
+                if (confirm('Tem certeza que deseja excluir este cupom permanentemente?')) {
+                    excluirCupom(id);
                 }
             };
         });
+
+        // Evento: Submissão do formulário de edição
+        formEditar.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('../app/controller/gerenciar_cupom.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cupom atualizado com sucesso!');
+                    // Fechar modal
+                    const modal = bootstrap.Modal.getInstance(modalGerenciar);
+                    modal.hide();
+                    // Recarregar página para atualizar a lista
+                    location.reload();
+                } else {
+                    alert('Erro: ' + (data.message || 'Falha ao atualizar cupom.'));
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar cupom. Verifique o console.');
+            });
+        });
+
+        // Função: Excluir Cupom
+        function excluirCupom(idCupom) {
+            const formData = new FormData();
+            formData.append('id_cupom', idCupom);
+            formData.append('acao', 'excluir');
+
+            fetch('../app/controller/gerenciar_cupom.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cupom excluído com sucesso!');
+                    // Fechar modal
+                    const modal = bootstrap.Modal.getInstance(modalGerenciar);
+                    modal.hide();
+                    // Recarregar página
+                    location.reload();
+                } else {
+                    alert('Erro: ' + (data.message || 'Falha ao excluir cupom.'));
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao excluir cupom. Verifique o console.');
+            });
+        }
     });
+
+    // Função auxiliar: Copiar código para a área de transferência
+    function copiarCodigo(codigo, elemento) {
+        navigator.clipboard.writeText(codigo).then(() => {
+            const hint = elemento.querySelector('.copy-hint');
+            const textoOriginal = hint.textContent;
+            hint.textContent = 'Copiado!';
+            setTimeout(() => {
+                hint.textContent = textoOriginal;
+            }, 2000);
+        });
+    }
+
+    // Função auxiliar: Fechar alerta
+    function fecharAlerta() {
+        document.getElementById('alert-info').classList.add('d-none');
+    }
 </script>
