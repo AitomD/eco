@@ -13,6 +13,8 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
 - 🚛 Sistema de carrinho de compras.
 - 📦 Sistema de Estoque de produtos.  
 - ⭐ Avaliação dos produtos.
+- ## 📈 Painel Administrativo
+O sistema conta com um painel dinâmico que apresenta gráficos de estoque e vendas em tempo real, desenvolvidos com **Chart.js**. Essa visualização facilita o acompanhamento das métricas do negócio e auxilia na tomada de decisões.
 ---  
 
 
