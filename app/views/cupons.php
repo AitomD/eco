@@ -22,16 +22,11 @@ if (!empty($userId)) {
 <style>
     @import url(main.css);
 
-    /* Fallback de variáveis */
-    :root {
-        --pmain-fallback: #0d6efd; 
-    }
-
     /* --- Card Estilo Ticket --- */
     .coupon-card {
-        background: #fff; /* Fundo Branco Puro */
+        background: #fff;
         border: 1px solid #e9ecef;
-        border-left: 5px solid var(--pmain, var(--pmain-fallback));
+        border-left: 5px solid var(--pmain);
         border-radius: 12px;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         height: 100%;
@@ -40,7 +35,7 @@ if (!empty($userId)) {
         position: relative;
         overflow: hidden;
         /* Removida qualquer opacidade padrão */
-        opacity: 1 !important; 
+        opacity: 1 !important;
     }
 
     .coupon-card:hover {
@@ -50,7 +45,7 @@ if (!empty($userId)) {
 
     .coupon-header {
         /* Fundo extremamente claro para destacar o topo, mas sem escurecer */
-        background-color: #f8f9fa; 
+        background-color: #f8f9fa;
         padding: 1.5rem 1rem;
         text-align: center;
         border-bottom: 2px dashed #dee2e6;
@@ -58,26 +53,33 @@ if (!empty($userId)) {
     }
 
     /* Detalhe das bolinhas (picote) */
-    .coupon-header::before, .coupon-header::after {
+    .coupon-header::before,
+    .coupon-header::after {
         content: '';
         position: absolute;
         bottom: -10px;
         width: 20px;
         height: 20px;
-        background-color: #f8f9fa; /* Deve bater com o fundo da página mãe */
+        background-color: #f8f9fa;
         border-radius: 50%;
         z-index: 2;
     }
-    .coupon-header::before { left: -10px; }
-    .coupon-header::after { right: -10px; }
+
+    .coupon-header::before {
+        left: -10px;
+    }
+
+    .coupon-header::after {
+        right: -10px;
+    }
 
     .discount-badge {
         font-size: 2rem;
         font-weight: 800;
-        color: var(--pmain, var(--pmain-fallback));
+        color: var(--pmain);
         line-height: 1;
     }
-    
+
     .discount-label {
         font-size: 0.85rem;
         text-transform: uppercase;
@@ -97,7 +99,7 @@ if (!empty($userId)) {
     /* Área do Código */
     .code-container {
         background: #ffffff;
-        border: 2px dashed var(--pmain, var(--pmain-fallback));
+        border: 2px dashed var(--pmain);
         border-radius: 8px;
         padding: 0.75rem;
         margin: 1rem 0;
@@ -119,7 +121,7 @@ if (!empty($userId)) {
 
     .copy-hint {
         font-size: 0.7rem;
-        color: var(--pmain, var(--pmain-fallback));
+        color: var(--pmain);
         display: block;
         margin-top: 2px;
     }
@@ -131,7 +133,7 @@ if (!empty($userId)) {
         padding-top: 0.75rem;
         margin-top: auto;
     }
-    
+
     /* Card Admin */
     .add-coupon-card {
         height: 100%;
@@ -147,9 +149,10 @@ if (!empty($userId)) {
         justify-content: center;
         cursor: pointer;
     }
+
     .add-coupon-card:hover {
-        border-color: var(--pmain, var(--pmain-fallback));
-        color: var(--pmain, var(--pmain-fallback));
+        border-color: var(--pmain);
+        color: var(--pmain);
         background-color: #fff;
     }
 </style>
@@ -168,29 +171,29 @@ if (!empty($userId)) {
 
         <?php if (!empty($cupons)): ?>
             <?php foreach ($cupons as $cupom): ?>
-                <?php 
-                    // --- TRATAMENTO DE DADOS (Preparo para o HTML) ---
-                    
-                    // 1. Formatar Valor do Desconto
-                    $valorFormatado = '';
-                    if ($cupom['tipo_desconto'] == 'porcentagem') {
-                        $valorFormatado = number_format($cupom['valor_desconto'], 0) . '%';
-                        $tipoLabel = 'DE DESCONTO';
-                    } else {
-                        $valorFormatado = 'R$ ' . number_format($cupom['valor_desconto'], 2, ',', '.');
-                        $tipoLabel = 'DE CRÉDITO';
-                    }
+                <?php
+                // --- TRATAMENTO DE DADOS (Preparo para o HTML) ---
+        
+                // 1. Formatar Valor do Desconto
+                $valorFormatado = '';
+                if ($cupom['tipo_desconto'] == 'porcentagem') {
+                    $valorFormatado = number_format($cupom['valor_desconto'], 0) . '%';
+                    $tipoLabel = 'DE DESCONTO';
+                } else {
+                    $valorFormatado = 'R$ ' . number_format($cupom['valor_desconto'], 2, ',', '.');
+                    $tipoLabel = 'DE CRÉDITO';
+                }
 
-                    // 2. Formatar Datas
-                    $dataInicio = date('d/m/Y', strtotime($cupom['data_inicio']));
-                    $dataFim    = date('d/m/Y', strtotime($cupom['data_fim']));
-                    
-                    
+                // 2. Formatar Datas
+                $dataInicio = date('d/m/Y', strtotime($cupom['data_inicio']));
+                $dataFim = date('d/m/Y', strtotime($cupom['data_fim']));
+
+
                 ?>
 
                 <div class="col-md-6 col-lg-4 <?= $classeOpacidade ?>">
                     <div class="coupon-card">
-                        
+
                         <div class="coupon-header">
                             <div class="discount-badge"><?= $valorFormatado ?></div>
                             <div class="discount-label"><?= $tipoLabel ?></div>
@@ -201,12 +204,13 @@ if (!empty($userId)) {
                                 <?= htmlspecialchars($cupom['descricao']) ?>
                             </p>
 
-                            <div class="code-container" onclick="copiarCodigo('<?= $cupom['codigo'] ?>')">
-                                <div class="coupon-code-text">
+                            <div class="code-container " onclick="copiarCodigo('<?= $cupom['codigo'] ?>', this)"
+                                style="cursor: pointer;">
+                                <div class="coupon-code-text ">
                                     <i class="bi bi-scissors me-1 small opacity-50"></i>
                                     <?= strtoupper(htmlspecialchars($cupom['codigo'])) ?>
                                 </div>
-                                <small class="copy-hint">Clique para copiar</small>
+                                <small class="copy-hint" style="transition: all 0.3s;">Clique para copiar</small>
                             </div>
 
                             <div class="coupon-dates d-flex justify-content-between align-items-center">
@@ -218,7 +222,20 @@ if (!empty($userId)) {
                                 </div>
                             </div>
                         </div>
-
+                        <?php if ($isDesenvolvedor): ?>
+                            <div class="coupon-footer text-center py-2 border-top bg-light">
+                                <i class="bi bi-pencil-square fs-5 btn-editar-cupom text-dark" style="cursor: pointer;"
+                                    data-bs-toggle="modal" data-bs-target="#modalGerenciarCupom" data-id="<?= $cupom['id'] ?? $cupom['id_cupom'] ?>"
+                                    data-codigo="<?= htmlspecialchars($cupom['codigo'] ?? '') ?>"
+                                    data-descricao="<?= htmlspecialchars($cupom['descricao'] ?? '') ?>"
+                                    data-tipo="<?= $cupom['tipo_desconto'] ?? 'valor' ?>"
+                                    data-valor="<?= $cupom['valor_desconto'] ?? '0' ?>"
+                                    data-inicio="<?= isset($cupom['data_inicio']) ? date('Y-m-d\TH:i', strtotime($cupom['data_inicio'])) : '' ?>"
+                                    data-fim="<?= isset($cupom['data_fim']) ? date('Y-m-d\TH:i', strtotime($cupom['data_fim'])) : '' ?>"
+                                    data-ativo="<?= $cupom['ativo'] ?? '1' ?>" title="Editar Cupom">
+                                </i>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -233,35 +250,36 @@ if (!empty($userId)) {
                 </div>
             </div>
         <?php endif; ?>
-        
+
     </div>
 
-        <?php if (empty($cupons) && !$isDesenvolvedor): ?>
-            <div class="col-12">
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-ticket-perforated display-1 opacity-25"></i>
-                    <h4 class="mt-3 fw-normal">Nenhum cupom disponível</h4>
-                    <p>Fique atento, novas promoções podem surgir a qualquer momento!</p>
-                </div>
+    <?php if (empty($cupons) && !$isDesenvolvedor): ?>
+        <div class="col-12">
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-ticket-perforated display-1 opacity-25"></i>
+                <h4 class="mt-3 fw-normal">Nenhum cupom disponível</h4>
+                <p>Fique atento, novas promoções podem surgir a qualquer momento!</p>
             </div>
-        <?php endif; ?>
-
-        <div id="alert-info"
-            class="alert alert-info shadow-lg border-0 alert-dismissible fade show position-fixed bottom-0 end-0 m-4 d-none"
-            role="alert" style="z-index: 1055; max-width: 400px; border-left: 5px solid #0dcaf0;">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                <div>
-                    <strong>Atenção:</strong><br>
-                    Apenas 1 cupom por compra!
-                </div>
-            </div>
-            <button type="button" class="btn-close" onclick="fecharAlerta()" aria-label="Close"></button>
         </div>
+    <?php endif; ?>
+
+    <div id="alert-info"
+        class="alert alert-info shadow-lg border-0 alert-dismissible fade show position-fixed bottom-0 end-0 m-4 d-none"
+        role="alert" style="z-index: 1055; max-width: 400px; border-left: 5px solid #0dcaf0;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+            <div>
+                <strong>Atenção:</strong><br>
+                Apenas 1 cupom por compra!
+            </div>
+        </div>
+        <button type="button" class="btn-close" onclick="fecharAlerta()" aria-label="Close"></button>
+    </div>
 
     </div>
 </main>
 
+<!-----MODAL DE ADIÇÃO DE CUPOM(SOMENTE ADMIN COM CARGO = 'Desenvolvedor')------>
 <div class="modal fade" id="modalAdicionarCupom" tabindex="-1" aria-labelledby="modalAdicionarCupomLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -347,3 +365,175 @@ if (!empty($userId)) {
         </div>
     </div>
 </div>
+
+<!---MODAL DE EDIÇÃO DE CUPOM JÁ EXISTENTE--->
+<div class="modal fade" id="modalGerenciarCupom" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Editar Cupom</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="formEditarCupom">
+                <div class="modal-body">
+                    <input type="hidden" name="id_cupom" id="modalId">
+                    <input type="hidden" name="acao" value="atualizar">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label ">Código</label>
+                            <input type="text" class="form-control" name="codigo" id="modalCodigo" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label ">Tipo</label>
+                            <select class="form-select" name="tipo_desconto" id="modalTipo" required>
+                                <option value="porcentagem">Porcentagem</option>
+                                <option value="valor">Valor Fixo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label ">Valor</label>
+                            <input type="number" step="0.01" class="form-control" name="valor_desconto" id="modalValor"
+                                required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label ">Descrição</label>
+                            <textarea class="form-control" name="descricao" id="modalDescricao" rows="2"></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label ">Data Início</label>
+                            <input type="datetime-local" class="form-control" name="data_inicio" id="modalInicio">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label ">Data Fim</label>
+                            <input type="datetime-local" class="form-control" name="data_fim" id="modalFim">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label ">Ativo ?</label>
+                            <select class="form-select" name="ativo" id="modalAtivo" required>
+                                <option value="1">Sim</option>
+                                <option value="0">Não</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * ====================================================================
+     * 1. FUNÇÕES AUXILIARES (DEFINIDAS NO ESCOPO GLOBAL)
+     * ====================================================================
+     */
+
+    // Função auxiliar: Copiar código para a área de transferência
+    function copiarCodigo(codigo, elemento) {
+        navigator.clipboard.writeText(codigo).then(() => {
+            const hint = elemento.querySelector('.copy-hint');
+            const textoOriginal = hint.textContent;
+            hint.textContent = 'Copiado!';
+            setTimeout(() => {
+                hint.textContent = textoOriginal;
+            }, 1500);
+        });
+    }
+
+    // Função auxiliar: Fechar alerta
+    function fecharAlerta() {
+        const alerta = document.getElementById('alert-info');
+        if (alerta) {
+            alerta.classList.add('d-none');
+        }
+    }
+
+    /**
+     * ====================================================================
+     * 2. LÓGICA DE INICIALIZAÇÃO (DOM CONTENT LOADED)
+     * ====================================================================
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos do DOM
+        const modalElement = document.getElementById('modalGerenciarCupom');
+        const formEditar = document.getElementById('formEditarCupom');
+        
+        // Nota: O botão btnExcluir foi removido do JS pois a exclusão física não é mais permitida.
+        // Certifique-se de remover o botão <button id="btnExcluir"> do seu HTML também.
+
+        // Cria/Obtém a instância do Bootstrap para o Modal
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        // Evento: Abrir modal com dados do cupom selecionado
+        modalElement.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+
+            // Extrair informações dos atributos data-*
+            const id = button.getAttribute('data-id');
+            const codigo = button.getAttribute('data-codigo');
+            const descricao = button.getAttribute('data-descricao');
+            const tipo = button.getAttribute('data-tipo');
+            const valor = button.getAttribute('data-valor');
+            const inicio = button.getAttribute('data-inicio');
+            const fim = button.getAttribute('data-fim');
+            const ativo = button.getAttribute('data-ativo');
+
+            // Preencher campos do formulário no modal
+            document.getElementById('modalId').value = id;
+            document.getElementById('modalCodigo').value = codigo;
+            document.getElementById('modalDescricao').value = descricao;
+            document.getElementById('modalTipo').value = tipo;
+            document.getElementById('modalValor').value = valor;
+            document.getElementById('modalInicio').value = inicio;
+            document.getElementById('modalFim').value = fim;
+            document.getElementById('modalAtivo').value = ativo;
+        });
+
+        // Evento: Submissão do formulário de edição (Inclui Atualizar Status Ativo/Inativo)
+        formEditar.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            // Garante que a ação de atualização seja enviada
+            formData.append('acao', 'atualizar');
+
+            fetch('../app/controller/gerenciar_cupom.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('✅ Cupom atualizado com sucesso!');
+                        
+                        // Fechar modal usando a instância
+                        modalInstance.hide();
+                        
+                        // Recarregar página
+                        location.reload();
+                    } else {
+                        alert('❌ Erro: ' + (data.message || 'Falha ao atualizar cupom.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('❌ Erro ao atualizar cupom. Verifique o console.');
+                });
+        });
+
+    }); // <--- FIM DO DOMContentLoaded
+</script>

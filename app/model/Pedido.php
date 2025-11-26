@@ -62,7 +62,6 @@ class Pedido {
             error_log("Erro de PDO ao criar pedido: " . $e->getMessage());
             
             throw new Exception("Erro de banco de dados: " . $e->getMessage());
-            // =================================================================
         }
     }
 

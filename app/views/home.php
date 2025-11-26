@@ -6,15 +6,15 @@ $produto = new Produto();
 $produtos = $produto->filtrar(); // Buscar todos os produtos
 
 // Filtrar apenas produtos que tenham estoque disponível para exibir primeiro
-usort($produtos, function($a, $b) {
-    // Produtos com estoque aparecem primeiro
-    if ($a['quantidade_disponivel'] === 'Sem Estoque' && $b['quantidade_disponivel'] !== 'Sem Estoque') {
-        return 1;
-    }
-    if ($a['quantidade_disponivel'] !== 'Sem Estoque' && $b['quantidade_disponivel'] === 'Sem Estoque') {
-        return -1;
-    }
-    return 0;
+usort($produtos, function ($a, $b) {
+  // Produtos com estoque aparecem primeiro
+  if ($a['quantidade_disponivel'] === 'Sem Estoque' && $b['quantidade_disponivel'] !== 'Sem Estoque') {
+    return 1;
+  }
+  if ($a['quantidade_disponivel'] !== 'Sem Estoque' && $b['quantidade_disponivel'] === 'Sem Estoque') {
+    return -1;
+  }
+  return 0;
 });
 
 // Limitar a 12 produtos para não sobrecarregar a página inicial
@@ -76,13 +76,13 @@ $produtos = array_slice($produtos, 0, 12);
       </div>
 
 
-        <div class="col">
-          <div class="card text-bg-dark">
-            <img src="../public/img/card2.png" class="card-img" alt="oferta">
-            <div class="card-img-overlay">
-              <p class="card-text"></p>
-              <p class="card-text"><small></small></p>
-            </div>
+      <div class="col">
+        <div class="card text-bg-dark">
+          <img src="../public/img/card2.png" class="card-img" alt="oferta">
+          <div class="card-img-overlay">
+            <p class="card-text"></p>
+            <p class="card-text"><small></small></p>
+          </div>
         </div>
       </div>
 
@@ -104,73 +104,73 @@ $produtos = array_slice($produtos, 0, 12);
     style="max-width: 1200px; margin: auto;">
     <div class="carousel-inner">
 
-      <?php 
+      <?php
       $produtosPorSlide = 4; // 4 produtos por slide
       $totalProdutos = count($produtos);
       $totalSlides = ceil($totalProdutos / $produtosPorSlide);
-      
-      for ($slide = 0; $slide < $totalSlides; $slide++): 
+
+      for ($slide = 0; $slide < $totalSlides; $slide++):
         $inicio = $slide * $produtosPorSlide;
         $fim = min($inicio + $produtosPorSlide, $totalProdutos);
         $isActive = $slide === 0 ? 'active' : '';
-      ?>
+        ?>
         <div class="carousel-item <?= $isActive ?>">
           <div class="row">
-            <?php for ($i = $inicio; $i < $fim; $i++): 
+            <?php for ($i = $inicio; $i < $fim; $i++):
               $prod = $produtos[$i];
-              
+
               // Array de imagens locais de fallback
               $imagensLocais = [
-                  'img/note.jpg',
-                  'img/computador1.webp',
-                  'img/computador2.webp',
-                  'img/computador3.webp',
-                  'img/computador4.webp',
-                  'img/computador5.webp',
-                  'img/computador6.webp',
-                  'img/computador7.webp'
+                'img/note.jpg',
+                'img/computador1.webp',
+                'img/computador2.webp',
+                'img/computador3.webp',
+                'img/computador4.webp',
+                'img/computador5.webp',
+                'img/computador6.webp',
+                'img/computador7.webp'
               ];
-              
+
               // Definir imagem a usar
               if (!empty($prod['imagem'])) {
-                  // Se a URL da imagem é externa (http/https), usar diretamente
-                  if (strpos($prod['imagem'], 'http') === 0) {
-                      $imagemUrl = $prod['imagem'];
-                  } else {
-                      // Se é um caminho local, processar
-                      $imagemUrl = strpos($prod['imagem'], 'img/') === 0 ? $prod['imagem'] : 'img/' . $prod['imagem'];
-                  }
+                // Se a URL da imagem é externa (http/https), usar diretamente
+                if (strpos($prod['imagem'], 'http') === 0) {
+                  $imagemUrl = $prod['imagem'];
+                } else {
+                  // Se é um caminho local, processar
+                  $imagemUrl = strpos($prod['imagem'], 'img/') === 0 ? $prod['imagem'] : 'img/' . $prod['imagem'];
+                }
               } else {
-                  // Usar uma imagem local baseada no ID do produto
-                  $indiceImagem = ($prod['id_produto'] - 1) % count($imagensLocais);
-                  $imagemUrl = $imagensLocais[$indiceImagem];
+                // Usar uma imagem local baseada no ID do produto
+                $indiceImagem = ($prod['id_produto'] - 1) % count($imagensLocais);
+                $imagemUrl = $imagensLocais[$indiceImagem];
               }
-              
+
               $preco = number_format($prod['preco'], 2, ',', '.');
-            ?>
+              ?>
               <div class="col-md-3">
-                <div class="card product-card" data-id="<?= htmlspecialchars($prod['id_produto']) ?>" data-price="<?= $prod['preco'] ?>">
-                  <a href="index.php?url=produto&id=<?= htmlspecialchars($prod['id_produto']) ?>" style="text-decoration: none;">
-                    <img src="<?= htmlspecialchars($imagemUrl) ?>" 
-                         class="card-img-top" 
-                         alt="<?= htmlspecialchars($prod['nome']) ?>"
-                         onerror="this.src='img/ImgNotFound.png';">
+                <div class="card product-card " data-id="<?= htmlspecialchars($prod['id_produto']) ?>"
+                  data-price="<?= $prod['preco'] ?>" style="max-width: 1200px; margin: auto;">
+                  <a href="index.php?url=produto&id=<?= htmlspecialchars($prod['id_produto']) ?>"
+                    style="text-decoration: none;">
+                    <img src="<?= htmlspecialchars($imagemUrl) ?>" class="card-img-top"
+                      alt="<?= htmlspecialchars($prod['nome']) ?>" onerror="this.src='img/ImgNotFound.png';">
                   </a>
                   <div class="card-body text-center">
                     <h6 class="card-title">
-                      <a href="index.php?url=produto&id=<?= htmlspecialchars($prod['id_produto']) ?>" 
-                         style="text-decoration: none; color: inherit;">
+                      <a href="index.php?url=produto&id=<?= htmlspecialchars($prod['id_produto']) ?>"
+                        style="text-decoration: none; color: inherit;">
                         <?= htmlspecialchars($prod['nome']) ?>
                       </a>
                     </h6>
                     <p class="card-price">R$ <?= $preco ?></p>
-                    <p class="card-stock">
-                      <?= $prod['quantidade_disponivel'] === 'Sem Estoque' ? 
-                          '<span class="text-danger">Sem Estoque</span>' : 
-                          'Estoque: ' . $prod['quantidade_disponivel'] ?>
-                    </p>
                     <?php if ($prod['quantidade_disponivel'] !== 'Sem Estoque' && $prod['quantidade_disponivel'] > 0): ?>
-                      <button class="btn btn-product btn-add-cart">Adicionar ao Carrinho</button>
+                      <button class="btn btn-product btn-add-cart" data-id="<?= htmlspecialchars($prod['id_produto']) ?>"
+                        data-nome="<?= htmlspecialchars($prod['nome']) ?>"
+                        data-preco="<?= htmlspecialchars($prod['preco']) ?>"
+                        data-imagem="<?= htmlspecialchars($imagemUrl) ?>">
+                        Adicionar ao Carrinho
+                      </button>
                     <?php else: ?>
                       <button class="btn btn-secondary" disabled>Indisponível</button>
                     <?php endif; ?>
@@ -178,12 +178,12 @@ $produtos = array_slice($produtos, 0, 12);
                 </div>
               </div>
             <?php endfor; ?>
-            
-            <?php 
+
+            <?php
             // Preencher colunas vazias se necessário para manter layout
             $produtosNoSlide = $fim - $inicio;
-            for ($j = $produtosNoSlide; $j < $produtosPorSlide; $j++): 
-            ?>
+            for ($j = $produtosNoSlide; $j < $produtosPorSlide; $j++):
+              ?>
               <div class="col-md-3">
                 <div class="card product-card" style="visibility: hidden;">
                   <div class="card-body text-center">
@@ -196,7 +196,7 @@ $produtos = array_slice($produtos, 0, 12);
           </div>
         </div>
       <?php endfor; ?>
-      
+
       <?php if (empty($produtos)): ?>
         <div class="carousel-item active">
           <div class="row">
@@ -222,6 +222,5 @@ $produtos = array_slice($produtos, 0, 12);
     <?php endif; ?>
   </div>
 
-  <div style="height: 100px;"></div>
 
 </main>
