@@ -1,10 +1,13 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
 require_once __DIR__ . '/../core/Database.php';
+require_once __DIR__ . '/../core/user.php';
 
 $response = ['sucesso' => false, 'erro' => ''];
 $pdo = Database::conectar();
 
+// pega o admin para passar ao sql
+$adminId = Auth::getAdminId();
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') throw new Exception("Método inválido");
 
@@ -17,6 +20,12 @@ try {
     // AÇÃO DE ATUALIZAR
     // ==================
     if ($action === 'update') {
+
+        // Define @admin_id para a trigger capturar
+        $stmtAdmin = $pdo->prepare("SET @admin_id = :admin_id");
+        $stmtAdmin->execute(['admin_id' => $adminId]);
+
+
         $tipo = $_POST['tipo'] ?? '';
         $id_especifico = $_POST['id_especifico'] ?? null;
 
@@ -32,30 +41,41 @@ try {
                 WHERE id_info=?";
             $stmtInfo = $pdo->prepare($sqlInfo);
             $stmtInfo->execute([
-                $_POST['ram'], $_POST['armazenamento'], $_POST['processador'], 
-                $_POST['placa_mae'], $_POST['placa_video'], $_POST['fonte'], 
-                $_POST['cor'], $_POST['descricao'], $id_especifico
+                $_POST['ram'],
+                $_POST['armazenamento'],
+                $_POST['processador'],
+                $_POST['placa_mae'],
+                $_POST['placa_video'],
+                $_POST['fonte'],
+                $_POST['cor'],
+                $_POST['descricao'],
+                $id_especifico
             ]);
-
         } elseif ($tipo === 'celular' && $id_especifico) {
             $sqlCel = "UPDATE celular SET 
                 ram=?, armazenamento=?, cor=?, tamanho_tela=?, processador=?, camera_traseira=?, camera_frontal=?, bateria=?
                 WHERE id_celular=?";
             $stmtCel = $pdo->prepare($sqlCel);
             $stmtCel->execute([
-                $_POST['ram'], $_POST['armazenamento'], $_POST['cor'], $_POST['tamanho_tela'],
-                $_POST['processador'], $_POST['camera_traseira'], $_POST['camera_frontal'], $_POST['bateria'],
+                $_POST['ram'],
+                $_POST['armazenamento'],
+                $_POST['cor'],
+                $_POST['tamanho_tela'],
+                $_POST['processador'],
+                $_POST['camera_traseira'],
+                $_POST['camera_frontal'],
+                $_POST['bateria'],
                 $id_especifico
             ]);
         }
 
         $response['sucesso'] = true;
 
-    // ==================
-    // AÇÃO DE DELETAR
-    // ==================
+        // ==================
+        // AÇÃO DE DELETAR
+        // ==================
     } elseif ($action === 'delete') {
-        
+
         // Precisamos descobrir os IDs filhos antes de apagar o pai
         $stmtBusca = $pdo->prepare("SELECT id_info, id_celular FROM produto WHERE id_produto = ?");
         $stmtBusca->execute([$id_produto]);
@@ -63,7 +83,7 @@ try {
 
         // 1. Deletar produto pai (Se tiver CASCADE no banco, isso já apagaria os filhos)
         // Mas vamos garantir apagando na ordem correta para evitar erro de constraint
-        
+
         // Apaga o Pai primeiro (pois é ele quem segura a FK no seu banco)
         $stmtDelPai = $pdo->prepare("DELETE FROM produto WHERE id_produto = ?");
         $stmtDelPai->execute([$id_produto]);
@@ -81,7 +101,6 @@ try {
 
         $response['sucesso'] = true;
     }
-
 } catch (Exception $e) {
     $response['erro'] = $e->getMessage();
 }

@@ -168,6 +168,7 @@ $produtos = $produtoModel->buscarPorLoja($idLoja);
         const form = document.getElementById('form-editar-produto');
         const formData = new FormData(form);
         formData.append('action', 'update');
+        formData.append('admin_id', <?= $idAdmin ?>);
 
         fetch('../app/controller/GerenciarProdutoController.php', {
             method: 'POST',
