@@ -277,4 +277,30 @@ document.getElementById("btn-finalizar").addEventListener("click", async () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const inputPreco = document.querySelector('input[name="preco"]');
+    const MAX_DIGITOS_INTEIROS = 5;
+
+    if (inputPreco) {
+        inputPreco.addEventListener('input', function (e) {
+            let value = e.target.value.replace(',', '.');
+            
+            if (parseFloat(value) < 0) {
+                e.target.value = '0.01';
+                return;
+            }
+
+            const parts = value.split('.');
+            let integerPart = parts[0];
+
+            if (integerPart.length > MAX_DIGITOS_INTEIROS) {
+                e.target.value = integerPart.substring(0, MAX_DIGITOS_INTEIROS) + (parts.length > 1 ? '.' + parts[1] : '');
+            }
+
+            if (parts.length > 1 && parts[1].length > 2) {
+                e.target.value = parts[0] + '.' + parts[1].substring(0, 2);
+            }
+        });
+    }
+});
 </script>
