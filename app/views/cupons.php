@@ -423,9 +423,6 @@ if (!empty($userId)) {
                 </div>
 
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-danger" id="btnExcluir">
-                        <i class="bi bi-trash"></i> Excluir Cupom
-                    </button>
                     <div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">
@@ -439,13 +436,50 @@ if (!empty($userId)) {
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalGerenciar = document.getElementById('modalGerenciarCupom');
+    /**
+     * ====================================================================
+     * 1. FUNÇÕES AUXILIARES (DEFINIDAS NO ESCOPO GLOBAL)
+     * ====================================================================
+     */
+
+    // Função auxiliar: Copiar código para a área de transferência
+    function copiarCodigo(codigo, elemento) {
+        navigator.clipboard.writeText(codigo).then(() => {
+            const hint = elemento.querySelector('.copy-hint');
+            const textoOriginal = hint.textContent;
+            hint.textContent = 'Copiado!';
+            setTimeout(() => {
+                hint.textContent = textoOriginal;
+            }, 1500);
+        });
+    }
+
+    // Função auxiliar: Fechar alerta
+    function fecharAlerta() {
+        const alerta = document.getElementById('alert-info');
+        if (alerta) {
+            alerta.classList.add('d-none');
+        }
+    }
+
+    /**
+     * ====================================================================
+     * 2. LÓGICA DE INICIALIZAÇÃO (DOM CONTENT LOADED)
+     * ====================================================================
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos do DOM
+        const modalElement = document.getElementById('modalGerenciarCupom');
         const formEditar = document.getElementById('formEditarCupom');
-        const btnExcluir = document.getElementById('btnExcluir');
+        
+        // Nota: O botão btnExcluir foi removido do JS pois a exclusão física não é mais permitida.
+        // Certifique-se de remover o botão <button id="btnExcluir"> do seu HTML também.
+
+        // Cria/Obtém a instância do Bootstrap para o Modal
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
 
         // Evento: Abrir modal com dados do cupom selecionado
-        modalGerenciar.addEventListener('show.bs.modal', function (event) {
+        modalElement.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
 
             // Extrair informações dos atributos data-*
@@ -458,7 +492,7 @@ if (!empty($userId)) {
             const fim = button.getAttribute('data-fim');
             const ativo = button.getAttribute('data-ativo');
 
-            // Preencher campos do modal
+            // Preencher campos do formulário no modal
             document.getElementById('modalId').value = id;
             document.getElementById('modalCodigo').value = codigo;
             document.getElementById('modalDescricao').value = descricao;
@@ -467,88 +501,39 @@ if (!empty($userId)) {
             document.getElementById('modalInicio').value = inicio;
             document.getElementById('modalFim').value = fim;
             document.getElementById('modalAtivo').value = ativo;
-
-            // Configurar o botão Excluir
-            btnExcluir.onclick = function () {
-                if (confirm('Tem certeza que deseja excluir este cupom permanentemente?')) {
-                    excluirCupom(id);
-                }
-            };
         });
 
-        // Evento: Submissão do formulário de edição
-        formEditar.addEventListener('submit', function (e) {
+        // Evento: Submissão do formulário de edição (Inclui Atualizar Status Ativo/Inativo)
+        formEditar.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const formData = new FormData(this);
+            // Garante que a ação de atualização seja enviada
+            formData.append('acao', 'atualizar');
 
             fetch('../app/controller/gerenciar_cupom.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Cupom atualizado com sucesso!');
-                    // Fechar modal
-                    const modal = bootstrap.Modal.getInstance(modalGerenciar);
-                    modal.hide();
-                    // Recarregar página para atualizar a lista
-                    location.reload();
-                } else {
-                    alert('Erro: ' + (data.message || 'Falha ao atualizar cupom.'));
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao atualizar cupom. Verifique o console.');
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('✅ Cupom atualizado com sucesso!');
+                        
+                        // Fechar modal usando a instância
+                        modalInstance.hide();
+                        
+                        // Recarregar página
+                        location.reload();
+                    } else {
+                        alert('❌ Erro: ' + (data.message || 'Falha ao atualizar cupom.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('❌ Erro ao atualizar cupom. Verifique o console.');
+                });
         });
 
-        // Função: Excluir Cupom
-        function excluirCupom(idCupom) {
-            const formData = new FormData();
-            formData.append('id_cupom', idCupom);
-            formData.append('acao', 'excluir');
-
-            fetch('../app/controller/gerenciar_cupom.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Cupom excluído com sucesso!');
-                    // Fechar modal
-                    const modal = bootstrap.Modal.getInstance(modalGerenciar);
-                    modal.hide();
-                    // Recarregar página
-                    location.reload();
-                } else {
-                    alert('Erro: ' + (data.message || 'Falha ao excluir cupom.'));
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao excluir cupom. Verifique o console.');
-            });
-        }
-    });
-
-    // Função auxiliar: Copiar código para a área de transferência
-    function copiarCodigo(codigo, elemento) {
-        navigator.clipboard.writeText(codigo).then(() => {
-            const hint = elemento.querySelector('.copy-hint');
-            const textoOriginal = hint.textContent;
-            hint.textContent = 'Copiado!';
-            setTimeout(() => {
-                hint.textContent = textoOriginal;
-            }, 2000);
-        });
-    }
-
-    // Função auxiliar: Fechar alerta
-    function fecharAlerta() {
-        document.getElementById('alert-info').classList.add('d-none');
-    }
+    }); // <--- FIM DO DOMContentLoaded
 </script>

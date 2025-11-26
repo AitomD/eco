@@ -1,7 +1,7 @@
 <?php
 /**
  * Controller para Gerenciar Cupons
- * Funções: atualizar_cupom e excluir_cupom
+ * Funções: atualizar_cupom
  * Acesso restrito: Apenas admin com cargo 'Desenvolvedor'
  */
 
@@ -35,7 +35,7 @@ function validarPermissao()
 }
 
 /**
- * Função: Atualizar Cupom Existente
+ * Função: Atualizar Cupom Existente (Inclui ativar/desativar)
  */
 function atualizarCupom()
 {
@@ -53,6 +53,8 @@ function atualizarCupom()
         $uso_user = isset($_POST['uso_user']) ? (int)$_POST['uso_user'] : null;
         $data_inicio = isset($_POST['data_inicio']) && !empty($_POST['data_inicio']) ? $_POST['data_inicio'] : null;
         $data_fim = isset($_POST['data_fim']) && !empty($_POST['data_fim']) ? $_POST['data_fim'] : null;
+        
+        // Aqui é onde o status é definido (1 = Ativo, 0 = Inativo)
         $ativo = isset($_POST['ativo']) ? (int)$_POST['ativo'] : 1;
 
         // Validações básicas
@@ -116,7 +118,8 @@ function atualizarCupom()
 
         $ok = $stmt->execute($params);
 
-        if ($ok && $stmt->rowCount() > 0) {
+        if ($ok) {
+            // Mensagem genérica pois pode ter atualizado dados ou apenas o status
             echo json_encode(['success' => true, 'message' => 'Cupom atualizado com sucesso.']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Nenhuma alteração foi feita ao cupom.']);
@@ -133,56 +136,6 @@ function atualizarCupom()
 }
 
 /**
- * Função: Excluir Cupom
- */
-function excluirCupom()
-{
-    try {
-        // Validar permissão
-        validarPermissao();
-
-        // Receber ID do cupom
-        $id_cupom = isset($_POST['id_cupom']) ? (int)$_POST['id_cupom'] : null;
-
-        // Validação
-        if (!$id_cupom || $id_cupom <= 0) {
-            echo json_encode(['success' => false, 'message' => 'ID do cupom inválido.']);
-            exit;
-        }
-
-        $pdo = Database::conectar();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // Verificar se o cupom existe
-        $checkCupom = $pdo->prepare('SELECT id_cupom FROM cupons WHERE id_cupom = :id LIMIT 1');
-        $checkCupom->execute([':id' => $id_cupom]);
-        if (!$checkCupom->fetch(PDO::FETCH_ASSOC)) {
-            echo json_encode(['success' => false, 'message' => 'Cupom não encontrado.']);
-            exit;
-        }
-
-        // Excluir cupom
-        $sql = 'DELETE FROM cupons WHERE id_cupom = :id';
-        $stmt = $pdo->prepare($sql);
-        $ok = $stmt->execute([':id' => $id_cupom]);
-
-        if ($ok && $stmt->rowCount() > 0) {
-            echo json_encode(['success' => true, 'message' => 'Cupom excluído com sucesso.']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Falha ao excluir cupom.']);
-        }
-
-    } catch (Exception $e) {
-        error_log('gerenciar_cupom.php - excluirCupom erro: ' . $e->getMessage());
-        echo json_encode([
-            'success' => false,
-            'message' => 'Erro ao excluir cupom.',
-            'error' => $e->getMessage()
-        ]);
-    }
-}
-
-/**
  * Router: Determinar qual ação executar
  */
 $acao = isset($_POST['acao']) ? trim($_POST['acao']) : '';
@@ -191,12 +144,10 @@ switch ($acao) {
     case 'atualizar':
         atualizarCupom();
         break;
-    case 'excluir':
-        excluirCupom();
-        break;
+    
+    // Caso alguém tente chamar 'excluir' via API antiga, retornará erro
     default:
         echo json_encode(['success' => false, 'message' => 'Ação não reconhecida.']);
         exit;
 }
-
 ?>
