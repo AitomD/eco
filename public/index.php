@@ -190,7 +190,9 @@ $cartCount = CarrinhoController::contarItens();
     <link rel="stylesheet" href="css/carrinhoStep.css">
     <link rel="stylesheet" href="css/carrinhoCards.css">
     <link rel="stylesheet" href="css/pedido-sucesso.css">
-
+    <?php if($pagina ===  'home') :   ?>
+    <link rel="stylesheet" href="css/homeCards.css">
+    <?php endif; ?>
 </head>
 
 <body<?= $bodyClass ? ' class="' . htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') . '"' : '' ?>
@@ -246,12 +248,12 @@ $cartCount = CarrinhoController::contarItens();
                             </a>
 
                             <!-- Dropdown do usuÃ¡rio -->
-                            <div class="dropdown">
+                            <div class="dropdown mx-3">
                                 <a class="dropdown-toggle text-light text-decoration-none d-flex align-items-center" href="#"
                                     role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
                                     <span class="d-none d-md-inline text-light">Olá,
-                                        <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
+                                        <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end"
                                     style="background-color: #09090A; border: 1px solid #3F0071;">
@@ -263,7 +265,7 @@ $cartCount = CarrinhoController::contarItens();
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                        <a class="dropdown-item text-danger logout-trigger" href="#">
                                             <i class="bi bi-box-arrow-right me-2"></i>Sair
                                         </a>
                                     </li>
@@ -351,8 +353,8 @@ $cartCount = CarrinhoController::contarItens();
                         <div class="footer-column">
                             <h4 class="text-light mb-3">Outros</h4>
                             <ul class="dev-list">
-                                <li><a class="text-muted" id="btnAbrirModal">Termos e Condições</a></li>
-                                <li><a  class="text-muted"  id="btnAbrirPrivacidade">Polí­tica de Privacidade</a></li>
+                                <li><a class="text-muted" id="btnAbrirModal" style="cursor:pointer;">Termos e Condições</a></li>
+                                <li><a  class="text-muted"  id="btnAbrirPrivacidade" style="cursor:pointer;">Polí­tica de Privacidade</a></li>
                             </ul>
                         </div>
                     </div>
@@ -377,7 +379,7 @@ $cartCount = CarrinhoController::contarItens();
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        AOS.init(); // Inicializa as animaÃ§Ãµes
+        AOS.init(); 
     </script>
     <script src="../public/js/dropinteracao.js"></script>
     <script src="../public/js/activebtn.js"></script>

@@ -13,7 +13,17 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
 - 🚛 Sistema de carrinho de compras.
 - 📦 Sistema de Estoque de produtos.  
 - ⭐ Avaliação dos produtos.
----  
+---
+
+
+## 📈 Painel Administrativo
+
+- 📊 Exibição de gráficos dinâmicos.
+- 🧮 Acompanhamento de vendas em tempo real.
+- 📉 Visualização analítica com **Chart.js**.
+- 🧠 Suporte à tomada de decisões com base em métricas.
+---
+
 
 
 ## 🛠 Tecnologias Utilizadas  
@@ -23,7 +33,9 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
 - ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 - ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=bootstrap&logoColor=white)
 - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-- ![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=flat&logo=jquery&logoColor=white)
+- ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chart.js&logoColor=white)
+- ![MVC](https://img.shields.io/badge/MVC-architecture-555?style=flat&logo=layers&logoColor=white)
+
 
 
 ## 🚀 Como Executar  
@@ -42,10 +54,9 @@ Uma plataforma digital interativa onde os usuários podem explorar entre mais di
     
 ## 👤  Autores
 
-- [**Fernando Consolin Rosa**](https://github.com/FernandoConsolinRosa11)
-
-- [**Aitom Henrique Donatoni**](https://github.com/AitomD)  
-- [**Hiago Nascimento**](https://github.com/haiagos48)
+- [**👤 Fernando Consolin Rosa**](https://github.com/FernandoConsolinRosa11)
+- [**👤 Aitom Henrique Donatoni**](https://github.com/AitomD)
+- [**👤 Hiago Nascimento**](https://github.com/haiagos48)
 ---  
 
 

@@ -77,3 +77,39 @@
     `;
         document.head.appendChild(style);
     });
+
+   function copiarCodigo(codigo, elemento) {
+    // 'elemento' já é o div.code-container (passado via 'this' no HTML)
+    
+    // 1. Usa a API moderna de Clipboard para copiar
+    navigator.clipboard.writeText(codigo).then(function() {
+        
+        // 2. Seleção dos Elementos
+        const hintElement = elemento.querySelector('.copy-hint');
+        const originalText = hintElement.innerText; // Guarda o texto original
+
+        // 3. Aplica Feedback Visual
+        
+        // A) Altera o texto de feedback
+        hintElement.innerText = "Copiado!";
+        hintElement.classList.add('text-success'); 
+        
+        // B) Altera a borda do contêiner principal (elemento)
+        elemento.classList.add('border-success');
+        elemento.classList.add('text-success'); 
+        
+        // 4. Restaura o estado original após 2 segundos
+        setTimeout(() => {
+            hintElement.innerText = originalText;
+            hintElement.classList.remove('text-success');
+            
+            // Remove as classes de sucesso do contêiner principal
+            elemento.classList.remove('border-success');
+            elemento.classList.remove('text-success'); 
+        }, 2000);
+
+    }).catch(function(err) {
+        console.error('Erro ao copiar: ', err);
+        alert('Não foi possível copiar o código automaticamente.');
+    });
+}

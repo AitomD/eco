@@ -9,10 +9,14 @@ class AuthSystem {
     }
 
     init() {
-        // Verificar se existe botão de logout
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            this.setupLogout(logoutBtn);
+        // CORREÇÃO: Usar querySelectorAll para pegar TODOS os botões de logout pela classe
+        const logoutBtns = document.querySelectorAll('.logout-trigger');
+        
+        // Adiciona o evento a cada botão encontrado
+        if (logoutBtns.length > 0) {
+            logoutBtns.forEach(btn => {
+                this.setupLogout(btn);
+            });
         }
 
         // Verificar se existe formulário de login
@@ -34,24 +38,26 @@ class AuthSystem {
     /**
      * Configurar logout
      */
-    setupLogout(logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
+    setupLogout(btn) {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            this.logout();
+            // CORREÇÃO: Passamos o botão clicado (btn) como argumento
+            this.logout(btn);
         });
     }
 
     /**
      * Executar logout
+     * CORREÇÃO: Recebe o botão específico para aplicar o efeito de loading nele
      */
-    async logout() {
-        const logoutBtn = document.getElementById('logoutBtn');
-        
+    async logout(clickedBtn) {
         try {
-            // Mostrar loading
-            const originalContent = logoutBtn.innerHTML;
-            logoutBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin me-2"></i>Saindo...';
-            logoutBtn.classList.add('disabled');
+            // Mostrar loading apenas no botão clicado
+            const originalContent = clickedBtn.innerHTML;
+            clickedBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin me-2"></i>Saindo...';
+            clickedBtn.classList.add('disabled');
+            // Prevenção extra para evitar cliques múltiplos
+            clickedBtn.style.pointerEvents = 'none'; 
 
             const formData = new FormData();
             formData.append('action', 'logout');
@@ -61,23 +67,28 @@ class AuthSystem {
                 body: formData
             });
 
+            // Verificação se a resposta é JSON válido
             const data = await response.json();
 
             if (data.success) {
-                // Redirecionar imediatamente sem mensagem
                 window.location.href = 'index.php?url=home';
             } else {
-                // Em caso de erro, apenas recarregar a página
                 window.location.reload();
             }
 
         } catch (error) {
             console.error('Erro no logout:', error);
-            // Em caso de erro, recarregar a página
+            // Remove o loading se der erro
+            if(clickedBtn) {
+                 clickedBtn.innerHTML = originalContent || 'Sair';
+                 clickedBtn.classList.remove('disabled');
+                 clickedBtn.style.pointerEvents = 'auto';
+            }
+
             window.location.reload();
         }
     }
-
+    
     /**
      * Configurar formulário de login
      */
@@ -88,9 +99,6 @@ class AuthSystem {
         });
     }
 
-    /**
-     * Processar login
-     */
     async processLogin(form) {
         const formData = new FormData(form);
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -106,11 +114,11 @@ class AuthSystem {
             const data = await response.json();
 
             if (data.success) {
-                // Redirecionar imediatamente sem mensagem
                 window.location.href = data.redirect || 'index.php?url=home';
             } else {
-                // Apenas logar erro no console
                 console.log('Erro no login:', data.message);
+                // Sugestão: Mostrar um alerta visual para o usuário aqui
+                alert('Erro ao logar: ' + (data.message || 'Tente novamente'));
             }
 
         } catch (error) {
@@ -120,9 +128,6 @@ class AuthSystem {
         }
     }
 
-    /**
-     * Configurar formulário de registro
-     */
     setupRegisterForm(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -130,9 +135,6 @@ class AuthSystem {
         });
     }
 
-    /**
-     * Processar registro
-     */
     async processRegister(form) {
         const formData = new FormData(form);
         const submitBtn = form.querySelector('button[type="submit"]');
@@ -148,11 +150,10 @@ class AuthSystem {
             const data = await response.json();
 
             if (data.success) {
-                // Redirecionar imediatamente sem mensagem
                 window.location.href = data.redirect || 'index.php?url=home';
             } else {
-                // Apenas logar erro no console
                 console.log('Erro no registro:', data.message);
+                alert('Erro no cadastro: ' + (data.message || 'Tente novamente'));
             }
 
         } catch (error) {
@@ -162,9 +163,6 @@ class AuthSystem {
         }
     }
 
-    /**
-     * Controlar estado de loading do botão
-     */
     setButtonLoading(button, isLoading) {
         const btnText = button.querySelector('.btn-text');
         const btnLoading = button.querySelector('.btn-loading');
@@ -180,58 +178,19 @@ class AuthSystem {
         }
     }
 
-    /**
-     * Adicionar estilos dinâmicos
-     */
     addDynamicStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            .spin {
-                animation: spin 1s linear infinite;
-            }
-            
-            @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-            
-            .user-section .dropdown-menu {
-                min-width: 200px;
-                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            }
-            
-            .user-section .dropdown-item:hover {
-                background-color: #3F0071 !important;
-                color: #fff !important;
-                transition: all 0.2s ease;
-            }
-
-            .btn-loading {
-                pointer-events: none;
-            }
-
-            .form-control.is-invalid {
-                border-color: #dc3545;
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.9.4M6.5 8.2v.01m-.01 0a.01.01 0 1 1 0 0Z'/%3e%3c/svg%3e");
-                background-repeat: no-repeat;
-                background-position: right calc(0.375em + 0.1875rem) center;
-                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-            }
-
-            .form-control.is-valid {
-                border-color: #198754;
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.94-.94 1.77-1.77.94-.94L6.23 3 4.77 1.54 3.83.6 2.89 1.54l-.94.94zm0 0L1.36 5.8l-.94-.94L0 5.29l.42.43z'/%3e%3c/svg%3e");
-                background-repeat: no-repeat;
-                background-position: right calc(0.375em + 0.1875rem) center;
-                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-            }
+            .spin { animation: spin 1s linear infinite; }
+            @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            .user-section .dropdown-menu { min-width: 200px; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); }
+            .user-section .dropdown-item:hover { background-color: #3F0071 !important; color: #fff !important; transition: all 0.2s ease; }
+            .btn-loading { pointer-events: none; }
+            .logout-trigger { cursor: pointer; } 
         `;
         document.head.appendChild(style);
     }
 
-    /**
-     * Verificar se usuário está logado (para uso em outras páginas)
-     */
     static async checkAuthStatus() {
         try {
             const response = await fetch('../app/core/User.php?check_auth=1');
@@ -243,9 +202,6 @@ class AuthSystem {
         }
     }
 
-    /**
-     * Redirecionar para login se não estiver autenticado
-     */
     static requireAuth(redirectUrl = 'index.php?url=login') {
         this.checkAuthStatus().then(isLoggedIn => {
             if (!isLoggedIn) {
@@ -255,10 +211,8 @@ class AuthSystem {
     }
 }
 
-// Inicializar quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', () => {
     new AuthSystem();
 });
 
-// Exportar para uso global
 window.AuthSystem = AuthSystem;
