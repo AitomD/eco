@@ -95,7 +95,7 @@
           const card = document.createElement('div');
           card.classList.add('card', 'm-6', 'col-sm-3'); // 4 cards por linha
           card.dataset.id = p.id_produto;
-          const imagemSrc = p.imagem || '../public/img/no-image.png'; // Imagem padrão se não houver
+          const imagemSrc = p.imagem;
           card.innerHTML = `
   <img src="${imagemSrc}" class="card-img-top object-fit-fill" alt="${p.nome}" >
   <div class="card-body">

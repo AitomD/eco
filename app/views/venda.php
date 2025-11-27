@@ -105,8 +105,22 @@ foreach ($vendas as $v) {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    const mapaMeses = {
+        "January": "Janeiro",
+        "February": "Fevereiro",
+        "March": "Março",
+        "April": "Abril",
+        "May": "Maio",
+        "June": "Junho",
+        "July": "Julho",
+        "August": "Agosto",
+        "September": "Setembro",
+        "October": "Outubro",
+        "November": "Novembro",
+        "December": "Dezembro"
+    };
     // Dados vindos do PHP
-    const meses = <?= json_encode(array_keys($dadosGrafico)) ?>;
+    const meses = <?= json_encode(array_keys($dadosGrafico)) ?>.map(m => mapaMeses[m]);
     const valores = <?= json_encode(array_values($dadosGrafico)) ?>;
 
     // Script do grafico
@@ -132,13 +146,13 @@ foreach ($vendas as $v) {
             },
             scales: {
                 x: {
-                ticks: {
-                    font: {
-                        size: 14,     // 🔥 tamanho dos nomes dos meses
-                        weight: 'bold'
+                    ticks: {
+                        font: {
+                            size: 14, // 🔥 tamanho dos nomes dos meses
+                            weight: 'bold'
+                        }
                     }
-                }
-            },
+                },
                 y: {
                     beginAtZero: true,
                     ticks: {

@@ -27,7 +27,6 @@ class Produto
     pi.cor,
     pi.fonte,
     pi.placa_video,
-    -- Imagens de produtos normais (através de produto_info)
     CASE 
         WHEN p.id_info IS NOT NULL THEN 
             (SELECT i.url 
@@ -43,17 +42,16 @@ class Produto
              LIMIT 1)
         ELSE NULL
     END AS imagem,
-    -- quantidade atual do estoque
     (SELECT COALESCE(MAX(e.total), 'Sem Estoque')
- FROM estoque e
- WHERE e.id_produto = p.id_produto
-) AS quantidade_disponivel
+     FROM estoque e
+     WHERE e.id_produto = p.id_produto
+    ) AS quantidade_disponivel
 FROM produto p
 LEFT JOIN produto_info pi ON p.id_info = pi.id_info
 LEFT JOIN celular cel ON p.id_celular = cel.id_celular
 LEFT JOIN marca m ON COALESCE(pi.id_marca, cel.id_marca) = m.id_marca
 LEFT JOIN categoria c ON COALESCE(pi.id_categoria, cel.id_categoria) = c.id_categoria
-WHERE 1=1";
+WHERE p.ativo = 1";
 
         $params = [];
 
@@ -76,8 +74,8 @@ WHERE 1=1";
     }
 
     public function buscarPorLoja($idLoja)
-{
-    $sql = "SELECT 
+    {
+        $sql = "SELECT 
                 p.id_produto,
                 p.nome,
                 p.preco,
@@ -86,13 +84,13 @@ WHERE 1=1";
             FROM produto p
             LEFT JOIN produto_info pi ON pi.id_info = p.id_info
             WHERE p.id_loja = :idLoja
+              AND p.ativo = 1 
             ORDER BY p.data_att DESC";
 
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(':idLoja', $idLoja, PDO::PARAM_INT);
-    $stmt->execute();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idLoja', $idLoja, PDO::PARAM_INT);
+        $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
