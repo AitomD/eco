@@ -14,7 +14,7 @@ class CuponsCarrinhoController {
         try {
             $pdo = Database::conectar();
             
-            // CORREÇÃO: Adicionado 'id_cupom' no SELECT abaixo
+         
             $query = "
                 SELECT id_cupom, codigo, descricao, data_inicio, data_fim, tipo_desconto, valor_desconto, uso_total, uso_user
                 FROM cupons

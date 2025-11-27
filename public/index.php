@@ -288,7 +288,7 @@ $cartCount = CarrinhoController::contarItens();
                                     role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle fs-5 me-2"></i>
                                     <span class="d-none d-md-inline text-light">Olá,
-                                        <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'UsuÃ¡rio', ENT_QUOTES, 'UTF-8') ?></span>
+                                        <?= htmlspecialchars(explode(' ', $userData['name'])[0] ?? 'Usuário', ENT_QUOTES, 'UTF-8') ?></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end"
                                     style="background-color: #09090A; border: 1px solid #3F0071;">
@@ -388,8 +388,8 @@ $cartCount = CarrinhoController::contarItens();
                         <div class="footer-column">
                             <h4 class="text-light mb-3">Outros</h4>
                             <ul class="dev-list">
-                                <li><a class="text-muted" id="btnAbrirModal">Termos e Condições</a></li>
-                                <li><a  class="text-muted"  id="btnAbrirPrivacidade">Polí­tica de Privacidade</a></li>
+                                <li><a class="text-muted" id="btnAbrirModal" style="cursor:pointer;">Termos e Condições</a></li>
+                                <li><a  class="text-muted"  id="btnAbrirPrivacidade" style="cursor:pointer;">Polí­tica de Privacidade</a></li>
                             </ul>
                         </div>
                     </div>

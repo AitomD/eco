@@ -263,19 +263,6 @@ if (!empty($userId)) {
         </div>
     <?php endif; ?>
 
-    <div id="alert-info"
-        class="alert alert-info shadow-lg border-0 alert-dismissible fade show position-fixed bottom-0 end-0 m-4 d-none"
-        role="alert" style="z-index: 1055; max-width: 400px; border-left: 5px solid #0dcaf0;">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-            <div>
-                <strong>Atenção:</strong><br>
-                Apenas 1 cupom por compra!
-            </div>
-        </div>
-        <button type="button" class="btn-close" onclick="fecharAlerta()" aria-label="Close"></button>
-    </div>
-
     </div>
 </main>
 
@@ -535,5 +522,5 @@ if (!empty($userId)) {
                 });
         });
 
-    }); // <--- FIM DO DOMContentLoaded
+    });
 </script>

@@ -23,7 +23,7 @@ $dadosGrafico = [];
 
 foreach ($vendas as $v) {
     $mes = date('m', strtotime($v['data_pedido']));
-    $mesNome = date('F', strtotime($v['data_pedido'])); // Ex: January, February
+    $mesNome = date('F', strtotime($v['data_pedido'])); 
 
     if (!isset($dadosGrafico[$mesNome])) {
         $dadosGrafico[$mesNome] = 0;
@@ -119,7 +119,7 @@ foreach ($vendas as $v) {
                 label: 'Faturamento por mês (R$)',
                 data: valores,
                 borderWidth: 3,
-                tension: 0.5, // curva suave
+                tension: 0.5, 
                 borderColor: '#28a745',
                 backgroundColor: '#28a745',
             }]
@@ -134,7 +134,7 @@ foreach ($vendas as $v) {
                 x: {
                 ticks: {
                     font: {
-                        size: 14,     // 🔥 tamanho dos nomes dos meses
+                        size: 14,    
                         weight: 'bold'
                     }
                 }
@@ -144,7 +144,7 @@ foreach ($vendas as $v) {
                     ticks: {
                         callback: value => 'R$ ' + value,
                         font: {
-                            size: 14, // 🔥 tamanho dos valores
+                            size: 14, 
                             weight: 'bold'
                         }
                     }
