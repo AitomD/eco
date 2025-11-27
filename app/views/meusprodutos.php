@@ -140,7 +140,7 @@ $produtos = $produtoModel->buscarPorLoja($idLoja);
     // 2. DELETAR PRODUTO (Botão da Tabela Principal)
     document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', function() {
-            if(!confirm("Tem certeza que deseja excluir este produto permanentemente?")) return;
+            if(!confirm("Deseja desativar este produto?\n\nEle não aparecerá mais para os clientes, mas continuará registrado para não afetar pedidos antigos.")) return;
 
             const id = this.getAttribute('data-id');
             const formData = new FormData();

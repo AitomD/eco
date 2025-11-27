@@ -1,9 +1,4 @@
 <?php
-/*
- * ======================================================================
- * FASE 1: INICIALIZAÃ‡ÃƒO E AÃ‡Ã•ES GERAIS (sempre rodam)
- * ======================================================================
- */
 
 // Iniciar sessÃ£o
 session_start();
@@ -22,7 +17,6 @@ CuponsCarrinhoController::processarAcao();
 // Processar requisiÃ§Ãµes AJAX de cupons (isso deve ter um 'exit' dentro dele)
 CuponsCarrinhoController::aplicarCupomAjax();
 
-// Tratamento simples para AJAX de adicionar cupom vindo do modal
 // Se a requisição enviar 'ajax_add_cupom', encaminhar para o handler e encerrar
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax_add_cupom'])) {
     // Carrega o arquivo que responde em JSON
@@ -31,12 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax_add_cupom'])) {
     exit;
 }
 
-
-/*
- * ======================================================================
- * FASE 2: DEFINIÃ‡ÃƒO DE ROTA E VARIÃVEIS GERAIS
- * ======================================================================
- */
 
 // Lista de pÃ¡ginas permitidas (whitelist)
 $paginasPermitidas = [
@@ -72,30 +60,20 @@ if ($isLoggedIn) {
     $userData = Auth::getCurrentUserData();
 }
 
-/*
- * ======================================================================
- * FASE 3: LÃ“GICA DE CONTROLADOR (ANTES DO HTML)
- * Aqui ficam todas as verificações que podem causar um redirecionamento.
- * ======================================================================
- */
-
 // --- Lógica para 'metodopagamento' (POST) ---
 if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['finalizar_compra'])) {
     require_once __DIR__ . '/../app/controller/PedidoController.php';
 
     $resultado = PedidoController::processarFinalizacaoCompra();
-    // Registro de depuraÃ§Ã£o: salvar resultado no log do PHP e na sessÃ£o para anÃ¡lise
     error_log('[DEBUG] Resultado finalizar compra: ' . print_r($resultado, true));
     $_SESSION['pedido_finalizacao_result'] = $resultado;
 
     if ($resultado['sucesso']) {
-        // Sucesso: tentar redirecionar para pÃ¡gina de sucesso com o ID
         $redirectUrl = 'index.php?url=pedido-sucesso&id=' . $resultado['id_pedido'];
         // Garantir que a sessÃ£o foi gravada
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_write_close();
         }
-        // Sempre tentar redirecionar â€” usar header e tambÃ©m enviar um fallback via JavaScript/meta-refresh no corpo da resposta.
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_write_close();
         }
@@ -114,13 +92,11 @@ if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'POST' && is
         echo "</body></html>";
         exit;
     } else {
-        // Falha: Armazenar mensagem de erro na sessÃ£o e deixar a pÃ¡gina carregar
         $_SESSION['erro_compra'] = $resultado['mensagem'];
     }
 }
 
-// --- LÃ³gica para 'metodopagamento' (GET) ---
-// Verificar se estÃ¡ tentando acessar a pÃ¡gina de pagamento com carrinho vazio
+
 if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $itensCarrinho = CarrinhoController::getItens();
     if (empty($itensCarrinho)) {
@@ -129,8 +105,7 @@ if ($pagina === 'metodopagamento' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 }
 
-// --- LÃ³gica para 'pedido-sucesso' (GET) ---
-// Esta Ã© a lÃ³gica que estava causando o erro, agora movida para cÃ¡.
+
 $pedido = null;
 $produtos = null;
 
@@ -145,12 +120,10 @@ if ($pagina === 'pedido-sucesso') {
     // 2. Obter ID do pedido da URL
     $idPedido = isset($_GET['id']) ? intval($_GET['id']) : null;
     if (!$idPedido) {
-        // Se nÃ£o houver ID, nÃ£o hÃ¡ o que mostrar
         header('Location: index.php?url=carrinho');
         exit;
     }
 
-    // 3. Buscar detalhes do pedido
     require_once __DIR__ . '/../app/controller/PedidoController.php';
     $detalhesPedido = PedidoController::buscarDetalhesPedido($idPedido, $_SESSION['user_id']);
 
@@ -159,20 +132,12 @@ if ($pagina === 'pedido-sucesso') {
         $pedido = $detalhesPedido['pedido'];
         $produtos = $detalhesPedido['produtos'];
     } else {
-        // Se nÃ£o conseguir carregar os detalhes, redirecionar
         $_SESSION['mensagem_erro'] = 'Pedido nÃ£o encontrado.';
         header('Location: index.php?url=produto');
         exit;
     }
 
 }
-
-
-/*
- * ======================================================================
- * FASE 4: PREPARAÃ‡ÃƒO FINAL DA VIEW (DEPOIS DE TODA LÃ“GICA)
- * ======================================================================
- */
 
 // Caminho base das views
 $viewFile = __DIR__ . "/../app/views/{$pagina}.php";

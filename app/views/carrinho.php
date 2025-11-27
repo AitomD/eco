@@ -183,7 +183,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                         <!-- Subtotal -->
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-light">
-                                Subtotal (<?= $totalItens ?>     <?= $totalItens === 1 ? 'item' : 'itens' ?>):
+                                Subtotal (<?= $totalItens ?> <?= $totalItens === 1 ? 'item' : 'itens' ?>):
                             </span>
                             <span class="text-light">
                                 R$ <?= number_format($valoresCarrinho['valor_original'], 2, ',', '.') ?>
@@ -262,8 +262,8 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                                             <small
                                                                 class="text-white fw-bold d-block"><?= htmlspecialchars($cupom['codigo']) ?></small>
                                                             <small
-                                                                class="text-light">Desconto de  
-                                                                <?php if($cupom['tipo_desconto'] === 'porcentagem') : ?>
+                                                                class="text-light">Desconto de
+                                                                <?php if ($cupom['tipo_desconto'] === 'porcentagem') : ?>
                                                                     <?= htmlspecialchars($cupom['valor_desconto']) ?>
                                                                     <span>%</span>
                                                                 <?php else : ?>
@@ -278,33 +278,27 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
                                                         </div>
                                                     <?php endforeach; ?>
 
+                                                    </div>
                                                 </div>
-                                            </div>
                                         </div>
 
                                     <?php endif; ?>
 
                                 <?php endif; ?>
-
-                                <!-- Continuar -->
-                                <button class="btn btn-success w-100 btn-lg mb-3 mt-3" id="finalizar-compra">
-                                    <i class="bi bi-arrow-right me-2"></i>
-                                    Próximo: Entrega
-                                </button>
-
-                                <div class="text-center">
-                                    <small class="text-white text-muted">
-                                        <i class="bi bi-shield-check me-1"></i>
-                                        Compra 100% segura
-                                    </small>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
                     </div>
-
+                    <div class="text-center">
+                        <small class="text-white text-muted">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Compra 100% segura
+                        </small>
+                    </div>
+                    <button class="btn btn-success w-100 btn-lg mb-3 mt-3" id="finalizar-compra">
+                        <i class="bi bi-arrow-right me-2"></i>
+                        Próximo: Entrega
+                    </button>
                 </div>
-
-
             </div>
         </div>
     <?php endif; ?>
@@ -346,10 +340,10 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 </form>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Atualizar quantidade
         document.querySelectorAll('.btn-aumentar').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const itemRow = this.closest('.item-carrinho');
                 const quantidadeInput = itemRow.querySelector('.quantidade-input');
                 const novaQuantidade = parseInt(quantidadeInput.value) + 1;
@@ -362,7 +356,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
         });
 
         document.querySelectorAll('.btn-diminuir').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const itemRow = this.closest('.item-carrinho');
                 const quantidadeInput = itemRow.querySelector('.quantidade-input');
                 const novaQuantidade = parseInt(quantidadeInput.value) - 1;
@@ -376,7 +370,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
         // Atualizar quantidade diretamente no input
         document.querySelectorAll('.quantidade-input').forEach(input => {
-            input.addEventListener('change', function () {
+            input.addEventListener('change', function() {
                 const itemRow = this.closest('.item-carrinho');
                 const quantidade = parseInt(this.value);
 
@@ -391,7 +385,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
         // Remover item
         document.querySelectorAll('.btn-remover').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const itemRow = this.closest('.item-carrinho');
                 const itemId = itemRow.dataset.id;
 
@@ -402,7 +396,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
         });
 
         // Finalizar compra
-        document.getElementById('finalizar-compra')?.addEventListener('click', function () {
+        document.getElementById('finalizar-compra')?.addEventListener('click', function() {
             <?php if (!$isLoggedIn): ?>
                 if (confirm('Você precisa estar logado para finalizar a compra. Deseja fazer login agora?')) {
                     window.location.href = 'index.php?url=login';
@@ -415,7 +409,7 @@ $valoresCarrinho = CuponsCarrinhoController::calcularValorFinal($totalCarrinho);
 
         // Aplicar cupons disponíveis
         document.querySelectorAll('.aplicar-cupom-disponivel').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const cupomDiv = this.closest('.cupom-disponivel');
                 const codigo = cupomDiv.dataset.codigo;
                 const cupomInput = document.getElementById('cupom-input');

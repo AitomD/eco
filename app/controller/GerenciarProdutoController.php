@@ -76,31 +76,15 @@ try {
         // ==================
     } elseif ($action === 'delete') {
 
-        // Precisamos descobrir os IDs filhos antes de apagar o pai
-        $stmtBusca = $pdo->prepare("SELECT id_info, id_celular FROM produto WHERE id_produto = ?");
-        $stmtBusca->execute([$id_produto]);
-        $prod = $stmtBusca->fetch(PDO::FETCH_ASSOC);
+    $stmtAdmin = $pdo->prepare("SET @admin_id = :admin_id");
+    $stmtAdmin->execute(['admin_id' => $adminId]);
 
-        // 1. Deletar produto pai (Se tiver CASCADE no banco, isso já apagaria os filhos)
-        // Mas vamos garantir apagando na ordem correta para evitar erro de constraint
+    // Soft delete: apenas desativa o produto
+    $stmtSoft = $pdo->prepare("UPDATE produto SET ativo = 0 WHERE id_produto = ?");
+    $stmtSoft->execute([$id_produto]);
 
-        // Apaga o Pai primeiro (pois é ele quem segura a FK no seu banco)
-        $stmtDelPai = $pdo->prepare("DELETE FROM produto WHERE id_produto = ?");
-        $stmtDelPai->execute([$id_produto]);
-
-        // 2. Apagar os filhos órfãos
-        if (!empty($prod['id_info'])) {
-            $pdo->prepare("DELETE FROM produto_info WHERE id_info = ?")->execute([$prod['id_info']]);
-        }
-        if (!empty($prod['id_celular'])) {
-            $pdo->prepare("DELETE FROM celular WHERE id_celular = ?")->execute([$prod['id_celular']]);
-        }
-
-        // Apagar imagens também (Opcional, recomendável)
-        // $pdo->prepare("DELETE FROM imagem WHERE id_produto = ?")... (depende da sua estrutura)
-
-        $response['sucesso'] = true;
-    }
+    $response['sucesso'] = true;
+}
 } catch (Exception $e) {
     $response['erro'] = $e->getMessage();
 }
